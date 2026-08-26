@@ -1,0 +1,142 @@
+{
+  "pages": [
+    {
+      "id": "screens",
+      "name": "屏"
+    },
+    {
+      "id": "system",
+      "name": "系统"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "首页 · 夜里",
+      "page": "screens",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "HomeDay.dc.html",
+      "title": "首页 · 白天",
+      "page": "screens",
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Bottle.dc.html",
+      "title": "情绪瓶子",
+      "page": "screens",
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Mood.dc.html",
+      "title": "记一个词",
+      "page": "screens",
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Mine.dc.html",
+      "title": "我现在不太好",
+      "page": "screens",
+      "x": 0,
+      "y": 944,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Hungry.dc.html",
+      "title": "饿了 · 潮汐",
+      "page": "screens",
+      "x": 470,
+      "y": 944,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "During.dc.html",
+      "title": "正在吃",
+      "page": "screens",
+      "x": 940,
+      "y": 944,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Mindful.dc.html",
+      "title": "一起正念",
+      "page": "screens",
+      "x": 1410,
+      "y": 944,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Breathe.dc.html",
+      "title": "正念课程 · 呼吸",
+      "page": "screens",
+      "x": 1880,
+      "y": 944,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "System.dc.html",
+      "title": "夜里的暖 · 设计系统",
+      "page": "system",
+      "x": 0,
+      "y": 0,
+      "w": 960,
+      "h": 2020
+    }
+  ],
+  "annotations": [
+    {
+      "id": "note-layers",
+      "page": "screens",
+      "x": 0,
+      "y": -150,
+      "w": 400,
+      "text": "上排是主线：提前接纳与化解。\n下排是兜底：急性期三支。\n\n层号是真信息——时间窗越短，屏上越大。"
+    },
+    {
+      "id": "note-warm",
+      "page": "screens",
+      "x": 1410,
+      "y": -150,
+      "w": 400,
+      "text": "暖来自材质和光，不来自饱和度。\n\n参考图上的积分、等级、底座数字、球上的表情、假状态栏，这里全部去掉——理由逐条写在「系统」那一页。"
+    },
+    {
+      "id": "note-tide",
+      "page": "screens",
+      "x": 470,
+      "y": 1830,
+      "w": 420,
+      "text": "潮汐是 canvas 画的：一条由三个周期叠出来的波线，线下是水体渐层，线上散墨点，最后压一层纸纹。\n\n没有纸纹的话，墨看起来就是塑料。"
+    },
+    {
+      "id": "note-food",
+      "page": "screens",
+      "x": 470,
+      "y": -150,
+      "w": 420,
+      "text": "食物材质是抽象的焦皮＋橙芯＋热气，不是一盘菜的写实图。\n\n写实会把线索做强，而每日滋味唯一的真风险就是线索。夜里那张卡因此不加质感，只留标题。"
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "screens"
+  }
+}

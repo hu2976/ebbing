@@ -1,0 +1,2224 @@
+<title>退潮</title>
+
+<style>
+  /* ── tokens ─────────────────────────────────────────── */
+  :root{
+    --ground:#F7F8F4; --surface:#FFFFFF; --sunk:#EDEFE8;
+    --ink:#161A18; --ink2:#4A524D; --ink3:#7C857F;
+    --rule:#DDE1D8; --rule-soft:#E8EBE3;
+    --accent:#0F5E52; --accent-soft:#E2EDE9; --accent-ink:#0B463D;
+    --rust:#9A3B28; --rust-soft:#F4E7E3;
+    --sand:#8A6A2F; --sand-soft:#F2ECDD;
+    --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,system-ui,sans-serif;
+    --serif:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif;
+    --mono:ui-monospace,"SF Mono","Menlo",monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#141713; --surface:#1A1E18; --sunk:#20241D;
+      --ink:#E9EDE5; --ink2:#AAB3A6; --ink3:#7B857A;
+      --rule:#2E3429; --rule-soft:#252A21;
+      --accent:#66C2AE; --accent-soft:#1B2D28; --accent-ink:#8FD6C5;
+      --rust:#D57F68; --rust-soft:#2A1F1B;
+      --sand:#C7A860; --sand-soft:#26221A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#141713; --surface:#1A1E18; --sunk:#20241D;
+    --ink:#E9EDE5; --ink2:#AAB3A6; --ink3:#7B857A;
+    --rule:#2E3429; --rule-soft:#252A21;
+    --accent:#66C2AE; --accent-soft:#1B2D28; --accent-ink:#8FD6C5;
+    --rust:#D57F68; --rust-soft:#2A1F1B;
+    --sand:#C7A860; --sand-soft:#26221A;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); font-size:16.5px; line-height:1.78;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent-soft); }
+
+  .shell{ max-width:1180px; margin:0 auto; padding:0 clamp(1.1rem,4vw,3rem); }
+  .grid{ display:grid; grid-template-columns:1fr; gap:0; }
+  @media (min-width:1000px){
+    .grid{ grid-template-columns:200px minmax(0,1fr); gap:clamp(2rem,5vw,4.5rem); align-items:start; }
+  }
+
+  /* ── masthead ───────────────────────────────────────── */
+  header.mast{ padding:clamp(3rem,7vw,5.5rem) 0 clamp(1.6rem,4vw,2.4rem); }
+  .eyebrow{
+    font-size:.7rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ink3); display:flex; flex-wrap:wrap; gap:.55rem; align-items:center;
+  }
+  .eyebrow span.dot{ width:3px; height:3px; border-radius:50%; background:var(--ink3); display:inline-block; }
+  h1{
+    font-size:clamp(2.5rem,6.5vw,4.1rem); line-height:1.04; font-weight:600;
+    letter-spacing:-.02em; margin:.7rem 0 0; text-wrap:balance;
+  }
+  .mast-meta{
+    margin-top:1.6rem; padding-top:1.05rem; border-top:1px solid var(--rule);
+    display:flex; flex-wrap:wrap; gap:.5rem 2.2rem;
+    font-size:.83rem; color:var(--ink3);
+  }
+  .mast-meta b{ color:var(--ink2); font-weight:600; }
+
+  /* ── side nav ───────────────────────────────────────── */
+  nav.toc{ display:none; }
+  @media (min-width:1000px){
+    nav.toc{ display:block; position:sticky; top:2.2rem; padding-top:.4rem; font-size:.815rem; line-height:1.5; }
+    nav.toc ol{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.6rem; }
+    nav.toc a{ color:var(--ink3); text-decoration:none; display:block; border-left:2px solid var(--rule); padding-left:.7rem; }
+    nav.toc a:hover{ color:var(--accent); border-left-color:var(--accent); }
+    nav.toc a:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+    nav.toc .grp{ font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink3); opacity:.7; margin-top:.5rem; padding-left:.7rem; }
+  }
+
+  /* ── sections ───────────────────────────────────────── */
+  main{ padding-bottom:5rem; }
+  section{ padding:clamp(2.1rem,5vw,3.2rem) 0; border-top:1px solid var(--rule-soft); }
+  section:first-of-type{ border-top:none; padding-top:.3rem; }
+  .sec-label{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:.5rem;
+  }
+  h2{ font-size:clamp(1.5rem,3.4vw,2.05rem); line-height:1.22; font-weight:600; letter-spacing:-.015em; margin:0 0 .9rem; text-wrap:balance; }
+  h3{ font-size:1.08rem; font-weight:600; line-height:1.45; margin:2rem 0 .55rem; letter-spacing:-.005em; }
+  h4{ font-size:.95rem; font-weight:600; margin:1.4rem 0 .4rem; color:var(--ink2); }
+  p{ margin:0 0 .95rem; max-width:66ch; }
+  p.lede{ font-size:1.06rem; color:var(--ink2); max-width:60ch; }
+  ul,ol{ max-width:66ch; padding-left:1.15rem; margin:0 0 1rem; }
+  li{ margin-bottom:.42rem; }
+  em{ font-style:normal; color:var(--accent-ink); font-weight:600; }
+  a{ color:var(--accent); text-underline-offset:2px; }
+  code{ font-family:var(--mono); font-size:.86em; background:var(--sunk); padding:.1em .38em; border-radius:3px; }
+
+  /* ── definition block (pyramid apex) ────────────────── */
+  .define{
+    background:var(--surface); border:1px solid var(--accent); border-radius:4px;
+    padding:clamp(1.2rem,3.2vw,1.9rem); margin:0 0 1.6rem;
+  }
+  .define .dt{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:.6rem;
+  }
+  .define p{ font-family:var(--serif); font-size:clamp(1.06rem,2.3vw,1.24rem); line-height:1.72; margin:0; max-width:44em; }
+
+  /* ── three theses ───────────────────────────────────── */
+  .theses{ counter-reset:t; display:flex; flex-direction:column; gap:1.05rem; margin:1.5rem 0; }
+  .thesis{ counter-increment:t; padding-left:2.4rem; position:relative; }
+  .thesis::before{
+    content:counter(t); position:absolute; left:0; top:.06em;
+    font-family:var(--mono); font-size:.9rem; font-weight:600; color:var(--accent);
+    width:1.55rem; height:1.55rem; border:1px solid var(--accent); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .thesis b{ display:block; font-weight:600; font-size:1.02rem; margin-bottom:.15rem; }
+  .thesis span{ font-size:.94rem; color:var(--ink2); }
+
+  /* ── negative list ──────────────────────────────────── */
+  .nope{ background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:clamp(1.1rem,3vw,1.7rem); margin:1.3rem 0; }
+  .nope ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.7rem; }
+  .nope li{ margin:0; padding-left:1.7rem; position:relative; font-size:.95rem; line-height:1.6; }
+  .nope li::before{ content:"×"; position:absolute; left:.25rem; top:-.03em; color:var(--rust); font-weight:600; font-size:1.05rem; }
+  .nope li small{ display:block; color:var(--ink3); font-size:.845rem; margin-top:.1rem; }
+
+  /* ── feature cards ──────────────────────────────────── */
+  .feat{ background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:clamp(1.1rem,3vw,1.6rem); margin:1.1rem 0; position:relative; }
+  .feat-head{ display:flex; align-items:baseline; gap:.7rem; flex-wrap:wrap; margin-bottom:.1rem; }
+  .feat-head h3{ margin:0; font-size:1.12rem; }
+  .pri{
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; font-weight:600;
+    padding:.16rem .46rem; border-radius:3px; white-space:nowrap;
+  }
+  .pri.p0{ background:var(--accent-soft); color:var(--accent); }
+  .pri.p1{ background:var(--sand-soft); color:var(--sand); }
+  .pri.p2{ background:var(--sunk); color:var(--ink3); }
+  .feat-sub{ color:var(--ink3); font-size:.855rem; margin:.28rem 0 .85rem; }
+
+  /* ── screen spec ────────────────────────────────────── */
+  .spec{ display:flex; flex-direction:column; gap:.05rem; margin:.9rem 0; }
+  .spec-row{ padding:.72rem 0; border-bottom:1px solid var(--rule-soft); display:grid; grid-template-columns:1fr; gap:.2rem; }
+  @media (min-width:660px){ .spec-row{ grid-template-columns:7.5rem minmax(0,1fr); gap:1.2rem; align-items:baseline; } }
+  .spec-k{ font-size:.79rem; color:var(--accent); font-weight:600; letter-spacing:.02em; }
+  .spec-v{ font-size:.94rem; }
+  .spec-v small{ display:block; color:var(--ink3); font-size:.85rem; margin-top:.12rem; }
+
+  /* ── statement ──────────────────────────────────────── */
+  .statement{
+    font-family:var(--serif); font-size:clamp(1.14rem,2.6vw,1.46rem); line-height:1.62;
+    color:var(--ink); max-width:31em; margin:1.5rem 0;
+    padding-left:1.15rem; border-left:2px solid var(--accent);
+  }
+
+  /* ── red flags ──────────────────────────────────────── */
+  .flags{ border:1px solid var(--rust); border-radius:4px; padding:clamp(1.1rem,3vw,1.7rem); margin:1.4rem 0; background:var(--surface); }
+  .flags .ft{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--rust); font-weight:600; margin-bottom:.7rem; }
+  .flags ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.6rem; }
+  .flags li{ margin:0; padding-left:1.5rem; position:relative; font-size:.94rem; line-height:1.6; }
+  .flags li::before{ content:"▲"; position:absolute; left:0; top:.16em; color:var(--rust); font-size:.62rem; }
+  .flags li b{ font-weight:600; }
+  .flags li small{ display:block; color:var(--ink3); font-size:.845rem; }
+
+  /* ── never-do (clinical) ────────────────────────────── */
+  .twocol{ display:grid; grid-template-columns:1fr; gap:1.1rem; margin:1.3rem 0; }
+  @media (min-width:760px){ .twocol{ grid-template-columns:1fr 1fr; gap:1.5rem; } }
+  .col{ background:var(--sunk); border-radius:4px; padding:1.1rem 1.2rem; }
+  .col .ct{ font-size:.72rem; letter-spacing:.11em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .col.do .ct{ color:var(--accent); }
+  .col.dont .ct{ color:var(--rust); }
+  .col ul{ margin:0; padding-left:1.05rem; }
+  .col li{ font-size:.9rem; line-height:1.6; margin-bottom:.4rem; }
+
+  /* ── mechanism box ──────────────────────────────────── */
+  .mech{ background:var(--surface); border:1px solid var(--rule); border-left:3px solid var(--sand); border-radius:4px; padding:clamp(1rem,2.8vw,1.5rem); margin:1.3rem 0; }
+  .mech .mt{ font-size:.72rem; letter-spacing:.11em; text-transform:uppercase; color:var(--sand); font-weight:600; margin-bottom:.5rem; }
+  .mech p:last-child{ margin-bottom:0; }
+  .chain{ font-family:var(--mono); font-size:.83rem; line-height:1.9; color:var(--ink2); margin:.5rem 0 .9rem; }
+
+  /* ── schedule / sessions ────────────────────────────── */
+  .sched{ margin:1.3rem 0; }
+  .slot{ display:grid; grid-template-columns:1fr; gap:.2rem; padding:.8rem 0; border-bottom:1px solid var(--rule-soft); }
+  @media (min-width:660px){ .slot{ grid-template-columns:6.5rem 5.4rem minmax(0,1fr); gap:1.2rem; align-items:baseline; } }
+  .slot-h{ font-family:var(--mono); font-size:.8rem; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .slot-w{ font-size:.8rem; color:var(--ink3); }
+  .slot-t{ font-size:.93rem; }
+  .slot-t small{ display:block; color:var(--ink3); font-size:.845rem; }
+
+  /* ── cut order ──────────────────────────────────────── */
+  .cuts{ counter-reset:c; list-style:none; padding:0; margin:1.1rem 0; }
+  .cuts li{ counter-increment:c; padding-left:2.1rem; position:relative; margin-bottom:.55rem; font-size:.95rem; }
+  .cuts li::before{ content:"砍 " counter(c); position:absolute; left:0; top:.12em; font-family:var(--mono); font-size:.68rem; letter-spacing:.04em; color:var(--rust); font-weight:600; }
+
+  /* ── demo beats ─────────────────────────────────────── */
+  .beat{ display:grid; grid-template-columns:1fr; gap:.2rem; padding:.78rem 0; border-bottom:1px solid var(--rule-soft); }
+  @media (min-width:660px){ .beat{ grid-template-columns:5.2rem minmax(0,1fr); gap:1.3rem; align-items:baseline; } }
+  .beat-t{ font-family:var(--mono); font-size:.8rem; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .beat-d{ font-size:.94rem; }
+
+  /* ── evidence ───────────────────────────────────────── */
+  .ev-row{ padding:.85rem 0; border-bottom:1px solid var(--rule-soft); }
+  .ev-claim{ font-size:.95rem; margin-bottom:.26rem; }
+  .ev-how{ font-size:.85rem; color:var(--ink3); }
+  .tag{ display:inline-block; font-size:.67rem; letter-spacing:.06em; font-weight:600; padding:.14rem .42rem; border-radius:3px; vertical-align:.12em; margin-right:.45rem; white-space:nowrap; }
+  .tag.ok{ background:var(--accent-soft); color:var(--accent); }
+  .tag.mix{ background:var(--sand-soft); color:var(--sand); }
+  .tag.todo{ background:var(--rust-soft); color:var(--rust); }
+  .tag.own{ background:var(--sunk); color:var(--ink2); }
+
+  /* ── note ───────────────────────────────────────────── */
+  .note{ background:var(--sunk); border-radius:4px; padding:clamp(1rem,2.6vw,1.4rem); margin:1.3rem 0; font-size:.93rem; line-height:1.7; }
+  .note p:last-child{ margin-bottom:0; }
+  .note .nt{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink3); font-weight:600; margin-bottom:.45rem; }
+
+  /* ── open questions ─────────────────────────────────── */
+  .asks{ list-style:none; padding:0; margin:1.2rem 0; display:flex; flex-direction:column; gap:1rem; }
+  .asks li{ margin:0; padding-left:1.2rem; border-left:2px solid var(--accent); }
+  .asks b{ display:block; font-weight:600; margin-bottom:.15rem; }
+  .asks span{ font-size:.91rem; color:var(--ink2); }
+
+  figure.tide{ margin:1.4rem 0; }
+  figure.tide svg{ width:100%; height:auto; display:block; }
+  figcaption{ font-size:.82rem; color:var(--ink3); margin-top:.5rem; max-width:52ch; }
+
+  /* ── 翻译卡 ── */
+  .tcard{ background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:clamp(1.1rem,3vw,1.5rem); margin:1.1rem 0; }
+  .tcard.star{ border-color:var(--accent); }
+  .tcard.star::before{ content:"演示用"; display:inline-block; font-size:.66rem; letter-spacing:.09em; font-weight:600; color:var(--accent); background:var(--accent-soft); padding:.14rem .45rem; border-radius:3px; margin-bottom:.6rem; }
+  .t-saw{ font-family:var(--serif); font-size:1.14rem; line-height:1.5; margin-bottom:.9rem; }
+  .t-row{ display:grid; grid-template-columns:1fr; gap:.2rem; padding:.6rem 0; border-top:1px solid var(--rule-soft); }
+  @media (min-width:620px){ .t-row{ grid-template-columns:6.2rem minmax(0,1fr); gap:1.1rem; align-items:baseline; } }
+  .t-k{ font-size:.78rem; font-weight:600; letter-spacing:.02em; }
+  .t-row.think .t-k{ color:var(--rust); }
+  .t-row.real .t-k{ color:var(--accent); }
+  .t-row.do .t-k{ color:var(--ink3); }
+  .t-v{ font-size:.94rem; line-height:1.68; }
+  .t-v b{ font-weight:600; }
+
+  /* ── 简表 ── */
+  .tbl{ width:100%; border-collapse:collapse; margin:1.2rem 0; font-size:.9rem; }
+  .tbl th{ text-align:left; font-size:.72rem; letter-spacing:.09em; text-transform:uppercase; color:var(--ink3); font-weight:600; padding:.5rem .7rem .5rem 0; border-bottom:1px solid var(--rule); }
+  .tbl td{ padding:.6rem .7rem .6rem 0; border-bottom:1px solid var(--rule-soft); vertical-align:top; }
+  .tbl td:first-child{ font-family:var(--mono); font-size:.8rem; color:var(--accent); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .tbl-wrap{ overflow-x:auto; }
+
+  footer.end{ border-top:1px solid var(--rule); padding:2rem 0 4rem; font-size:.83rem; color:var(--ink3); }
+  footer.end p{ max-width:60ch; }
+
+  @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }
+</style>
+
+<div class="shell">
+  <header class="mast">
+    <div class="eyebrow">
+      <span>PRD</span><span class="dot"></span>
+      <span>进食障碍全谱系</span><span class="dot"></span>
+      <span>软件赛道 · 滴水穿石</span><span class="dot"></span>
+      <span>命题 eazo</span><span class="dot"></span>
+      <span>刷至 08-25</span>
+    </div>
+    <h1>退潮</h1>
+    <div class="mast-meta">
+      <span><b>用户</b> 暴食／厌食／贪食患者及照护者</span>
+      <span><b>形态</b> 微信小程序 · 体验版 · 匿名无账号</span>
+      <span><b>状态</b> 62 屏可跑 · 构建期自检全绿</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <nav class="toc" aria-label="目录">
+      <ol>
+        <li><a href="#define">产品定义</a></li>
+        <li><a href="#thesis">三条核心论点</a></li>
+        <li><a href="#lived">亲历输入</a></li>
+        <li><a href="#answer">回应：情绪疏导</a></li>
+        <li><a href="#compete">竞品分析</a></li>
+        <div class="grp">产品</div>
+        <li><a href="#user">用户与场景</a></li>
+        <li><a href="#nope">产品原则</a></li>
+        <li><a href="#voice">语气原则</a></li>
+        <li><a href="#acute">急性期三屏</a></li>
+        <li><a href="#nutrition">营养与躯体层</a></li>
+        <li><a href="#mytaste">我写的滋味</a></li>
+        <li><a href="#mentors">四个人</a></li>
+        <li><a href="#group">定时小组</a></li>
+        <li><a href="#record">记录与风险</a></li>
+        <li><a href="#ally">照护者端</a></li>
+        <div class="grp">路演</div>
+        <li><a href="#backwards">从效果反推</a></li>
+        <li><a href="#demo">演示脚本</a></li>
+        <li><a href="#dist">分发</a></li>
+        <li><a href="#money">商业化</a></li>
+        <div class="grp">执行</div>
+        <li><a href="#look">呈现规格</a></li>
+        <li><a href="#tech">技术方案</a></li>
+        <li><a href="#build">执行顺序</a></li>
+        <li><a href="#scope">剩下的时间</a></li>
+        <div class="grp">依据</div>
+        <li><a href="#evidence">证据基础</a></li>
+        <li><a href="#safety">安全边界</a></li>
+        <li><a href="#open">未决问题</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <section id="define">
+        <div class="define">
+          <div class="dt">产品定义</div>
+          <p><strong>凌晨三点，发作正在发生的那一刻，市面上没有任何东西是开着的。</strong>咨询师不在。热线是开着的——<strong>但打过去，就有一个人知道了。</strong>而她最不能承受的正是这个：<em>越是看起来没问题的人，越不能让人知道自己有问题。</em><br><br>所以此刻唯一开着、而且她真的会打开的，是热量 App——它不需要她开口，也不会有人知道。<strong>而它只会让事情更糟。</strong><br><br>退潮是那个还开着的东西。它面向暴食谱系进食障碍患者及其照护者，匿名、无账号、无用户互动，只在三个时刻工作：冲动升起、发作进行中、发作之后。它不记热量、不记体重、不做任何形式的评分，但它会在发作后处理心理干预够不着的那一层——身体正在发生什么，以及哪些是必须去医院的。</p>
+        </div>
+        <p class="lede">下面全部内容都是在支撑这一段。先读这一段和三条论点，其余按需查。</p>
+        <div class="statement">这个产品里没有人。<br>没有账号，没有咨询师，没有任何人会知道你来过。</div>
+        <p>这不是隐私功能，是产品的地基。<strong>求助之所以难，不只是因为病难以启齿，更因为求助这个动作本身就是暴露</strong>——热线要开口、咨询要建档、跟朋友说要被记住。<em>而这个人群里越是高功能、越是"看起来一切都好"的人，越付不起这个代价。</em></p>
+        <div class="note">
+          <div class="nt">这一条往回推，解释了产品的大半设计</div>
+          <p>为什么无账号、为什么定时小组是零发言、为什么不做生成式对话、为什么坚决不把急性期流量导向按分钟计费的咨询——<strong>不是因为技术简单，是因为任何"有人在接收"的形式都是暴露。</strong></p>
+        </div>
+      </section>
+
+      <section id="thesis">
+        <div class="sec-label">Why</div>
+        <h2>三条核心论点</h2>
+        <div class="theses">
+          <div class="thesis">
+            <b>要解的不是有效性，是留存。</b>
+            <span>DBT 技能 App 对暴食有效已被大样本 RCT 证实（Linardon 等 2024，n=576，6 周客观暴食发作发生率比 0.69）。但同一项研究里，干预组 6 周脱落 48%，只有三分之一的人完成最后一个模块。行业整体更糟：心理健康 App 平均留存 5.5 天。<em>有效的方案已经存在，没人用完它。</em></span>
+          </div>
+          <div class="thesis">
+            <b>现有方案是纯心理的，躯体那一层是空的。</b>
+            <span>暴食与清除之后会发生一串具体的生理事件——水潴留被误读成变胖、血糖波动被误读成"还没吃够"、停止催吐后的反跳性水肿被误读成"停了就胖"。<em>这些误读是下一轮发作的直接引信，而它们全部可以用营养与生理知识拆掉。</em>纯心理干预不处理这些，也没有能力处理。</span>
+          </div>
+          <div class="thesis">
+            <b>暴食是最大的那一群，也是最不被看见的那一群。</b>
+            <span>终生患病率（Hudson 2007，NCS-R，女性）：暴食障碍 <strong>3.5%</strong>、贪食症 1.5%、厌食症 0.9%——<em>暴食障碍仍高于厌食与贪食之和</em>，却连 GBD 全球疾病负担研究都没把它单独纳入。中国方面，BN 年龄标化患病率约为 AN 两倍且持续上升，大样本女性中 7.04% 筛查阳性，而诊断率低、就诊延迟，治疗被指过度聚焦体重恢复。<em>公众注意力和医疗资源都压在"瘦"上，人最多的这一侧几乎没有声音。</em></span>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section id="lived">
+        <div class="sec-label">Design input</div>
+        <h2>亲历输入</h2>
+        <p class="lede">以下四条来自限制型厌食的亲历，不是文献。它们是本版几处关键改动的来源，也是这个产品与一份文献综述的区别所在。</p>
+
+        <div class="note">
+          <div class="nt">为什么限制型的经历对暴食产品成立</div>
+          <p><strong>限制是通往暴食最大的一条来路。</strong>限制型厌食患者中<strong>约四到六成</strong>会发展出暴食/清除型（研究跨度大，Eddy 随访约 55%，2022 年荟萃约 42%，62% 是文献上限不要当事实）；厌食患者中 20–50% 最终转为贪食症（一项 7 年纵向研究中为 34%）；7 年间超过一半的厌食女性在两个亚型之间来回穿越。<em>上游的经验不能冒充下游的经验，但它确实站在同一条河上。</em></p>
+        </div>
+
+        <h3>输入一 · 产品不制造动机</h3>
+        <p>原话：<strong>"改变发生在她想改变的时候。"</strong>突然有一天觉得不行、自己得活下去，说不清是怎么开悟的。</p>
+        <p><strong>产品含义</strong>：这是本产品最重要的一条定位约束。<em>退潮不试图让任何人想变好，它服务的是已经决定了的人，任务是把决定变成可执行的动作。</em></p>
+        <p>推论有两个：一是首屏不得有任何劝说、鼓励、励志内容；二是<strong>必须有一个"我还没打算改变"的入口</strong>，点进去不劝、不追踪、不列入任何流程，只留下急性期那三屏和红旗清单。假设所有打开的人都在恢复轨道上，是不诚实的，也会把那 48% 直接推走。</p>
+
+        <h3>输入二 · 数字的方向可以反过来</h3>
+        <p>原话：还是没办法正常进食，但<strong>一点点通过可以接受的食物增加热量，先把热量吃到 1800 大卡一天</strong>。</p>
+        <p><strong>产品含义</strong>：同一个数字，在两个方向上是相反的东西。<em>作为上限它是病，作为下限它是治疗。</em></p>
+        <div class="mech">
+          <div class="mt">但这一条不能直接搬到暴食侧</div>
+          <p>暴食谱系用户看到具体数字的风险是明确的（见 Levinson 与 Simpson 的数据），所以<strong>产品仍然不显示任何热量数字</strong>。真正要继承的是那个方向：<em>判断标准永远是"够不够"，不是"多不多"。</em></p>
+          <p>落到界面上：六格记录的空格代表的是缺口不是成绩；发作后的"下一餐照常吃"给的是餐盘结构而不是分量控制；产品从头到尾没有任何一处在衡量"吃多了"。<strong>这就是热量作下限这条洞察在暴食侧的形态。</strong></p>
+        </div>
+
+        <h3>输入三 · 冲突本身在制造症状行为</h3>
+        <p>原话：会偷偷藏食物或者扔掉，父母会批评。<strong>但那不是故意浪费</strong>——知道不该浪费，可这个病让人控制不住地想从食物上找回掌控欲。<strong>和父母沟通无效，又为了避免冲突，就会去干错事。</strong></p>
+        <p><strong>产品含义</strong>：这条链条是照护者端的全部设计依据。</p>
+        <div class="chain">照护者看见行为 → 读成浪费 / 撒谎 / 不听话 → 批评 → 沟通失败<br>→ 患者为避免冲突转入更隐蔽的行为 → 照护者更警觉 → 冲突升级</div>
+        <p>所以照护者端的核心不是话术库，是<strong>行为翻译器</strong>：把他看见的动作，翻译成它真实的意思。<em>而最该告诉他的一句话是：你的批评正在生产你想制止的那个行为。</em></p>
+
+        <h3>输入四 · 那句起作用的话</h3>
+        <div class="statement">你的人生才刚刚开始，只有你能定义自己。</div>
+        <p>它起作用的原因：<strong>"常常觉得干错一件事天就塌了"</strong>——而事实是可以随时重新开始。</p>
+        <p><strong>产品含义</strong>：这个"一件事做错等于全盘崩塌"的结构，<em>和暴食里的破戒效应是同一副骨架</em>——限制型表现为一口"错"的食物即全盘失败，暴食侧表现为"反正已经毁了，索性吃完"。<strong>所以这句话可以原样进产品，放在发作进行中那一屏</strong>，它和"你可以继续，这一次不会毁掉什么"是同一句话的两种说法，而这一种是被验证过的。</p>
+        <p>另外，康复研究里有一条与之对应：<strong>当生活角色与目标的重要性超过疾病身份时，康复被促进。</strong>"只有你能定义自己"正是这一条的日常语言版本。</p>
+      </section>
+
+      <section id="answer">
+        <div class="sec-label">Rebuttal</div>
+        <h2>回应："你 miss 掉了最重要的情绪疏导"</h2>
+        <p class="lede">这条评审意见指出了一个真实的缺口，但给出的解法会把产品推进最危险也最拥挤的位置。两件事要分开处理。</p>
+
+        <h3>他说对的部分：这个产品从头到尾都在派活</h3>
+        <p>"像一个老教授在那告诉我该怎么办"——这个描述是准确的，而且是设计缺陷，不是风格问题。翻一遍上一版的每一屏：<strong>分诊、动作、清单、红旗、下一餐结构</strong>，全部是指令。<em>产品里没有任何一个地方，用户只是被听见。</em></p>
+        <p>对一个以羞耻为核心驱动的疾病，"不断被指导"本身就在复现"你又做错了"的关系。这一版的修正见<a href="#voice">语气原则</a>与<a href="#group">被听见层</a>。</p>
+
+        <h3>还有一个现成的反例：知识本身可以是杠杆</h3>
+        <p>"工具是次要的"这个论断，有一个来自本项目内部的反例。<a href="#lived">亲历输入一</a>里那个转折点的描述是：<em>"可能也是随着自己营养学知识越学越多，意识到自己的问题了。"</em></p>
+        <p>但要放对位置，否则就成了为科普辩护：<strong>知识不制造动机</strong>——同一段亲历里说得很清楚，改变发生在她想改变的时候。<strong>但对一个已经决定了的人，足够具体的知识是最有力的工具。</strong>所以产品不以教育开场、不劝、不讲道理，却必须为已经决定的人备好极其具体的东西。这一条同时容纳了这条批评和那段经历。</p>
+
+        <h3>他说错的部分：DBT 就是情绪干预</h3>
+        <p>情绪调节与痛苦耐受是 DBT 的两个核心模块，也是目前针对这一人群<strong>证据最强的情绪干预框架</strong>。把"情绪疏导"等同于"一个会共情的 AI 陪你聊"，是把一种交付形式误当成了整个类别。</p>
+
+        <h3>为什么不做 AI 情绪陪伴：这件事在本领域已经出过重大事故</h3>
+        <div class="mech">
+          <div class="mt">Tessa 案 · 2023</div>
+          <p>美国最大的进食障碍组织 NEDA 用 AI 聊天机器人 Tessa 替换人工求助热线，<strong>上线不到一周即被迫下架</strong>。原因是 Tessa 向进食障碍求助者提供了：如何计算热量、建议每周减重 1–2 磅、限制饮食——<em>而且在被明确告知用户患有进食障碍之后，仍继续推荐热量限制与节食。</em></p>
+          <p>曝光此事的当事人 Sharon Maxwell 的原话是：<strong>"Tessa 建议的每一件事，都正是当年导致我患上进食障碍的东西。"</strong>NEDA 最初公开称其说法为谎言，在对方出示截图后删帖。</p>
+          <p>这不是"提示词写得不好"。它说明的是：<em>一个以共情和顺从为目标函数的生成式对话系统，在这个人群里的失败模式是给出节食建议，而这恰恰是致病机制本身。</em></p>
+        </div>
+        <p>换句话说，本产品那份不做清单的第一条——<strong>永不给出热量、且在用户索要时拒绝</strong>——正是 Tessa 翻车的那个点。<em>把产品重心移到生成式共情对话上，等于主动走回已知的事故现场。</em></p>
+
+        <h3>但缺口是真的，而且证据指向的方向不是 AI</h3>
+        <p>关于进食障碍康复转折点的质性研究反复指向同几件事：<strong>被理解与被接纳的感受</strong>、<strong>与不评判的人的连接</strong>、<strong>有相似经历者的同伴支持</strong>（"让人感到被理解、被连接、不那么孤单、属于某个群体"），以及<strong>生活角色的重要性超过疾病身份</strong>。促进因素被总结为：有同情心的个体化照护、同伴连接、以及亲历经验的整合。</p>
+        <div class="statement">证据要的是"被一个懂的人接住"，不是"被一个会共情的系统接住"。</div>
+        <p><strong>所以答案不是加一个聊天机器人，而是把本产品里唯一具备同伴属性的东西提到中心——定时小组与在场，并给它补上一个真正的被接收动作。</strong>这也是唯一既回应了缺口、又不违反不做清单的路径。</p>
+      </section>
+
+      <section id="compete">
+        <div class="sec-label">Landscape</div>
+        <h2>竞品分析</h2>
+        <p class="lede">结论先说：<strong>"AI 情绪陪伴"和"倾诉"是这张地图上最拥挤的两块，而暴食急性期与躯体层是空的。</strong>往中心挤是 48 小时里最没有胜算的打法。</p>
+
+        <h3>国内 · 倾诉与情绪疏导</h3>
+        <ul>
+          <li><strong>壹点灵</strong>——市场头部，2024 年付费咨询时长超 6 亿分钟、注册用户 4300 万。<em>这个体量说明"倾诉"不是空白，是一个已被规模化占据的成熟市场。</em></li>
+          <li><strong>松果倾诉、壹心理、武志红心理、央心倾诉、云朵倾诉</strong>等——同质化的按时长售卖咨询 / 会员制</li>
+          <li><strong>云愈心理</strong>——AI 算法 + 心理测评 + 树洞倾诉 + 冥想助眠 + 解压小游戏，形态最接近"情绪疏导 App"的国内样本</li>
+        </ul>
+        <h4>UI 共性（可直接借用与规避的）</h4>
+        <ul>
+          <li>暖色调、大圆角、大量插画与拟物化元素，整体走"被安抚"的视觉</li>
+          <li>首页是内容流或服务列表——<em>为浏览与转化设计，不为"此刻正在发作"设计</em></li>
+          <li>几乎都有测评入口，用测评做获客漏斗</li>
+          <li><strong>本产品要反着来的地方</strong>：首屏不是首页，是可用的东西；不做测评漏斗；视觉不追求"温暖治愈感"，因为深夜发作时高饱和暖色和插画是刺激而不是安抚</li>
+        </ul>
+
+        <h3>国际 · AI 情绪支持</h3>
+        <ul>
+          <li><strong>Woebot</strong>——CBT 取向，14 项随机对照试验，产后抑郁工具获 FDA 突破性设备认定。局限：纯文本、对话有脚本感、<em>明确不是为开放式情绪处理设计的</em></li>
+          <li><strong>Wysa</strong>——有同行评议研究，英国 NHS 部分数字路径在用。局限：明确声明<strong>不能处理危机与重症</strong>；AI 层实际是次要的，主体是冥想内容；使用几个月后推荐会平台化</li>
+          <li><strong>共同的硬数据</strong>：此类研究流失率可达 61%，且多依赖自我报告结局</li>
+        </ul>
+        <div class="note">
+          <div class="nt">这一栏对我们的意义</div>
+          <p>头部产品带着十几项 RCT 和监管认定。<strong>48 小时内做不出能与之比较的生成式对话产品，这是资源事实，不是志气问题。</strong>但注意 Wysa 那条局限——连它都把"不能处理危机与重症"写在明处，而暴食发作正是危机时刻。<em>这块空地是留给专门为危机窗口设计的东西的，不是留给又一个通用陪伴机器人的。</em></p>
+        </div>
+
+        <h3>进食障碍专门的 AI 尝试</h3>
+        <ul>
+          <li><strong>Tessa（NEDA）</strong>——唯一一个由权威机构推出的 ED 专用聊天机器人，已下架，详见上一章</li>
+          <li>目前<strong>没有找到</strong>面向暴食急性期（冲动 / 发作中 / 发作后）的专门产品，也<strong>没有找到</strong>任何产品处理清除行为后的躯体与营养后果</li>
+        </ul>
+
+        <h3>地图上的位置</h3>
+        <div class="spec">
+          <div class="spec-row"><span class="spec-k">最拥挤</span><span class="spec-v">通用情绪陪伴 / 倾诉<small>国内有 4300 万用户级的头部，国际有 14 项 RCT 的头部</small></span></div>
+          <div class="spec-row"><span class="spec-k">较拥挤</span><span class="spec-v">冥想、正念、测评<small>几乎每个产品的标配模块</small></span></div>
+          <div class="spec-row"><span class="spec-k">有先例但已翻车</span><span class="spec-v">ED 专用生成式对话<small>Tessa</small></span></div>
+          <div class="spec-row"><span class="spec-k">空</span><span class="spec-v">暴食急性期的三个窗口<small>连 Wysa 都声明不处理危机</small></span></div>
+          <div class="spec-row"><span class="spec-k">空</span><span class="spec-v">发作与清除之后的躯体与营养处理<small>本产品差异化的全部理由</small></span></div>
+          <div class="spec-row"><span class="spec-k">空</span><span class="spec-v">中文世界的暴食专门工具</span></div>
+        </div>
+      </section>
+
+      <section id="user">
+        <div class="sec-label">Users</div>
+        <h2>用户与场景</h2>
+
+        <h3>主用户：暴食谱系患者</h3>
+        <p>包含暴食障碍（无清除）与贪食症（有清除），以及大量未被诊断的亚临床人群。关键场景特征决定了整个产品形态：</p>
+        <ul>
+          <li><strong>隐秘。</strong>秘密进食反映进食与身体相关的羞耻，与抑郁和暴食行为相关；社交隐瞒与退缩是这个病的心理社会后果。<em>因此匿名不是产品偏好，是症状决定的硬约束——任何要求暴露给熟人的设计都在跟症状对着干。</em></li>
+          <li><strong>独处、夜间、突发。</strong>产品必须能在深夜被单手打开，且首屏就是可用的东西，不是首页。</li>
+            <li><strong>羞耻驱动复发。</strong>发作后的羞耻是下一次的燃料，所以任何让发作变成"被监视事件"的设计都会加重病情。</li>
+        </ul>
+
+        <h3>次用户：照护者</h3>
+        <p>与厌食不同，暴食的照护者通常<strong>什么都不知道</strong>，只是隐约察觉——食物少了、深夜有声音、垃圾、卫生间时间长、情绪突然掉下去。他真正的痛点是那一句"我好像发现了，但不知道该不该说破"。他自己下载，不被邀请，<em>与患者端完全不绑定、不互通</em>。</p>
+      </section>
+
+      <section id="nope">
+        <div class="sec-label">Principles</div>
+        <h2>产品原则（不做清单）</h2>
+        <p>任何新功能提案先过这份清单。这也是路演第一张片子。</p>
+        <div class="nope">
+          <ul>
+            <li>不显示热量、不显示宏量营养素克数
+              <small>包括"大约""参考值"这类软化说法</small></li>
+            <li>不记录体重、不画体重曲线、不计算 BMI</li>
+            <li>不做连续打卡天数、不做进度条、不做成就徽章
+              <small>有系统综述指出：提醒与真人支持能改善依从性，游戏化不能</small></li>
+            <li>不做用户之间的任何互动：无发帖、无回复、无私信、无关注、无个人主页
+              <small>进食障碍匿名社区的默认失败模式是变成 pro-ana——靠公约挡不住，只能靠结构上没有通道。<strong>08-25 补：「我写的滋味」里的「别人写的」不破这条</strong>——没有回复、没有楼、没有 ID、没有点赞（点赞就是评价），读到的是<strong>句子</strong>不是人，无从追踪也无从回应；和定时小组同一个思路，社交性只保留「有别人在」。而且门槛在结构上就挡住了 pro-ana 通道：数字、份量、身材词一律进不了公共池。</small></li>
+            <li>不做食物图像识别
+              <small>识别通往量化。技术上做得到，产品上不做，这条要在台上主动讲</small></li>
+            <li>不给食物贴道德标签，无"健康/不健康"分类</li>
+            <li>用户明确索要热量时，拒绝，并说明为什么拒绝</li>
+            <li>不给药物剂量建议，包括补钾、补镁在内的任何电解质补充剂量</li>
+            <li>不诊断、不评估严重程度、不替代治疗</li>
+          </ul>
+        </div>
+      </section>
+
+
+      <section id="voice">
+        <div class="sec-label">Principles · 新增</div>
+        <h2>语气原则</h2>
+        <p class="lede">这一章是针对"像老教授在告诉我该怎么办"这条评审意见新增的。它与不做清单同级，是可逐屏审查的硬规则，不是文案风格建议。</p>
+        <div class="nope">
+          <ul>
+            <li>任何一屏，<strong>第一句话不得是指令或提问</strong>
+              <small>上一版的冲动屏开口就是"你今天吃过东西吗"——第一个动作是审问。改为先说一句接住的话，再出选项</small></li>
+            <li>每一屏都必须有一个<strong>不是任务的选项</strong>
+              <small>"我现在什么都不想做"必须是一个可以点的东西，且点了之后不催、不追问、不记为失败</small></li>
+            <li>不用"应该""建议你""正确做法是"
+              <small>改为陈述事实或提供选择："这时候多数人会……""你可以……也可以先不……"</small></li>
+            <li>解释一律放在动作后面，且可折叠
+              <small>机制和依据是给评委和给状态好的时候看的，不是给发作当下的人看的</small></li>
+            <li>不出现进度、评价、总结性判断
+              <small>没有"你今天做得很好"，也没有"你已经连续 X 天"</small></li>
+            <li>用户写下的任何东西，产品只回一句收到，不分析、不生成报告、不引用回来</li>
+          </ul>
+        </div>
+        <div class="note">
+          <div class="nt">一句自查</div>
+          <p>把任意一屏念出来，问：<strong>这听起来像一个懂的人坐在旁边，还是像一份医嘱？</strong>如果是后者，把第一句删掉重写。</p>
+        </div>
+        <h3>08-21 补：这条自查长出了三把尺子</h3>
+        <p>六轮逐屏批注之后，上面那句自查裂成三条可分别执行的规则。<strong>这三条已经用在全部三十三屏上，逐字定稿见《01-给UI-定稿册》。</strong></p>
+        <div class="nope">
+          <ul>
+            <li><strong>说有什么，不说没什么</strong>
+              <small>否定句要被读懂，脑子必须先把被否定的那个东西造出来——「不用算成这个月的第几次」等于把一个现成的计数器发给本来没在数的人。<b>四处用同一招修掉了：</b>空格子那句整句删（给它配任何说明都是把它推到聚光灯下，说「是失分」和「不是失分」一样糟）／「饭就是饭」代替「食物没有好坏」／小组四个「没有」换成一句「屏幕上只有一个数字」。<b>例外只给急救</b>：否定此刻一个手部动作、且紧跟身体理由（别再喝水、别平躺、先别刷牙），留</small></li>
+            <li><strong>念出来，念整屏</strong>
+              <small>「过一两个小时又会饿」会说出口，「过一会儿还是空」不会。而且要连整屏一起念——我有一版单句读着对，放回整屏才发现和标题撞词</small></li>
+            <li><strong>屏幕上只有食物</strong>
+              <small>「1800」和「够不够」是做产品判断的语言，不是给用户的语言。判断依据写进这份文档，屏上只有桌上有几样。<b>同理「力气」可以说，但不往下接「才能做好什么」</b>——把吃饭的正当性挂在能做事上，对把价值挂在表现上的人会长出一个新条件：我今天什么也没做出来，那我不配吃。力量框架和热量框架一样，都是给吃饭设了理由，而有理由就可以被撤销</small></li>
+          </ul>
+        </div>
+        <div class="note">
+          <div class="nt">还有两条界线，是做全量审查才想清的</div>
+          <p><strong>命名她已有的念头 ≠ 造出她没有的。</strong>三件误读那一屏必须点名，因为她正在想那三件事；「算成这个月的第几次」不行，因为她本来没在数。<br>
+          <strong>按钮说她的话，正文说产品的话。</strong>「我知道我不是饿」「现在什么都不想回答」留着否定式，因为那是她自己会说出口的句子；产品自己的句子不行。</p>
+        </div>
+      </section>
+
+      <section id="acute">
+        <div class="sec-label">Core · P0</div>
+        <h2>急性期三屏</h2>
+        <p class="lede"><strong>08-20 定位澄清：这三屏是兜底，不是主体。</strong>三个时刻需要完全不同的东西，混在一起就什么都做不好——但打开这个 app 的默认理由不是「我要暴食了」。</p>
+        <div class="note">
+          <div class="nt">首页把这三个入口收成了一个</div>
+          <p>她的原话：<em>"不想一上来就『你来啦』然后选暴没暴食，好像点进软件就是为了暴食一样。"</em>所以首页只有一个<strong>「我现在不太好」</strong>，点进去才分岔（正在吃／很想吃／吃完了／<strong>吃不下·说不上来</strong>）。<br>
+          这一改同时解掉两件事：这句话<strong>不预设是暴食</strong>，限制型、回避型、夜食的人都能说，所以第四支给全类别留了口；而首页默认主体让给了日常那一层（每日滋味 → 今天怎么样 → 那场）。<strong>主线是提前接纳与化解，急性期是兜底。</strong><br>
+          屏级细节不在这份文档里：三十三屏的示意图与逐字定稿见《01-给UI-定稿册》，两份文档不重复。</p>
+        </div>
+
+        <figure class="tide">
+          <svg viewBox="0 0 720 200" role="img" aria-label="冲动强度随时间先升后降的曲线，横轴无刻度数字">
+            <defs>
+              <linearGradient id="tideFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--accent)" stop-opacity=".22"/>
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="0" y1="170" x2="720" y2="170" stroke="var(--rule)" stroke-width="1"/>
+            <path d="M0,170 C 90,168 130,60 210,42 C 268,29 300,58 360,88 C 440,128 530,162 720,169 L720,170 L0,170 Z" fill="url(#tideFill)"/>
+            <path d="M0,170 C 90,168 130,60 210,42 C 268,29 300,58 360,88 C 440,128 530,162 720,169" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="210" cy="42" r="3.4" fill="var(--accent)"/>
+            <text x="210" y="26" text-anchor="middle" font-size="13" fill="var(--ink3)">峰值</text>
+            <text x="10" y="190" font-size="13" fill="var(--ink3)">冲动升起</text>
+            <text x="710" y="190" text-anchor="end" font-size="13" fill="var(--ink3)">退潮</text>
+          </svg>
+          <figcaption>产品的中心隐喻，也是名字的来源。界面上不出现倒计时数字——看着秒数走本身会制造焦虑。</figcaption>
+        </figure>
+
+        <div class="feat">
+          <div class="feat-head"><span class="pri p0">P0</span><h3>屏一 · 冲动升起</h3></div>
+          <p class="feat-sub">最短的窗口，也是唯一可能改变结局的窗口。第一个动作不是安抚，是分诊。</p>
+          <div class="spec">
+            <div class="spec-row"><span class="spec-k">第一句</span><span class="spec-v">"你来了。先不用决定任何事。"<small>依语气原则：第一句不得是指令或提问。接住之后才出选项</small></span></div>
+            <div class="spec-row"><span class="spec-k">然后才问</span><span class="spec-v">你今天吃过东西吗？<small>反直觉但关键：如果是生理性饥饿，去吃一顿正经的才是对的，不是抵抗。压制身体的讨债只会让后面那次更猛</small></span></div>
+            <div class="spec-row"><span class="spec-k">分支 A</span><span class="spec-v">生理饥饿 → 直接给一份可执行的进食方案<small>蛋白质 + 复合碳水 + 脂肪三者都要有。纯蔬菜、纯代餐、"健康的一小份"在这里会失败并引发暴食</small></span></div>
+            <div class="spec-row"><span class="spec-k">分支 B</span><span class="spec-v">情绪触发 → 痛苦耐受技能<small>首选低温（冷水浸手/敷面），通过潜水反射快速降低生理唤起，几秒到几分钟起效，在认知已不可用时仍有效</small></span></div>
+            <div class="spec-row"><span class="spec-k">不做</span><span class="spec-v">不推荐剧烈运动<small>运动是代偿行为。通用 DBT 的 TIP 技能包含短时剧烈运动，这一项在本产品中删除，见证据基础</small></span></div>
+            <div class="spec-row"><span class="spec-k">常驻入口</span><span class="spec-v">"我还没打算改变"<small>点进去不劝、不追踪、不进任何流程，只保留急性期三屏与红旗清单。见<a href="#lived">亲历输入一</a>：产品不制造动机</small></span></div>
+            <div class="spec-row"><span class="spec-k">不做</span><span class="spec-v">自我安抚五感中删除"味觉"<small>通用清单常写"吃一块你喜欢的巧克力"，等于把食物正式登记为情绪调节工具，而那恰是要解构的机制。替换为薄荷、冷水漱口等非摄入方式</small></span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><span class="pri p0">P0</span><h3>屏二 · 发作进行中</h3></div>
+          <p class="feat-sub">几乎所有产品放弃的时刻，本产品最有差异化的一屏。目标不是阻止，是降低"已经毁了"的程度。</p>
+          <div class="mech">
+            <div class="mt">机制依据</div>
+            <p><strong>破戒效应</strong>（abstinence violation effect，正式术语为反调节性进食 counterregulatory eating）：导致一场完整暴食的不是那一口，是"我已经失败了"这个念头以及随之而来的羞耻，把一次越界滚成全盘放弃。<em>因此打断这个念头本身，就是在减少摄入量。</em></p>
+          </div>
+          <div class="spec">
+            <div class="spec-row"><span class="spec-k">第一句</span><span class="spec-v">"你可以继续。这一次不会毁掉什么。"<small>不是安慰，是针对破戒效应的直接干预</small></span></div>
+            <div class="spec-row"><span class="spec-k">第二句</span><span class="spec-v">"你的人生才刚刚开始，只有你能定义自己。"<small>来自<a href="#lived">亲历输入四</a>，针对的是"干错一件事天就塌了"这个结构。上面那句拆的是这一次，这句拆的是整个人生被一次发作定义</small></span></div>
+            <div class="spec-row"><span class="spec-k">一个动作</span><span class="spec-v">坐下 / 开灯 / 用碗 / 把包装扔掉<small>不要求任何意志力。目的不是让她停，是让发作从"站在冰箱前"变成"坐在桌前"，降低事后羞耻</small></span></div>
+            <div class="spec-row"><span class="spec-k">在场</span><span class="spec-v">此刻还有多少人在这个窗口里<small>发作的典型状态是独处 + 羞耻 + "只有我这样"，一个数字直接打击第三项</small></span></div>
+            <div class="spec-row"><span class="spec-k">严禁</span><span class="spec-v">不计时、不计数、不问吃了什么、不弹"你确定还要继续吗"<small>任何让它变成被监视事件的设计都会加重羞耻，从而加重下一次</small></span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><span class="pri p0">P0</span><h3>屏三 · 发作之后</h3></div>
+          <p class="feat-sub">"补救"这个词要被拆掉。补救行为本身是病灶——催吐、断食、明天少吃、狂运动，既是诊断标准里的代偿行为，也是下一次的直接原因。</p>
+          <p>但只说"别补救"就是上课。这一屏给的是具体替代动作，而这些动作几乎全部落在营养与生理知识里，构成下一章。</p>
+          <div class="spec">
+            <div class="spec-row"><span class="spec-k">分诊</span><span class="spec-v">是否有清除行为（催吐 / 泻药 / 利尿剂）<small>两条完全不同的路径。有清除 = 进入躯体安全流程</small></span></div>
+            <div class="spec-row"><span class="spec-k">解释</span><span class="spec-v">你现在感觉到的是什么<small>腹胀多久消、明早那个数字是什么、几小时后又饿是怎么回事——把误读拆掉</small></span></div>
+            <div class="spec-row"><span class="spec-k">行动</span><span class="spec-v">下一餐怎么吃，具体到时间与结构</span></div>
+            <div class="spec-row"><span class="spec-k">红旗</span><span class="spec-v">随时可查的就医阈值清单</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="nutrition">
+        <div class="sec-label">Core · P0 · 差异化</div>
+        <h2>营养与躯体安全层</h2>
+        <p class="lede">这一章是本产品区别于已有 DBT App 的全部理由。Linardon 那个经过 RCT 的产品是纯心理干预——它不会告诉你心悸意味着什么，也不会告诉你明早体重秤上那个数字是水。</p>
+
+        <h3>路径 A · 单纯暴食（无清除行为）</h3>
+        <p>核心任务只有一个：<strong>拆掉三个会引发下一轮的误读。</strong></p>
+
+        <div class="mech">
+          <div class="mt">误读一 · 体重</div>
+          <div class="chain">大量碳水 → 糖原合成（每 1 g 糖原结合约 3–4 g 水）+ 钠潴留 + 食物本身重量<br>→ 次日体重上升 → 误读为"我胖了" → 断食 / 催吐 → 下一轮</div>
+          <p>产品要说的是：<em>这几天的秤代表不了脂肪，称了也没有用。</em>并建议这几天不称重。</p>
+          <div class="note" style="margin:.8rem 0 0"><div class="nt">上一版在这里说过头了，已改</div><p>原文写的是"不是脂肪，通常 48–72 小时回落"。<strong>"不是脂肪"是假的</strong>——一次大量能量盈余确实会存下一部分；<strong>48–72 小时也不是保证</strong>。如果用户照做、第三天没掉，产品就成了骗子，而她会退回限制或清除。<em>只讲方向，不给时限。</em></p></div>
+        </div>
+
+        <div class="mech">
+          <div class="mt">误读二 · 几小时后又饿了</div>
+          <div class="chain">大量精制碳水 → 血糖快速升高后回落 → 数小时后出现饥饿、手抖、乏力、犯困<br>→ 误读为"我还是没吃够"或"我又要发作了" → 下一轮</div>
+          <p>解释它就能打断它。这是最常被误解、也最容易澄清的一环。</p>
+        </div>
+
+        <div class="mech">
+          <div class="mt">误读三 · 下一餐该少吃</div>
+          <p>唯一正确的做法是<strong>下一餐照常吃，且必须含蛋白质、复合碳水、脂肪</strong>。做成"清淡的一碗蔬菜汤"是限制，会直接引发下一次。但"照常吃"三个字对刚发作完的人太抽象——<em>产品必须给到具体的时间与餐盘结构，判断标准是"够不够"，不是"多不多"。</em>这也正好把 DBT 情绪调节模块 PLEASE 里那句空泛的"平衡饮食"落到地面上。</p>
+        </div>
+
+        <h4>其余可执行项</h4>
+        <ul>
+          <li>不平躺，上半身抬高（减少反流）</li>
+          <li>温水少量多次，不要猛灌（加重腹胀）</li>
+          <li>散步可以，但要与运动代偿明确区分。<strong>判断标准</strong>：是否为了"抵消"而做、是否超出平时量、是否带有强迫感。三条中一条成立即为代偿</li>
+        </ul>
+
+        <h3>路径 B · 有清除行为</h3>
+        <p>这条路径是真正的医学问题，也是产品里唯一涉及生命风险的部分。</p>
+
+        <div class="mech">
+          <div class="mt">病理生理链条</div>
+          <div class="chain">自我诱吐 → 丢失胃液（盐酸、钾、钠、氯）→ 低氯性代谢性碱中毒<br>容量丢失 → 肾素-血管紧张素-醛固酮系统激活 → 继发性醛固酮增多<br>→ 肾脏排钾保钠 → <strong>低钾血症</strong>（可致心律失常，严重时致死）<br>低镁 → 补钾无效的难治性低钾<br>泻药滥用 → 方向相反的代谢性酸中毒 + 低钾<br>利尿剂滥用 → 低钾 + 低钠</div>
+        </div>
+
+        <div class="mech">
+          <div class="mt">最值钱的一条 · 停止催吐后的反跳性水肿</div>
+          <p>停止清除行为后，醛固酮仍处于高位，导致显著的水钠潴留，体重会明显上升（文献中称为假性 Bartter 综合征）。<strong>幅度和持续时间因人而异，可能比想象的久</strong>——有资料记载停清除后数日到峰、可持续数周、部分人在医疗场景下需要药物处理。<em>产品只讲方向，绝不给时限</em>：说"一到两周"而实际肿到第三周的人，会理解成"你说错了，还是该吐"。</p>
+          <p><em>患者会把它读成"我一停下来就胖了"，然后恢复催吐。</em>这可能是整个疾病里最残酷的一个陷阱：<strong>正确的行为在短期内产生了看起来最像失败的结果。</strong>而几乎没有人提前告诉过她这件事。</p>
+          <p>产品在这里做的事很简单——<strong>提前告诉她</strong>：如果你打算停，接下来一到两周体重会上去，那是水，不是你失败了。这一条不需要任何技术，但可能是全产品最能改变结局的一句话。</p>
+        </div>
+
+        <div class="twocol">
+          <div class="col do">
+            <div class="ct">产品可以给的</div>
+            <ul>
+              <li>红旗症状识别与就医阈值，并说明到医院要查什么（电解质、心电图）</li>
+              <li><strong>一小口一小口地补液体，不要猛灌</strong>——胃已经胀的人再灌一大包，是胃扩张的反操作</li>
+              <li>明确警告：大量灌白水不能纠正电解质紊乱，且会稀释血钠，有低钠血症风险</li>
+              <li><strong>但也要明确：口服补液盐同样纠不了清除导致的低钾，它不是电解质紊乱的家庭解法。</strong>心悸、抽搐、严重乏力不要在家自救</li>
+              <li>催吐后 30 分钟内不要刷牙（酸性环境刷牙加速釉质磨损），先用<strong>清水或含氟漱口水</strong>漱口，之后顺着牙横向轻刷<small style="display:block;color:var(--ink3)">08-21 更正：原写「碳酸氢钠水（小苏打）」。文献原话是水或含氟漱口水（CCJM 2021;88(6):333＋ACUTE＋StatPearls）；小苏打中和酸有其道理，但查不到任何进食障碍患者教育指引这么写，含氟漱口水才是有出处的那一个</small></li>
+              <li>不平躺，上半身抬高</li>
+              <li>泻药作用于结肠，对能量吸收影响极小——直接拆掉"泻药有用"这个信念</li>
+            </ul>
+          </div>
+          <div class="col dont">
+            <div class="ct">产品绝不能给的</div>
+            <ul>
+              <li>任何补钾、补镁的剂量建议。高钾血症同样致命，判断需要血液检查</li>
+              <li>任何"排毒""刮油""代谢重启"方案</li>
+              <li>代餐、轻食、清淡饮食建议——那是限制的另一种说法</li>
+              <li>任何形式的运动建议</li>
+              <li>基于症状的诊断结论</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flags">
+          <div class="ft">红旗症状 · 出现即就医或急诊</div>
+          <ul>
+            <li><b>心悸、心律不齐、胸闷</b><small>可能提示低钾导致的心律失常</small></li>
+            <li><b>严重肌无力、抽搐、四肢麻木刺痛</b><small>电解质紊乱的典型表现</small></li>
+            <li><b>意识模糊、晕厥、极度乏力</b></li>
+            <li><b>呕血</b><small>贲门黏膜撕裂（Mallory-Weiss）</small></li>
+            <li><b>剧烈胸痛伴颈部或胸部皮下捻发感</b><small>食管破裂（Boerhaave 综合征），致死率高，属急诊</small></li>
+            <li><b>大量进食后严重腹胀腹痛且不缓解、腹部发硬、吐不出来</b><small>急性胃扩张，罕见但可致胃壁坏死或破裂。<b>此时应立即停止进食与进水并就医</b>——注意这与本产品"下一餐照常吃"的常规建议冲突，红旗优先</small></li>
+            <li><b>觉得活不下去</b><small>发作后的羞耻窗口是自杀风险窗口。此条与内科红旗并列常驻，配可拨打的号码</small></li>
+          </ul>
+          <div class="note" style="margin-top:1rem">
+            <div class="nt">号码必须真实可拨，上台前逐个打通验证</div>
+            <p>全国心理援助热线 <strong>12356</strong>、急救 <strong>120</strong>，以及本地有进食障碍专科的机构。<em>上一版说"凌晨三点热线不在"——这是错的，国内确有 24 小时值守的心理援助热线</em>，产品不能既错报现状又不给号码。</p>
+          </div>
+        </div>
+
+        <div class="note">
+          <div class="nt">必须设一道闸门 · 再喂养综合征</div>
+          <p>长期严重限制、低体重的人群在恢复进食时存在<strong>再喂养综合征</strong>风险（低磷、低钾、低镁、硫胺素缺乏，可致命）。这类用户不适用本产品的"下一餐照常吃"建议。</p>
+          <p><strong>上一版这里是口号，不是分叉，已重写。</strong>原来的筛查问题是"是否处于长期限制或体重明显下降"——太模糊，靠自我认知判断。而暴食谱系里大量人有间歇限制和体重起伏：这句话要么把主用户拦在门外，要么把刚从限制转过来的低体重者放进"下一餐照常吃"。<em>后者是真会出事的人，而且恰好就是本产品作者亲历的那一类。</em></p>
+          <h4>改成不可跳过的第一叉，问行为不问身份</h4>
+          <ul>
+            <li>最近两周有没有几乎不吃东西的日子？</li>
+            <li>体重最近在往下掉吗？</li>
+            <li>有没有人说过你太瘦？</li>
+          </ul>
+          <p><strong>任一条为「是」→ 立即关闭「下一餐照常吃」与全部进食方案，只保留红旗清单与一句：这种情况下恢复进食需要医疗监护，不能自助。</strong></p>
+          <p>参考依据方向（<span class="tag todo">待核实</span>需落实到原文）：NICE 的再喂养高危标准是有具体数字的——BMI 低于某阈值、数月内非故意减重超过一定比例、近十天几乎无摄入、或已存在低磷低钾低镁。<em>产品不做诊断，但闸门的问题应当照着这些维度去设计，而不是问"你觉得自己是不是"。</em></p>
+        </div>
+      </section>
+
+      <section id="mytaste">
+        <div class="sec-label">Core · P0 · 08-25 新增</div>
+        <h2>我写的滋味</h2>
+        <p class="lede">这一层要解的是她自己说过的那句话——<strong>「我的食物滋味消失了是不是」</strong>。那句话说的不是舌头坏了，是<strong>一个人对食物的语言只剩下数字</strong>：她说不出「香」，只能说「多少卡」。所以这一层做的不是记录吃了什么（那是评价她），是把形容词还回去。</p>
+
+        <div class="mech">
+          <div class="mt">为什么落点是滋味，而不是别的</div>
+          <p>病理是：<em>进食障碍不是失控，是掌控用错了地方</em>。她们不缺自律，自律是全场最强的，问题是它指向了「少吃」。掌控欲消灭不了、也不该劝人放手（劝就是评价），只能改道。</p>
+          <p>落点用两把尺子筛：<strong>① 被精密掌控到极致会变成新症状吗？② 会让她继续在食物上投入精确性吗？</strong>滋味是唯一同时过两条的——推到极致是变成一个会说味道的人（无害），而味道没有正确答案、不能被量化，往这个方向走是<strong>离开</strong>精确。<em>它「看起来轻」和它「安全」是同一件事的两面。</em></p>
+          <p>被这两把尺子判死的方向记在这里，别重走：任何「算给她看」的东西（热量、GI、吸收率、这一顿之后会怎样）都是给一个算术能力极强、掌控欲过剩的人一件更精密的仪器；「让她来当食物库的录入员」要的正是极度的精确，是把症状的核心动作包装成美德。</p>
+        </div>
+
+        <h3>流程</h3>
+        <p>每日滋味卡展开 → 写下它是什么样的 → 五个角度 → 存 → 卡面上系统那段被换成她自己的话 → （写过之后才出现）看别人写的。</p>
+
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">五个角度</div><div class="spec-v">色 / 香 / 味 / 声 / 质地。<strong>没有好坏轴</strong>——这是它比「好不好吃」强的地方。「声」尤其好：没人会用声音评判一个人的品行。</div></div>
+          <div class="spec-row"><div class="spec-k">全空</div><div class="spec-v">不存，那天仍旧显示系统那句。没吃过、想不起来、不想写，都走这条。</div></div>
+          <div class="spec-row"><div class="spec-k">抹除</div><div class="spec-v">她写过之后，那张卡的系统描述被她自己的话替换。<strong>用久了整本卡都是她自己写的。</strong></div></div>
+          <div class="spec-row"><div class="spec-k">再写一条</div><div class="spec-v">同一样食物可以写很多条，<strong>不覆盖</strong>，按日期排开。</div></div>
+          <div class="spec-row"><div class="spec-k">别人写的</div><div class="spec-v">同一样食物别人写过的句子。<strong>先写后看</strong>，且<strong>另开一屏不并排</strong>。</div></div>
+        </div>
+
+        <div class="mech">
+          <div class="mt">核心机制：存下来 ≠ 给别人看</div>
+          <p>这是整层的地基，也是那道门槛不伤人的原因。<strong>她写什么都存，永远在她自己手机里；门槛只决定这条会不会进公共池。</strong></p>
+          <p>所以她写「恶心」——<strong>照存</strong>，屏上那句是<em>「这一条只留在你这儿」</em>，不是拒绝，是说明去向。<strong>产品从头到尾没有否定过她任何一个字，而公共池仍然干净。</strong></p>
+          <p>此前设计里「拒绝还是引导、删掉是不是强权」这个死结解不开，正是因为把<strong>存下来</strong>和<strong>给别人看</strong>捆在了一起。它们本来就是两个不同的权限。</p>
+        </div>
+
+        <div class="mech">
+          <div class="mt">门槛不是正能量过滤器，是「描述 vs 判断」过滤器</div>
+          <div class="spec">
+            <div class="spec-row"><div class="spec-k">恶心</div><div class="spec-v">拦。「这是判断，不是味道。」——它是身体反应加评价，既不是气味也不是滋味。</div></div>
+            <div class="spec-row"><div class="spec-k">像屎一样</div><div class="spec-v">拦。「这是个比喻。」</div></div>
+            <div class="spec-row"><div class="spec-k">入口即化</div><div class="spec-v">拦。<strong>理由和「恶心」一模一样</strong>——都不是描述。规则对称，不偏向好话。</div></div>
+            <div class="spec-row"><div class="spec-k">臭 / 酸了 / 发苦 / 黏手 / 凉了</div><div class="spec-v"><strong>放行。</strong>臭是真实的气味——臭豆腐、臭鳜鱼、蓝纹奶酪。</div></div>
+          </div>
+          <p><em>台上那句：<strong>我们不要求她说好话，只要求她说的是味道。</strong></em>如果只让填愉快的感受，那是另一种压力。</p>
+        </div>
+
+        <h3>三条不能改的规则</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">提示一次</div><div class="spec-v">第一次那一栏下面出一句，<strong>字不清空</strong>；再写同一个词就直接收下，<strong>不提示、不解释、不安慰</strong>。<em>沉默是唯一不评价的回应。</em></div></div>
+          <div class="spec-row"><div class="spec-k">没有「提交失败」</div><div class="spec-v">空着有默认值（系统那句），所以任何时候都能走开、卡片一定存得下来。<strong>这个默认值是让整道门槛不伤人的那个零件</strong>——没有它，「引导」就变成「你不改就别想走」。</div></div>
+          <div class="spec-row"><div class="spec-k">不夸、不计数</div><div class="spec-v">她再写一条，产品<strong>什么都不说</strong>，只把两条并排放着。夸会给变化定方向——<em>如果这次写的比上次更难受呢</em>。只显示日期，不显示「第 3 条」（计数就是打卡，见 s-passed「不用算成这个月的第几次」）。</div></div>
+        </div>
+
+        <div class="note">
+          <div class="nt">这不是被否决过的那个社区</div>
+          <p>不做论坛式社区、不做用户互动这条不变：<strong>没有回复、没有楼、没有 ID、没有点赞</strong>（点赞就是评价，直接违红线）。读到的是<strong>句子</strong>，不是人，无从追踪也无从回应。和定时小组同一个思路——社交性只保留「有别人在」，不保留互动。<strong>另外：不叫「评价」，叫「别人写的」。</strong></p>
+          <p>两条硬规则的理由：<strong>先写后看</strong>是防止她照着别人的写（那就不是她的滋味了）；<strong>不并排</strong>是因为并排就是比较，那等于给她一根新的尺子。</p>
+        </div>
+
+        <div class="mech">
+          <div class="mt">AI 只判语言，不写内容</div>
+          <p>模型出现在两个地方，<strong>两处都不许它写字</strong>：判「这是描述还是判断」，判「这段串联有没有换词」。</p>
+          <p>串联是把五个角度接成一句她自己的话，<strong>一个词都不许换</strong>。如果 AI 把「黏手」改成「绵密」，她并没有重新拥有形容词——<em>拥有的是 AI 的</em>。逐词校验：<strong>她写的每个词都必须原样留在结果里</strong>，过不了就退回纯规则拼接。</p>
+
+          <div class="note">
+            <div class="nt">08-25 修：不换词 ≠ 不加字</div>
+            <p>第一版只用句号连缀，热牛奶那张卡出来是——</p>
+            <p><em>「白色。香甜。暖呼呼的味道。没有。软软的，流动。」</em></p>
+            <p>两处错：① <strong>五个碎片摆在一起不是话</strong>；② 「没有」是她在「声」那栏写的（热牛奶确实没声音），本来等于空着，却占了一句。</p>
+            <p>改法：<strong>空的那一栏不占句</strong>（「没有」「说不上来」这类等同空）；<strong>短的形容词加骨架字</strong>——「香甜」→「闻着香甜」，吃的用「吃着」、喝的用「喝着」。现在是——</p>
+            <p><em>「白色。闻着香甜。喝着暖呼呼的味道，软软的，流动。」</em></p>
+            <p><strong>她的词一个字没动，只是有了句子的骨架。</strong>校验方向因此反过来：查她的词还在不在，不查有没有多出字——骨架字本来就是多出来的，那是句子的骨头不是替换。</p>
+            <p>已经成句的不插手（「整只手都是那个味」加「闻着」读着别扭）。判据用长度不用正则查动词：<small>试过列动词表（是/有/都/一…），结果把「什么都不加也有一点甜」也当成句了——那几个字在形容词里同样常见。拿正则做中文句法判断走不通。</small>中间那段宁可不加——<em>少一个字不难看，加错才难看</em>，而写作规则里本来就有一条「句子短，断得生硬也行」。</p>
+          </div>
+          <p>依据在证据章：Pucci 2026（临床标注 268 对中仅 44.7% 安全）、Bilen 2026（五个主流模型给青少年餐单平均低估 695 kcal）、Tessa 一周下架。<strong>在这个产品里让模型生成内容是有生命危险的。</strong></p>
+        </div>
+
+        <div class="mech">
+          <div class="mt">这一层的立场是机器验证的，不是文档里的声明</div>
+          <p><code>chk.mjs</code> 每次构建跑三条硬断言：<strong>写了「恶心」必须存得下来</strong>（存≠给别人看）、<strong>「入口即化」必须和「恶心」同罪</strong>（门槛对称不偏向好话）、<strong>润色过的串联必须被退回</strong>（AI 不写内容）。任何一条塌了构建失败。</p>
+          <p><em>评委问「你怎么保证 AI 不写内容」，答案是一行命令，不是一段话。</em>另有 <code>.sync-mp/mytaste-check.mjs</code> 26 条自检。</p>
+        </div>
+
+        <h3>技术与范围</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">存</div><div class="spec-v"><code>data/mytaste.js</code>，本机 <code>wx.setStorageSync</code>，按食物名索引、多条带日期。数据不出设备。</div></div>
+          <div class="spec-row"><div class="spec-k">读别人的</div><div class="spec-v"><code>data/others.js</code> 静态公共池，跟小程序一起发。<strong>读不需要后端</strong>——这一层不押在云开发上。种子 12 样食物 18 条，全部取自已有定稿内容。</div></div>
+          <div class="spec-row"><div class="spec-k">写进公共池</div><div class="spec-v"><strong>下一版。</strong>那一步才需要后端与审核。</div></div>
+          <div class="spec-row"><div class="spec-k">屏</div><div class="spec-v"><code>taste-write</code> / <code>taste-others</code>，挂在 <code>runtime-screens.js</code>——原型是 26 屏文案的唯一源，这两屏是功能屏不是文案屏。</div></div>
+        </div>
+
+        <div class="note">
+          <div class="nt">摆摊怎么演</div>
+          <p>初评是摆摊不是台上路演，评委一次可能只给 15–60 秒，而且<strong>随时会走</strong>。让评委自己写一句、故意被提示一次——那一下他同时明白了三件事，<strong>而且是他自己发现的，不是你讲的</strong>。</p>
+          <p><em>这个演示不依赖现场人流</em>：别人写的是静态种子，墙不会是空的。</p>
+        </div>
+      </section>
+
+      <section id="mentors">
+        <div class="sec-label">Core · P0 · 08-25 新增</div>
+        <h2>四个人</h2>
+        <p class="lede">这一层回应的是那条评审意见——「你 miss 掉了最重要的情绪疏导」。<strong>但它不是生成式共情对话，而且正因为不是，它才能上线。</strong></p>
+
+        <div class="box warn" style="background:var(--rust-soft);border:1px solid var(--rust);border-radius:3px;padding:16px 20px;margin:18px 0">
+          <div class="nt" style="color:var(--rust)">为什么不让模型自由说话</div>
+          <p>「不做生成式共情对话」这条已冻结，决定性论据是 <strong>Tessa</strong>——NEDA 那个机器人对已告知患 ED 的用户仍推荐热量限制，一周下架。后来的证据更狠：<strong>Pucci 2026</strong>（临床标注 268 对中仅 44.7% 安全）、<strong>CCDH</strong>（ChatGPT 对假装 13 岁者给 0 卡计划并教其隐瞒家人）、<strong>Bilen 2026</strong>（五个模型给青少年餐单平均低估 695 kcal）。</p>
+          <p><em>带人设更险</em>：「以某某的口吻」是绕过对齐的经典手法。</p>
+          <p><strong>也不用真人名。</strong>精神分析对进食障碍的经典解释是口欲期固着、对母亲的攻击、拒绝性成熟——把这套话对患者说出来，是把病因归到她的欲望和家庭关系上。<em>而那不是模型跑偏，是忠实还原人设的结果。</em></p>
+        </div>
+
+        <h3>四个人是产品四个层的化身</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">过潮</div><div class="spec-v">先过这一阵 —— 对应 DBT 定时小组与急性期三屏</div></div>
+          <div class="spec-row"><div class="spec-k">听声</div><div class="spec-v">念头不等于事实 —— 对应 CBT 与破戒效应那一屏</div></div>
+          <div class="spec-row"><div class="spec-k">同行</div><div class="spec-v">不用先感觉好 —— 对应「产品不制造动机」那条原则</div></div>
+          <div class="spec-row"><div class="spec-k">落地</div><div class="spec-v">此刻的身体 —— 对应滋味层与正念课</div></div>
+        </div>
+        <p><em>不是外挂一个聊天功能，是让已有的四层各自开口说话。</em></p>
+
+        <h3>架构：AI 只判语言，不写内容</h3>
+        <pre style="background:var(--sunk);border:1px solid var(--rule-soft);border-radius:3px;padding:13px 15px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6">她写下今天的状态
+  ↓  1 本地关键词    零成本、零延迟、断网可用
+  ↓  2 模型          本地没中才调，只输出一个分类标签
+  ↓  3 接不住        两级都没中
+四段回应 ← 全部来自 data/mentor.js，没有一句是现场生成的</pre>
+        <p>模型只可能返回四个已知标签之一（三类困境 + none），回了别的一律当 none。<strong>这一步是硬闸：模型返回的东西永远只能是一个 key，不会变成屏上的字。</strong>与滋味层同一条立场，整个产品一句话讲完。</p>
+        <p><strong>实测 8/8</strong>（deepseek-v4-flash，用产品里那一份 prompt）：三类困境六条各自命中，两条无关的话正确返回 none。<em>给模型一个说「不知道」的出口，比调 prompt 有用得多。</em></p>
+
+        <h3>几条不能改的</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">四段默认收起</div><div class="spec-v">四个人同时说话是这个产品里<strong>评价密度最高</strong>的形态。收起之后主动权回到她手上。<small>（也是排版的必然：四段各三行量出来 896px，超一屏 146px。腾空间靠减元素不靠缩字号。）</small></div></div>
+          <div class="spec-row"><div class="spec-k">不排名</div><div class="spec-v">顺序固定，没有「最适合你的」——<strong>排名就是评价</strong></div></div>
+          <div class="spec-row"><div class="spec-k">不存原话</div><div class="spec-v">只存「日期 · 主题 · 主导那一位」。<em>她写下的东西不被引用回来</em>（语气原则第六条）</div></div>
+          <div class="spec-row"><div class="spec-k">等待期不说「正在分析」</div><div class="spec-v">那句话把她变成被分析的对象。屏上只说这一头在做什么。</div></div>
+          <div class="spec-row"><div class="spec-k">分诊例句不上屏</div><div class="spec-v">上屏会变成「原来我该这么想」。<code>chk.mjs</code> 扫这一条。</div></div>
+        </div>
+
+        <div class="mech">
+          <div class="mt">「这个我接不住」不是失败，是立场</div>
+          <p>两级都没认出来时，屏上是：<em>「这儿只有那三种说法，你说的不在里面。不是你说得不清楚，是这里就这么大。」</em></p>
+          <p><strong>一个知道自己边界的产品，比一个什么都敢答的可信。</strong>不说「我不理解你」——那是评价她的表达。</p>
+        </div>
+
+        <div class="mech">
+          <div class="mt">这一层的立场同样是机器验证的</div>
+          <p><code>chk.mjs</code> 每次构建断言：每一类 × 每一个人都有话说 · <strong>12 段语料过写作规则</strong>（指令词／热量／够不够／评价词／比喻／夸与进度，两头都收）· 分诊例句没上屏 · 认不出有兜底 · 分诊不会把无关的话硬塞进某一类。</p>
+        </div>
+
+        <h3>范围</h3>
+        <p>语料现为 <strong>三类困境 × 四个人 = 12 段</strong>。覆盖不到的走「接不住」。<em>演示时评委只会试一两次，他看的是「四个人各自说了不同的话」这件事本身，不是覆盖率。</em>扩类只需往 <code>CASES</code> 里加，代码不用动。</p>
+      </section>
+
+      <section id="group">
+        <div class="sec-label">Core · P0 · 已升级为中心</div>
+        <h2>定时小组与被听见层</h2>
+        <p class="lede">上一版这一章是"针对留存的一个功能"。这一版它被提为产品的中心，因为它是<strong>唯一一条既回应"缺情绪疏导"、又有循证支持、又不违反不做清单的路径</strong>——康复研究指向的是同伴连接与被理解，而这里是产品中唯一具备同伴属性的地方。</p>
+
+        <p>社交性只保留一样：<strong>同时性</strong>。到点进入，跟一段十到十五分钟的引导流程，屏幕上唯一的社交信息是"此刻有多少人在做同一件事"。<strong>台上和屏上都这么说：「屏幕上只有一个数字：此刻多少人在。」</strong>——说清有什么，剩下的就自动没了；而四个"没有"会把"被看见"逐个请上屏。</p>
+
+        <div class="mech">
+          <div class="mt">08-20 补：这一层打的是一个已被测出的中介变量</div>
+          <p>零发言小组不是"退而求其次的社交"。Southward 等 2013（<i>Eat Weight Disord</i>，n=107 BN/BED）测出情绪失调→暴食病理<strong>由孤独中介</strong>（95% CI 0.03–0.09），而<strong>反向路径不成立</strong>（CI −0.01–0.01）。Esplen/Garfinkel/Gallop 2000 同一批 n=50 也给出链条：自我安抚接受度↓ ↔ 唤起性记忆能力↓ ↔ 孤独↑。</p>
+          <p><em>所以"此刻多少人在"是在不暴露任何人的前提下对孤独直接下手</em>——这也是它为什么值得占用唯一的后端。<strong>三条防线：</strong>措辞落在窗口和难度上，不落在行为上；<strong>人数为 0 或 1 时整块不显示</strong>（凌晨三点看到"还有 0 个人"比看不到更糟）；只在小组那一条和发作那一屏各出现一次。</p>
+        </div>
+
+        <div class="note">
+          <div class="nt">为什么是定时小组，而不是一个技能模块</div>
+          <p>被动模块随时可做，所以永远不做——这正是 Linardon 那项 RCT 里"只有三分之一完成最后模块"的形态。定时小组提供的是时间结构、承诺和他人在场，属于文献中被证实有效的"提醒 + 类人支持"，而不是被证实无效的游戏化。<strong>零内容也意味着零审核、零 pro-ana 风险——根本没有传递任何东西的通道。</strong></p>
+        </div>
+
+        <h3>被听见层（新增，回应"缺情绪疏导"）</h3>
+        <p>不做论坛、不做互动、不做 AI 对话，仍然可以让人被接住。三个动作，全部零内容风险：</p>
+        <div class="spec">
+          <div class="spec-row"><span class="spec-k">过后回来</span><span class="spec-v">撑过去的人留一行话，正在发作窗口里的人能看到<small>不能回复、不能追溯、几小时后消失。这是"亲历经验的整合"——康复研究里被点名的促进因素，而它不需要任何互动通道</small></span></div>
+          <div class="spec-row"><span class="spec-k">"我也是"</span><span class="spec-v">对任意一行只能做一个无内容的确认，双方都不知道对方是谁<small>最小的被接收动作。不是点赞（无计数、无排序），只是一个"有人看到了你写的"</small></span></div>
+          <div class="spec-row"><span class="spec-k">不被分析的书写</span><span class="spec-v">写给自己，可选是否放进上面那条流<small>产品只回一句"记下了"。不分析、不生成报告、不在别处引用回来</small></span></div>
+          <div class="spec-row"><span class="spec-k">在场</span><span class="spec-v">此刻有多少人在同一个窗口里<small>措辞落在窗口和难度上，不落在行为上</small></span></div>
+        </div>
+        <div class="note">
+          <div class="nt">为什么这仍然不是社区</div>
+          <p>没有身份、没有主页、没有关注、没有回复、没有私信、没有计数、没有排序、内容会过期、数字被自动屏蔽。<strong>唯一能传递的是"有人在"和"有人也这样过"。</strong>这是被接住的最小充分条件，也是结构上无法变成 pro-ana 的最大信息量。</p>
+        </div>
+
+        <h3>内容：DBT-BED 的三个模块</h3>
+        <p>依据 Safer、Telch、Chen 的暴食与贪食 DBT 手册，标准改编保留三个模块并去掉人际效能：</p>
+        <ul>
+          <li><strong>正念</strong>——观察 / 描述 / 参与，以及不评判、一心一意、有效。<em>其中"不评判"是这个病最核心的一条</em>，整个进食障碍靠评判运转：好食物坏食物、好的一天毁掉的一天、我很恶心</li>
+          <li><strong>情绪调节</strong>——相反行动、检查事实、ABC PLEASE（其中 balanced eating 由营养层落地）</li>
+          <li><strong>痛苦耐受</strong>——TIP（删除剧烈运动项）、STOP、利弊分析、五感自我安抚（删除味觉项）</li>
+          <li><strong>正念进食</strong>——手册中专门为该人群定制的技能，可以做，但必须用手册框架（针对发作时的解离与自动进食），<em>不得使用减肥语境那套"慢点吃就能少吃、觉察到饱就停"</em>，那是节食换皮，而限制会引发暴食</li>
+        </ul>
+
+        <h3>排期：对着风险窗口排，不是排成每日课程</h3>
+        <div class="sched">
+          <div class="slot"><span class="slot-h">17:00</span><span class="slot-w">5 分钟</span><span class="slot-t">饭前那场，做完直接去吃饭<small>最有价值的一场：跳餐往往不是忘了，是不敢面对。它把技能和进食绑成一个行为，而不是两块知识</small></span></div>
+          <div class="slot"><span class="slot-h">20:30</span><span class="slot-w">15 分钟</span><span class="slot-t">晚上那场，含「一口水」<small>痛苦耐受模块。一口水必须在平时练熟，急性期才调得动</small></span></div>
+          <div class="slot"><span class="slot-h">22:30</span><span class="slot-w">10 分钟</span><span class="slot-t">夜里那场，给已经在里面的人<small>此场不做正念——急性期解离已高，注意力不可用，失败会转成羞耻。此场只做低温与接地</small></span></div>
+        </div>
+        <div class="note">
+          <div class="nt">08-20 改：三场全部前移，因为原排期追在峰值之后</div>
+          <p>EMA 实测的发作峰值约 <strong>17:30</strong>（最高）、<strong>12:30</strong>、<strong>23:00</strong>（PubMed 37212510），另一研究给约 13:00 与 19:00–21:00；<strong>峰值紧随午餐与晚餐，早餐后无峰</strong>；工作日多于周末；失控严重度全天递增、晚间达峰。负性情绪与内疚在发作前 4 小时上升、后 4 小时下降（Berg 2015）。</p>
+          <p>原排 17:50 / 21:30 / 23:30 <strong>三场全部落在峰值之后</strong>。改为 17:00 / 20:30 / 22:30，<strong>周末减为两场</strong>。<em>另外：排期不做个体化</em>——个体化会把"此刻多少人在"打散，而那是唯一的社交性也是唯一的后端；改为固定三场 ＋ 标出「你最该来的那一场」。</p>
+        </div>
+              </section>
+
+      <section id="record">
+        <div class="sec-label">P1</div>
+        <h2>记录与风险</h2>
+        <p class="lede">记结构，不记内容。这一层的权重要比我最初设想的低——原因见下。</p>
+
+        <h3>六格记录</h3>
+        <p>一天六格：早餐、上午、午餐、下午、晚餐、夜间。每格三种状态：<strong>吃了 / 跳过 / 发作</strong>。不写食物名、不写分量、不写克数，填一格一秒。可附一句可选的话（在干嘛、和谁、什么心情）。</p>
+        <p>设计要害在于同一个动作被翻转了含义：<em>填格子时，空格代表的不是"我今天很自律"，而是"这里有个洞"。</em>热量 App 里少吃是成绩，这里少吃是风险点。</p>
+
+        <h3>情绪标注</h3>
+        <p>一次点选，记录发生了什么、当时什么情绪。命名情绪本身能降低强度，成本一秒，且直接喂给风险模型。<strong>投入产出比高于任何知识型模块。</strong></p>
+
+        <div class="note">
+          <div class="nt">重要修正 · 风险模型的权重</div>
+          <p>"限制引发暴食"作为<strong>起病</strong>风险因素证据较好，但作为暴食障碍的<strong>维持</strong>因素受到近期研究挑战：Bartholomay 等（2023）发现当天早些时候的限制不预测当天晚些时候的发作，某天跳餐不预测次日发作，17 周治疗中限制的下降与发作频率下降无关。唯一存活的发现是：更长时间不进食确实预测次日风险升高，<em>但仅在基线节食倾向较高的亚组中成立</em>。</p>
+          <p>因此风险模型的权重应为：<strong>负性情绪、独处、时段、月经周期为主；跳餐降为次要变量，且只对高节食倾向者加权。</strong>这也反过来支持整个产品选择 DBT（情绪调节）而不是营养教育作为主干。</p>
+        </div>
+
+        <h3>风险变量（按证据强度排序）</h3>
+        <ul>
+          <li><strong>负性情绪</strong>——双通路模型中支持最一致的一条</li>
+          <li><strong>独处 + 时段</strong>——多在傍晚至深夜</li>
+          <li><strong>月经周期</strong>——发作在排卵后、黄体中期显著增加（雌二醇低、孕酮高时最高；排卵前雌二醇上升期最低）。对本产品的女性用户高度相关，且完全不涉及热量</li>
+          <li><strong>睡眠不足</strong></li>
+          <li><strong>长时间未进食</strong>——仅对高节食倾向者加权</li>
+        </ul>
+
+        <h3>一周矩阵</h3>
+        <p>把一周的格子摊开，叠上发作事件。用户会自己看出模式，说出"我这周三次发作有两次在同一个时段"。<em>这是她自己得出的因果，不是产品告诉她的道理</em>——也是唯一允许的"进步可视化"，因为它衡量的是模式，不是身体。</p>
+      </section>
+
+      <section id="ally">
+        <div class="sec-label">P1 · 已升级</div>
+        <h2>照护者端：行为翻译器</h2>
+        <p class="lede">独立下载、独立匿名、<strong>与患者端硬隔离</strong>。不配对、不绑定、不互通。上一版这里是话术库，这一版换成翻译器——依据见<a href="#lived">亲历输入三</a>。</p>
+        <p>隔离是硬约束而非技术限制：患者若看到"我在她房间发现了包装，我一晚上没睡"，是直接的负罪感投喂；照护者去读患者内容则是窥视。<em>两边共用代码，不共用数据。</em></p>
+
+        <h3>核心功能：把行为翻译成它真实的意思</h3>
+        <p>照护者看到的是动作，读到的是品行。翻译器的任务是把中间那段机制补上。每张卡三段：<strong>你会怎么想 / 真实是什么 / 现在做什么</strong>。</p>
+
+        <div class="tcard star">
+          <div class="t-saw">她把饭倒进了垃圾桶。</div>
+          <div class="t-row think"><span class="t-k">你会想</span><span class="t-v">浪费。任性。不知道珍惜。跟她说了多少次了。</span></div>
+          <div class="t-row real"><span class="t-k">真实是</span><span class="t-v"><b>那不是浪费，但也不必急着定性。</b>可能是想从食物上找回一点支配权，可能是发作后的羞耻，也可能是在清掉家里的诱发物。<b>这三种你现在都不需要判断。</b>唯一确定的是：<b>她也知道不该浪费</b>——那份自责在你开口之前就已经在了，你的话只是把它加倍。<br><small style="color:var(--ink3)">上一版这里写死成"是掌控感"，那是限制型的机制，直接套到暴食谱系是用上游经验冒充下游机制，已改。</small></span></div>
+          <div class="t-row do"><span class="t-k">现在</span><span class="t-v">不清点、不对质、不在垃圾桶旁边说话。这件事本身不值得开战，<b>而开战会把下一次推到你看不见的地方。</b></span></div>
+        </div>
+
+        <div class="tcard star">
+          <div class="t-saw">她问你："我是不是很胖？"</div>
+          <div class="t-row think"><span class="t-k">你会想</span><span class="t-v">赶紧安慰她。"你哪里胖了""你一点都不胖"。</span></div>
+          <div class="t-row real"><span class="t-k">真实是</span><span class="t-v"><b>这是最容易好心办坏事的一句。</b>"你不胖"看起来是否认，实际是在确认两件事：她的身体是一个可以被评价的对象，以及<b>胖是坏的</b>。这两条正是病的地基。而且这类询问通常是焦虑找出口，不是真的要一个答案——你答什么都不够，她会再问。</span></div>
+          <div class="t-row do"><span class="t-k">现在</span><span class="t-v">不回答这个问题本身，回应它下面的东西："你今天是不是很难受？"<b>把话题从身体挪到感受上，是唯一不喂养它的回法。</b></span></div>
+        </div>
+
+        <div class="tcard">
+          <div class="t-saw">她说"我吃过了"，或者在饭桌上把食物拨来拨去。</div>
+          <div class="t-row think"><span class="t-k">你会想</span><span class="t-v">撒谎。挑食。不给面子。一家人吃饭都不肯坐下来。</span></div>
+          <div class="t-row real"><span class="t-k">真实是</span><span class="t-v">不是撒谎，是<b>回避那一场围观</b>。同桌吃饭意味着每一口都被看见，而被看见本身就是压力源。拨来拨去往往是在<b>制造"我在吃"的样子</b>，好让你别开口。</span></div>
+          <div class="t-row do"><span class="t-k">现在</span><span class="t-v">不劝食、不数她吃了几口、不评论她的盘子。<b>把"吃完了"的判定权交回给她</b>——由别人宣布一顿饭结束，是这个病里最难受的时刻之一。</span></div>
+        </div>
+
+        <div class="tcard">
+          <div class="t-saw">家里的食物莫名少了，或者她房间里囤着吃的。</div>
+          <div class="t-row think"><span class="t-k">你会想</span><span class="t-v">嘴太馋。一点自制力都没有。</span></div>
+          <div class="t-row real"><span class="t-k">真实是</span><span class="t-v">发作需要储备，<b>囤积是症状的一部分，不是贪吃</b>。而且发作之后常会补货——那是怕被发现，不是没吃够。<b>家里食物越是紧张、越是被清点，囤积越重</b>。</span></div>
+          <div class="t-row do"><span class="t-k">现在</span><span class="t-v">不清点存货、不说"是不是你吃的"。反过来做：<b>保证家里随时有正常的、可及的食物</b>。匮乏感会直接加重这个行为。</span></div>
+        </div>
+
+        <div class="tcard">
+          <div class="t-saw">深夜有声音，她一个人在厨房。</div>
+          <div class="t-row think"><span class="t-k">你会想</span><span class="t-v">偷偷摸摸的，有什么不能见人的。要不要下去看看。</span></div>
+          <div class="t-row real"><span class="t-k">真实是</span><span class="t-v"><b>隐秘是这个病的核心特征，不是欺骗。</b>秘密进食反映的是与食物、身体相关的羞耻。<b>撞破不会让它停止，只会让下一次藏得更深</b>——而藏得更深意味着你更晚才会知道。</span></div>
+          <div class="t-row do"><span class="t-k">现在</span><span class="t-v">不开灯、不下楼、<b>不要在当下闯进去</b>。第二天也不要在厨房或饭桌旁提起——但<b>这不等于永远不谈</b>，而是换一个平静的、不挨着食物的时间谈。</span></div>
+          <div class="t-row" style="border-top:1px solid var(--rust)"><span class="t-k" style="color:var(--rust)">必须动</span><span class="t-v">听到摔倒、呕吐后没动静、喊痛、有自伤迹象——<b>立刻下楼</b>。不作为的边界只到"不要在行为进行中对质"，不包括躯体安全。</span></div>
+        </div>
+
+        <div class="tcard">
+          <div class="t-saw">她饭后在卫生间待了很久。</div>
+          <div class="t-row think"><span class="t-k">你会想</span><span class="t-v">是不是不舒服……还是说，是那个？然后你不敢往下想。</span></div>
+          <div class="t-row real"><span class="t-k">真实是</span><span class="t-v"><b>这里不做判断，也不替你下结论。</b>能说的是：如果存在清除行为，它带来的是<b>真实的躯体风险</b>——电解质紊乱可致心律失常。这不是道德问题，是医学问题。</span></div>
+          <div class="t-row do"><span class="t-k">现在</span><span class="t-v">不守门口、不计时、不在门口开战。<b>但红旗清单要成为家里的公共信息</b>——贴在冰箱上、发在家庭群里，讲的是身体风险不是道德，不针对任何人。<em>上一版写的是"悄悄放着不说是给她的"，那是鬼祟，已改。</em></span></div>
+          <div class="t-row" style="border-top:1px solid var(--rust)"><span class="t-k" style="color:var(--rust)">必须动</span><span class="t-v">出现心悸、严重乏力、抽搐、呕血、意识不清——<b>直接送医，不需要她同意，也不需要先把话说开</b>。清除是这七条里唯一有致死风险的行为，<b>不确定的时候按有风险处理</b>。<b>未成年人的家长不适用"不对质"这条</b>，见下方专章。</span></div>
+        </div>
+
+        <div class="tcard">
+          <div class="t-saw">她情绪毫无预兆地掉下去，回房间不说话。</div>
+          <div class="t-row think"><span class="t-k">你会想</span><span class="t-v">又闹脾气。还是我刚才说错什么了？得问清楚。</span></div>
+          <div class="t-row real"><span class="t-k">真实是</span><span class="t-v"><b>这常常紧跟在一次发作之后。</b>此刻的羞耻是压倒性的，"你怎么了"这个问题她答不了——说出来等于承认，而承认在此刻是做不到的。<b>你的追问会让羞耻再加一层。</b></span></div>
+          <div class="t-row do"><span class="t-k">现在</span><span class="t-v">不追问。等她出来之后，<b>表现得像什么都没发生</b>。这不是回避，是给她一个不需要解释就能回来的入口——<em>这个入口是很多人唯一能走的路。</em></span></div>
+          <div class="t-row" style="border-top:1px solid var(--rust)"><span class="t-k" style="color:var(--rust)">必须动</span><span class="t-v">如果出现"活不下去""没意思了"这类话，或者反锁、长时间不应声——<b>不要给空间，直接进去</b>。发作后的羞耻窗口同时是自杀风险窗口。</span></div>
+        </div>
+
+        <div class="note">
+          <div class="nt">贯穿七条的两句（已改）</div>
+          <p><strong>最该记住的一句</strong>：你看见的每一个行为，都不是它看起来的那个意思。<br>
+          <strong>最该做的一件事</strong>：<em>发作进行中不要对质；事后选一个不挨着饭桌、也不挨着卫生间的时间再谈。</em></p>
+          <p style="margin-top:.6rem">上一版这句是"在你想开口纠正的那一刻，先什么都不做"。<strong>那句话作为总原则是危险的</strong>——它把"这一分钟别闯进去"写成了"永远不作为"，而永久沉默会被读成共谋或抛弃。</p>
+        </div>
+
+        <div class="flags">
+          <div class="ft">未成年人：以上七条不完整适用</div>
+          <ul>
+            <li><b>发病高峰在青少年，而七条写的全是住在家里的场景。</b></li>
+            <li><b>对未成年人的监护人说"不对质、不下楼"，临床和法律上都不成立。</b>监护责任不能被"给她空间"取代。</li>
+            <li><b>产品必须有一条独立的未成年人路径</b>：明确告知监护人有就医决定权与责任，并直接导向专科就诊，而不是停在自助内容里。</li>
+            <li>同时涉及未成年人网络保护的合规义务——<span class="tag todo">待核实</span>上线前必须查清。</li>
+          </ul>
+        </div>
+
+        <div class="mech">
+          <div class="mt">另一种失败模式：七条目前只治了一半</div>
+          <p>这七条治的是<strong>把行为读成品行然后批评</strong>——它来自限制型厌食的亲子冲突，链条真实，但那是<em>一种</em>失败模式。</p>
+          <p>暴食谱系的照护者更常见的另一种是：<strong>纵容、替她买、事后默默打扫、吓得什么都不敢说。</strong>对这一类人，"先什么都不做"是在给已经过量的回避再加码。</p>
+          <p><strong>所以翻译器需要一个前置分叉</strong>：你更接近哪一种——总忍不住说，还是从来不敢说？<em>两类人需要的建议方向相反。</em>这一条是本版新增的待办，尚未写内容。</p>
+        </div>
+
+        <div class="mech">
+          <div class="mt">最该告诉他的一句话</div>
+          <p><strong>你的批评正在生产你想制止的那个行为。</strong></p>
+          <div class="chain">看见行为 → 读成浪费/撒谎/不听话 → 批评 → 沟通失败<br>→ 她为避免冲突转入更隐蔽的行为 → 你更警觉 → 冲突升级</div>
+          <p>这条链条不是推测，是亲历描述：<em>"和爸爸妈妈沟通无效又为了避免冲突，我就会干错事。"</em>照护者端的存在理由，就是在这条链条的第二环把它切断。</p>
+        </div>
+
+        <h3>其余模块</h3>
+        <ul>
+          <li><strong>这是不是我想的那样</strong>——不做诊断，只描述他可能正在看到的，以及它<strong>不是</strong>什么：不是矫情、不是不自律、不是他的教育失败</li>
+          <li><strong>该不该说破、什么时候说</strong>——时机远比措辞重要，而所有科普只教措辞</li>
+          <li><strong>照护者自己的定时小组</strong>——同一套机制换内容，形式完全复用，几乎不增加开发量</li>
+          <li><strong>一条最硬的可操作建议</strong>：最该做的不是盯着她吃饭，是保证家里有正常规律的饭，且家里没有节食氛围——包括不要当着她的面谈自己的减肥</li>
+        </ul>
+      
+        <h3>08-20 新增：七张反应卡（翻译器管她的动作，这七张管他的反应）</h3>
+        <p>翻译器解决的是"他把她的动作读错了"。但还有一半没解决：<strong>他自己的反应也在起作用，而他看不见。</strong>这一半有现成的骨架可以爬——New Maudsley Model 的照护风格分析（Treasure／Schmidt 组，英国 Beat 官方以动物类比呈现同一组反应，新增照护者工作坊有非随机对照研究 PMC12773670）。</p>
+        <p><strong>它和翻译器同语气，因为它也不给人贴标签，只给反应命名。</strong>五种反应 ＋ 两种理想的样子，每张三段：那是什么样子／它的代价／换成什么。<em>卡片正文一律不出现「你是」</em>。</p>
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th>那是什么样子</th><th>它的代价</th><th>换成什么</th></tr></thead>
+          <tbody>
+            <tr><td>想把道理讲清楚</td><td>正在发生的时候讲道理，她听到的不是道理，是「你又要跟我吵」</td><td>这一刻不谈。要谈，挑一个不挨着饭桌、也不挨着卫生间的时间</td></tr>
+            <tr><td>忍不住一直提</td><td>提醒越多，她越需要藏——你想制止的行为正被你的关心推往隐蔽处</td><td>一天只说一次。说完就走开，不等回答</td></tr>
+            <tr><td>看见了但装作没看见</td><td>沉默不会让它停，只会让它更省事。而且她多半知道你看见了</td><td>不用先弄清全部。只说你看见的一件事，不带评价，也不问是不是</td></tr>
+            <tr><td>把所有难都替她挡掉</td><td>挡得越干净，她越没有机会发现自己其实应付得来</td><td>留一件她能自己做的小事，哪怕做得不好</td></tr>
+            <tr><td>自己先撑不住</td><td>这些情绪她全都收得到，然后还给你同样的失控</td><td>先管你自己那一份。你稳一点，她才有一个稳的地方可以靠</td></tr>
+            <tr><td>在旁边一起走<span style="color:var(--accent)"> · 理想</span></td><td>—</td><td>不在前面拉，不在后面推。温和地推一下就够了，方向由她定</td></tr>
+            <tr><td>不慌<span style="color:var(--accent)"> · 理想</span></td><td>—</td><td>她最需要的不是有人替她着急，是有人不慌。先确认身体安全，确认了就可以慢下来</td></tr>
+          </tbody>
+        </table></div>
+        <div class="note">
+          <div class="nt">两项最容易被误读的观察，值得单独放进这一端</div>
+          <p><strong>Russell 征</strong>——手背指关节的老茧，自诱发呕吐特有。<br>
+          <strong>「ta 好像脸肿了」</strong>——那是停清除之后的水肿，<em>最容易被读成胖，而这几天评论外形的风险最高</em>。这一条和患者端的 s-swell 是同一件事的两面。</p>
+          <p><strong>资源做成推送不做库，而且一周一条</strong>（他们的困境是理解，理解需要时间消化，推太密会变成任务）：Beat 照护者书单、F.E.A.S.T. 论坛与技能课、NEDA 家长工具包＋Project EMPOWER-ED。<em>片单不做</em>——ED 题材影视普遍带具体化描写（体重数字、极端行为），既是患者的触发源，也会给照护者种下"必须瘦到那个程度才算严重"的误解。</p>
+        </div>
+</section>
+
+
+
+      <section id="dist">
+        <div class="sec-label">Gap · 新增</div>
+        <h2>分发：她手机里怎么会有这个东西</h2>
+        <p class="lede">这是整份文档原本完全没有的一章，也是"凌晨三点还开着"这句话成立的前提。<br><strong>08-25 重写：这一章原来整章建立在"不进小程序的 H5"上，而工程 08-22 起就是小程序了。</strong></p>
+
+        <div class="box warn" style="background:var(--rust-soft);border:1px solid var(--rust);border-radius:3px;padding:16px 20px;margin:18px 0">
+          <div class="nt" style="color:var(--rust)">先说一条硬门槛：这个产品上不了线，而且不是时间问题</div>
+          <p>微信小程序涉及<strong>心理健康</strong>内容属于需要<strong>前置审批</strong>的类目，<strong>个人主体账号申请不了</strong>——不是审得慢，是这条路对个人号是关着的。而这个产品就是那个类目：进食障碍、红旗清单、就医科室指引、DBT 技能。</p>
+          <p><em>所以 08-22 那个「走体验版不过审」的决定不是权宜之计，是唯一可行的路</em>——也正因为如此，「36 屏文案一个字不改」才是硬前提，不是洁癖。</p>
+        </div>
+
+        <h3>这条门槛是论据，不是短板</h3>
+        <div class="claim">
+          进食障碍相关内容在小程序平台需要前置审批，个人开发者拿不到。<br>
+          <em>所以这类产品在中文世界里做不出来——不是没人想做。</em>
+        </div>
+        <p>这句话比「中文世界没有」更硬：<strong>是有结构性障碍，不是没人关注</strong>。而它同时给出了后续计划该长什么样——上线路径是<strong>企业主体 + 医疗机构合作</strong>，正好接上商业化那章「让付费方不是脆弱的那一方」。</p>
+
+        <h3>现在怎么分发</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">摆摊</div><div class="spec-v"><strong>体验版二维码</strong>，评委扫码在自己手机上用真机。比让人开浏览器输网址顺得多。</div></div>
+          <div class="spec-row"><div class="spec-k">硬限制</div><div class="spec-v"><strong>体验成员最多 100 个，且要手动加微信号。</strong>当天现加会手忙脚乱，名额也得省着用。</div></div>
+          <div class="spec-row"><div class="spec-k">名额满了</div><div class="spec-v">摊位上放一台已经装好的手机，递给人用。<em>这个兜底要提前准备，不是当天再想。</em></div></div>
+          <div class="spec-row"><div class="spec-k">「还开着」怎么成立</div><div class="spec-v">小程序天然解决了原来那个难题——<strong>用过一次就在「最近使用」里</strong>，不需要「添加到主屏幕」的引导。凌晨三点是第二次打开，不是第一次，这个叙事仍然成立而且更顺。</div></div>
+        </div>
+
+        <h3>长期</h3>
+        <ul>
+          <li><strong>企业主体 + 前置审批</strong>——这是上线的唯一门。个人号这条路不用再试。</li>
+          <li><strong>获客渠道待想</strong>：搜索、社群、高校心理中心、专科门诊出院时。<em>台上被问到要有答案</em>，但不是这周要解决的。</li>
+        </ul>
+      </section>
+
+      <section id="money">
+        <div class="sec-label">Business</div>
+        <h2>商业化</h2>
+        <p class="lede">在这个领域，<strong>不能走的路比能走的路更能体现判断</strong>。台上先讲不做什么。</p>
+
+        <h3>不走的四条</h3>
+        <div class="nope">
+          <ul>
+            <li>不向患者收订阅
+              <small>付费墙挡在急性期前面是灾难——凌晨三点弹付费框，还会触发"我连这个都要花钱"的羞耻</small></li>
+            <li>不做广告
+              <small>进食障碍用户 + 广告定向 = 减肥广告精准投放，这是能想到的最恶劣场景</small></li>
+            <li>不做数据变现</li>
+            <li>不把急性期流量导向按分钟计费的心理咨询
+              <small>这是国内同类产品的标准打法（头部一年付费咨询超 6 亿分钟就是这么来的），但那是在最脆弱的时刻做转化，而且多数咨询师没有进食障碍专门训练</small></li>
+          </ul>
+        </div>
+
+        <h3>走的四条：让付费方不是脆弱的那一方</h3>
+        <div class="spec">
+          <div class="spec-row"><span class="spec-k">主模型</span><span class="spec-v"><strong>机构授权</strong>：高校心理中心 / 专科院外延伸 / 企业 EAP<small>进食障碍在大学生中高发而学校普遍无专门工具；出院后空窗期正是复发高发期；EAP 通常不覆盖进食障碍，是空白。<em>付费方明确、预算明确、且不是脆弱的那一方</em></small></span></div>
+          <div class="spec-row"><span class="spec-k">已降级</span><span class="spec-v">照护者端付费——<strong>作为假设，不作为已成立的模型</strong><small>三个说不通的地方：①文档自己写了暴食照护者"通常什么都不知道"，<em>不知道的人不会去搜索，也不会为七张静态卡付费</em>；②这是内容生意，对标免费的公众号和视频，不是工具订阅；③卡上场景全是住在一起的青少年父母，而 BED 更多是独居或与伴侣同住的成年人，<b>那个付费方可能根本不存在</b>；④双端硬隔离意味着付费方看不到效果，购买理由只剩"我买得安心"。<b>台上主动讲这是难题，不要讲成已经长出来的结构。</b></small></span></div>
+          <div class="spec-row"><span class="spec-k">专业侧</span><span class="spec-v">躯体安全层做成校医、基层医生、营养师的参考工具<small>他们往往是第一个接触到患者的人，且普遍不知道该看什么。这是 B 端的雏形</small></span></div>
+          <div class="spec-row"><span class="spec-k">监管</span><span class="spec-v"><strong>刻意停在医疗器械边界之外</strong><small>不诊断、不评估严重程度、不给剂量。既是安全设计也是商业设计——它让产品现在就能跑，不用等一到三年的注册周期</small></span></div>
+        </div>
+
+        <div class="note">
+          <div class="nt">台上就讲三句</div>
+          <p>患者端永远免费，且不做广告不做数据——<strong>这是产品伦理，不是暂时策略</strong>；收入来自不脆弱的那一侧；刻意停在监管边界内所以能先跑。</p>
+          <p><em>这个讲法把"不赚钱的地方"讲成了设计原则而不是缺陷。</em>黑客松不需要你证明能赚钱，需要你证明知道钱从哪来、以及为什么不从某些地方来——后者更能体现判断力。<strong>不要灌 TAM。</strong></p>
+        </div>
+      </section>
+
+
+      <section id="look">
+        <div class="sec-label">Spec</div>
+        <h2>呈现规格</h2>
+        <p class="lede">不是"一个 App"，是<strong>六个能点通的页面</strong>。其余全部不做。</p>
+        <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>#</th><th>页面</th><th>内容</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>入口</td><td>三个大按钮：<b>现在想吃 / 正在吃 / 已经吃完了</b>。角落一个小的"我还没打算改变"。<b>无首页、无导航栏、无登录</b></td></tr>
+            <tr><td>2</td><td>冲动</td><td>接住的第一句 → 分诊一问 → 两条分支</td></tr>
+            <tr><td>3</td><td>发作中</td><td>那两句话 + 一个动作 + 在场人数</td></tr>
+            <tr><td>4</td><td>发作后</td><td>有无清除分诊 → 解释 + 下一餐 + 红旗入口</td></tr>
+            <tr><td>5</td><td>红旗</td><td>纯静态清单</td></tr>
+            <tr><td>6</td><td><b>翻译器</b></td><td>七个情境卡，点开是翻译。<b>做得最精的一屏，因为它是高潮</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h3>视觉规格：它本身就是产品主张</h3>
+        <ul>
+          <li><strong>深色为底。</strong>理由不是好看，是凌晨三点在床上，白屏是物理性的刺痛。<em>这条在台上可以直接讲</em></li>
+          <li><strong>低对比、低饱和。</strong>无红色警示（红旗清单是唯一例外），无绿色奖励</li>
+          <li><strong>大字号、极少元素。</strong>发作当下认知窄化，能处理的信息很少</li>
+          <li><strong>全部操作在拇指范围内。</strong>可能躺着用、桌下用</li>
+          <li><strong>无动画无过渡</strong>（潮水那一处除外）</li>
+        </ul>
+
+        <div class="note">
+          <div class="nt">保真度是不对称的</div>
+          <p><strong>文案必须是终稿，界面可以极简</strong>——但要看得出是"刻意的朴素"，不是"没做完"。一致的字号阶梯、克制的间距、一个强调色，就够了。</p>
+          <p><strong>明确不做</strong>：登录、设置页、引导页、关于页、响应式桌面版。时间杀手且零演示价值。</p>
+        </div>
+      </section>
+
+      <section id="tech">
+        <div class="sec-label">Engineering</div>
+        <h2>技术方案</h2>
+        <p class="lede">全部可以不联网。匿名极大简化了后端——没有账号，就没有登录、鉴权、资料、关系、权限模型。</p>
+        <ul>
+          <li><strong>形态</strong>：<strong>微信小程序</strong>，走体验版不过审（<em>所以 36 屏文案一个字不改</em>）。36 屏 = 一个页面，单页换内容，和原型同构。<small>（08-22 起改的：早前这里写的是 H5，理由是"48 小时内过不了审"——体验版不需要过审，扫码即用，且摆摊时比让人开浏览器输网址顺。）</small></li>
+          <li><strong>存储</strong>：记录、情绪、滋味、设置全部走本机存储。<em>数据不出设备</em>——这既是隐私设计，也省掉整个后端</li>
+          <li><strong>内容层</strong>：引导流程、技能文案、营养与红旗内容全部是数据模块。<em>这是本项目真正的护城河，时间优先给它</em></li>
+          <li><strong>公共池（别人写的）</strong>：<strong>静态数据，跟小程序一起发，读不需要后端。</strong>写进公共池是下一版——那一步才需要后端与审核</li>
+          <li><strong>唯一需要后端的</strong>：小组在线人数。目前写死；真接要微信云开发一个集合加心跳</li>
+          <li><strong>模型</strong>：只出现在「我写的滋味」两处，<strong>两处都只判语言、不写内容</strong>（判描述还是判断 / 判串联有没有换词），由 <code>chk.mjs</code> 硬断言看住</li>
+          <li><strong>不做</strong>：账号系统、图像识别、模型训练、论坛式社区、用户互动（回复／楼／ID／点赞）</li>
+          <li><strong>设计系统</strong>：无红色警示、无绿色奖励、无进度条，低对比低饱和。视觉服从不做清单。唯一允许使用警示色的地方是红旗症状清单</li>
+        </ul>
+
+        <div class="mech">
+          <div class="mt">构建期自检——这是「完成度」和「技术能力」的硬证据</div>
+          <p><code>node .sync-mp/chk.mjs</code> 一次跑完：每个块都有渲染分支 · 无死链 · 块型全覆盖 · 每日内容长度合规 · <strong>滋味卡符合写作规则</strong>（无比喻／无评价词） · <strong>患者端无临床词</strong>（<code>CLIN</code> 表，她点名骂过的那条） · WXML 标签平衡 · 截图渲染映射全覆盖 · <code>draw()</code> 调用的函数都有定义 · <strong>我写的滋味三条硬断言</strong> · 照护者端死链与两端硬隔离。</p>
+          <p><code>node .sync-mp/shot.mjs --all</code> 用真实样式渲进 headless Chrome，报每一屏「一屏装不装得下」。<em>两端全部屏态已达标。</em></p>
+        </div>
+      </section>
+
+
+      <section id="build">
+        <div class="sec-label">Execution</div>
+        <h2>执行顺序</h2>
+
+        <h3>找什么样的队友</h3>
+        <p>不是"全栈工程师"，是<strong>能在 24 小时内把六个静态页面做成手机端网页并部署上线的人</strong>。这个项目没有技术难点，只有时间约束——<em>要找最快的人，不是最强的人</em>。</p>
+        <p>招人时把分工边界说死：<strong>"我出全部内容和产品决策，你出实现和部署。"</strong>这句话吸引想把事做完的人，同时挡掉想重新设计产品的人——<em>第 20 小时冒出来一个想重构方向的队友，是黑客松第二大死因。</em></p>
+        <p>只能招一个人时的优先级：<strong>能部署上线 &gt; 会写前端 &gt; 会做视觉</strong>。最常见的死法不是做不出来，是做到 90% 没部署上。</p>
+
+        <h3>没有队友：单人顺序</h3>
+        <p>原则只有一条：<strong>每个阶段结束都必须有能演的东西，永远不出现"做到一半什么都演不了"。</strong></p>
+        <div class="sched">
+          <div class="slot"><span class="slot-h">阶段 0</span><span class="slot-w">4–5 h</span><span class="slot-t">不写代码：翻译器七条 + 三屏全部文案<small>先写完再动代码，否则边写边改是双倍成本。这也是唯一不可替代的工作</small></span></div>
+          <div class="slot"><span class="slot-h">阶段 1</span><span class="slot-w">3 h</span><span class="slot-t">单个 HTML 文件，六页用显示/隐藏切换，文案填进去<small><b>第 8 小时就有东西能演</b>——整个计划的安全垫</small></span></div>
+          <div class="slot"><span class="slot-h">阶段 2</span><span class="slot-w">3 h</span><span class="slot-t">视觉：深色、字号阶梯、间距、一个强调色</span></div>
+          <div class="slot"><span class="slot-h">阶段 3</span><span class="slot-w">2 h</span><span class="slot-t">翻译器那一屏做精<small>高潮值得单独花时间</small></span></div>
+          <div class="slot"><span class="slot-h">阶段 4</span><span class="slot-w">2 h</span><span class="slot-t">部署 + 手机实测<small><b>第 12 小时就该有线上地址。</b>部署失败是黑客松第一死因</small></span></div>
+          <div class="slot"><span class="slot-h">阶段 5</span><span class="slot-w">余下</span><span class="slot-t">加东西：潮水动画、小组页、在场人数、六格记录<small>每加一个都保证还能演</small></span></div>
+          <div class="slot"><span class="slot-h">最后</span><span class="slot-w">3 h</span><span class="slot-t">冻结、录屏 fallback、排练三遍</span></div>
+        </div>
+
+        <h3>硬纪律</h3>
+        <ul>
+          <li><strong>单文件优先。</strong>一个 HTML 写完，不建工程、不装依赖、不配构建</li>
+          <li><strong>不要用 React / Next。</strong>六个静态页用原生 HTML 加一点 JS 更快，且不会出现构建报错吃掉两小时</li>
+          <li><strong>每两小时保存一个可运行版本</strong></li>
+          <li><strong>保底方案</strong>：真卡住了就把页面做成图片、点击热区串起来。丑，但能演。<em>永远要有地板</em></li>
+        </ul>
+      </section>
+
+      <section id="scope">
+        <div class="sec-label">Scope</div>
+        <h2>剩下的时间</h2>
+        <p class="lede"><strong>08-25 重写：这一章原来是「48 小时从零写」的排期，整个前提是错的。</strong>真实情况是——可以带已有项目、周五 08-28 截止、初评是<strong>摆摊</strong>不是台上路演。</p>
+
+        <div class="mech">
+          <div class="mt">真实可用时间：约 16 小时，其中只有一个整块日</div>
+          <p>考研日历已经写死：<strong>08-26 与 08-30 数学归零</strong>（那两天给黑客松），<strong>08-27–08-29 每天上限 3 小时</strong>，普通工作日数学预算 2.2 小时。扣掉数学和上班，黑客松真实可用约 16 小时。</p>
+          <p><strong>08-26 是截止前唯一的整块日，它的价值等于其余三天的总和。</strong>所以那一天只能用来干最难的事——任何文档撰写、视觉打磨、内容抄录都不许进那一天。</p>
+        </div>
+
+        <h3>已经做完的</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">62 屏</div><div class="spec-v">患者端 + 照护者端，单页换内容，零死链，<strong>64 个屏态全部一屏装下</strong></div></div>
+          <div class="spec-row"><div class="spec-k">我写的滋味</div><div class="spec-v">五个角度 · 门槛 · 串联逐词校验 · 本机多条存 · 别人写的（静态池，<strong>读不用后端</strong>）</div></div>
+          <div class="spec-row"><div class="spec-k">四个人</div><div class="spec-v">四屏 · 12 段语料 · 三级分诊（本地 → 模型 → 接不住）· 导出</div></div>
+          <div class="spec-row"><div class="spec-k">构建期自检</div><div class="spec-v"><code>chk.mjs</code> 14 项全绿，含<strong>三条立场硬断言</strong>；<code>shot.mjs</code> 量一屏装不装得下</div></div>
+        </div>
+
+        <h3>还差的（按优先级）</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">准入项</div><div class="spec-v"><strong>GitHub 仓库 + Tag <code>#shenicest-fission</code></strong>／项目文档七项／<strong>演示视频</strong>／项目图片／Slogan 与描述。<em>缺一样就交不上，优先级高于一切加分项。</em></div></div>
+          <div class="spec-row"><div class="spec-k">真机验证</div><div class="spec-v">逻辑层已有 34 条自检，但输入框在真机上的行为（<code>bindblur</code> 触发时机、键盘收起）没验过。<strong>这是唯一必须手点的部分。</strong></div></div>
+          <div class="spec-row"><div class="spec-k">体验成员</div><div class="spec-v"><strong>提前加，最多 100 个</strong>，当天现加会手忙脚乱。备一台装好的手机兜底。</div></div>
+          <div class="spec-row"><div class="spec-k">摊位话术</div><div class="spec-v">15 秒 / 60 秒 / 3 分钟三个长度。<em>用那把尺子念一遍</em>——文案过了 26 屏，话术还没过。</div></div>
+        </div>
+
+        <h3>砍功能顺序（提前定好，现场不临时判断）</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">先砍</div><div class="spec-v"><strong>模型分诊</strong> → 本地关键词照跑，认不出出「接不住」。<em>「AI 分诊」讲成已设计未接入。</em></div></div>
+          <div class="spec-row"><div class="spec-k">再砍</div><div class="spec-v"><strong>写进公共池</strong> → 只保留读。读别人写的本来就不需要后端。</div></div>
+          <div class="spec-row"><div class="spec-k">再砍</div><div class="spec-v">新增视觉打磨 → 用现有 <code>cardHue</code> 出</div></div>
+          <div class="spec-row"><div class="spec-k">再砍</div><div class="spec-v">照护者端新增内容 → 保持现状，一个字不动</div></div>
+        </div>
+
+        <div class="box warn" style="background:var(--rust-soft);border:1px solid var(--rust);border-radius:3px;padding:16px 20px;margin:18px 0">
+          <div class="nt" style="color:var(--rust)">绝不砍</div>
+          <ul style="margin:0">
+            <li><strong>GitHub 仓库 + Tag、演示视频、项目文档</strong>——准入项，缺一样就交不上</li>
+            <li><strong>36 屏文案</strong>——一个字不改，体验版不过审是前提</li>
+            <li><strong>三条立场硬断言</strong>——它们是「AI 只判语言不写内容」的机器证据，砍了这句话就变回一句声明</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="backwards">
+        <div class="sec-label">Working backwards</div>
+        <h2>从效果反推</h2>
+        <p class="lede">评委四分钟里要看二十几个项目。目标不是让他们听懂产品，是让他们<strong>在某一刻被卷进去</strong>，散场后能用一句话复述给别人。以下所有执行优先级都是从这个目标倒推出来的。</p>
+
+        <h3>核心那一刻：让评委当场说错话</h3>
+        <p>评委没法在三十秒内变成暴食患者，但<em>每个人都当过那个说错话的人</em>。所以最强的一拍不是讲患者，是让全场亲身踩一次：</p>
+        <div class="statement">"她把饭倒进了垃圾桶。<br>我猜在座包括我，第一反应都是——浪费。<br>我父母也是。而我当时不是想浪费。"</div>
+        <p><strong>关键：这句错话由你自己说出来，不要提问、不要等回答、不要点评委。</strong></p>
+        <div class="note">
+          <div class="nt">为什么改掉"让评委开口"</div>
+          <p>上一版设计的是现场提问、让全场先踩坑再翻页。三个风险：四分钟路演里点名让人出声，常见结局是冷场、打哈哈、或者有人开始讲自己的育儿观，后面全废；中国场合"当众说错"伤面子；<strong>而"浪费粮食"在国内是道德正确和公共宣传，把它命名为错误，容易被听成指责家庭、指责长辈。</strong></p>
+          <p>自己说出来，洞察一点不少，风险全没了。措辞上也别说"浪费粮食是错的"，说<em>"这个动作的原因不是她不珍惜粮食"</em>。</p>
+        </div>
+
+        <div class="note">
+          <div class="nt">三重印证</div>
+          <p><a href="#ally">照护者翻译器</a>同时是：<strong>最有差异化的功能、最便宜的功能</strong>（纯内容 + 静态界面，无状态无后端）、<strong>最好演的功能</strong>。三个独立信号指向同一处，所以它是这个项目的重心，而不是一个 P1 功能。</p>
+        </div>
+
+        <h3>倒推出的优先级</h3>
+        <p><strong>48 小时里瓶颈不是代码，是文案。</strong>上面每一拍起作用的都是那几句话，界面只是载体。<em>一个文案打磨到位的静态页，胜过一个功能齐全但文案平庸的原型</em>——评委记住的是话，不是你的状态管理。</p>
+        <ol>
+          <li><strong>翻译器七条</strong>——演示高潮、最便宜、只有你能写</li>
+          <li><strong>急性期三屏全部文案定死</strong>——按<a href="#voice">语气原则</a></li>
+          <li><strong>反跳性水肿那一段的讲法</strong>——专业深水区，一段就够</li>
+          <li>三屏能点通</li>
+          <li>小组页 + 一个数字（可模拟，台上声明）</li>
+          <li>其余全砍</li>
+        </ol>
+      </section>
+
+      <section id="demo">
+        <div class="sec-label">Pitch</div>
+        <h2>四分钟演示脚本</h2>
+        <div>
+          <div class="beat"><span class="beat-t">0:00</span><span class="beat-d"><strong>先立时刻。</strong>"凌晨三点，一场暴食正在发生。热线是开着的——<b>但打过去，就有一个人知道了。</b><em>越是看起来没问题的人，越不能让人知道自己有问题。</em><br>此刻唯一开着、又不需要她向任何人开口的，是热量 App。而它只会让事情更糟。"<br><small>别说"热线不在"——那是假的，评委里有人知道号码，开场就崩。说"打了就被知道"，既真实又更狠。</small></span></div>
+          <div class="beat"><span class="beat-t">0:25</span><span class="beat-d"><strong>坐实最后半句。</strong>"105 名确诊患者中约七成在用它，其中七成认为它加重了自己的病。"</span></div>
+          <div class="beat"><span class="beat-t">0:30</span><span class="beat-d"><strong>再立同行。</strong>"有效的 DBT App 已经存在，做过 576 人的 RCT。但六周脱落 48%，三分之一的人才走完。<em>要解的不是有效性，是没人用完。</em>"</span></div>
+          <div class="beat"><span class="beat-t">1:00</span><span class="beat-d"><strong>先开日常，不是急救。</strong>这是 08-20 新定的顺序，也是和所有竞品分开的地方：<em>"打开这个 app 的默认理由不是『我要暴食了』。"</em>今天的滋味一条（烤红薯，纯感官，不出现热量与「好吃」）→ 今天怎么样六格 → 那场，此刻 23 人在。<strong>台上强调：整屏只有一个数字会自己变。</strong><small style="display:block;color:var(--ink3)">竞品把急性期入口占了（Unbinge 的 "2am 在厨房"、URGR 的 panic button、UrgeFree 的两分钟流程），但它们都停在冲动退下去为止。所以不能说"没人做发作那一刻"，要说"做的人都停在那儿"。</small></span></div>
+          <div class="beat"><span class="beat-t">1:40</span><span class="beat-d"><strong>再走兜底那条。</strong>「我现在不太好」→ 分岔 → 发作中那句话 → 发作后。<strong>这里必须交代因果证据，是全场最硬的一条机制论证：</strong>Adams &amp; Leary 的甜甜圈实验——吃下"禁忌食物"后<strong>只给一句自我关怀陈述</strong>，高限制型进食者就不再出现破戒后过食，后续吃得显著更少、内疚显著更低。<em>变量只有一句话。这就是我们把文案预先写死、不交给 AI 生成的理由。</em></span></div>
+          <div class="beat"><span class="beat-t">2:00</span><span class="beat-d"><strong>亮出别人没有的那一层。</strong>反跳性水肿那一段——"停止催吐后体重会上去一到两周，那是水。没有人提前告诉过她，所以她又吐了回去。"<em>这是全场最能证明专业价值的三十秒。</em></span></div>
+          <div class="beat"><span class="beat-t">2:45</span><span class="beat-d"><strong>当场索要热量。</strong>它拒绝，并说明为什么拒绝。</span></div>
+          <div class="beat"><span class="beat-t">3:10</span><span class="beat-d"><strong>定时小组，讲成打在中介变量上。</strong>"此刻有 N 个人在做同一件事。<strong>屏幕上只有这一个数字。</strong>"——说清有什么，不数四个"没有"。然后给机制：情绪失调通向暴食病理<strong>由孤独中介</strong>，反向路径不成立（Southward 2013，n=107）。<em>零发言小组不是退而求其次的社交，是在不暴露任何人的前提下对孤独下手。</em>顺带交代砍掉进度条的依据：117 项试验／1698 个效应量／279,791 人的 meta 分析——脱落更低的试验有提醒、有真人接触、<strong>且无游戏化</strong>。</span></div>
+          <div class="beat"><span class="beat-t">3:30</span><span class="beat-d"><strong>边界与转介，主动讲。</strong>再喂养闸门、红旗清单、不给剂量、以及为什么不做生成式对话。<strong>这里用比 Tessa 更新更狠的一条：</strong>Pucci 等 2026（arXiv:2606.02444），11,712 条提示、临床标注的 268 对里<strong>仅 44.7% 安全</strong>；失败模式包括免责声明之后照样给建议、说一句"医生告诉我"就能绕过。</span></div>
+          <div class="beat"><span class="beat-t">3:50</span><span class="beat-d"><strong>如果你决定披露：一句，平着说，然后停住。</strong><br>可用的版本："我走的是限制那一段。那条路上有相当一部分人最后走到了暴食，我是没走到那一步的那一半。<em>产品里有几句话，是当年有人对我说过的。</em>"<br>它诚实、不冒充暴食的经验、并且解释了这个产品为什么由你来做。<strong>不解释、不展开、不哭，说完直接结束。</strong></span></div>
+        </div>
+        <div class="statement">已经有人证明了这套方法有效。没有人解决为什么没人用完，也没有人管发作之后身体发生了什么。</div>
+
+        <div class="note">
+          <div class="nt">关于"最好声泪俱下"这条建议 · 不建议采纳</div>
+          <p>四个具体理由，与勇气无关：</p>
+          <p><strong>一、它把你的病史变成了得分手段。</strong>一旦"哭"成了演出目标，没哭好就等于没讲好——这是不该背上台的负担。<br>
+          <strong>二、披露不可撤回。</strong>现场有记录、有照片、有陌生人。要不要说是你的决定，但"最好声泪俱下"这个指令把"平静地说一句"这个选项拿掉了。<br>
+          <strong>三、演出的情绪会反噬。</strong>真实的利害关系评委听得出来，被表演的情绪也听得出来，后者读作操纵。<br>
+          <strong>四、纯粹的实务问题：路演后面是问答。</strong>你哭完之后要立刻回答芯片、留存、医疗器械边界这类问题。</p>
+          <p><strong>更强的版本是相反的做法</strong>：一句陈述，平着说，说完停住。"这一条在产品里，是因为当年没有人提前告诉过我。"<em>克制比眼泪更难被忽略，而且它始终在你的控制之内。</em></p>
+        </div>
+      </section>
+
+      <section id="evidence">
+        <div class="sec-label">Evidence</div>
+        <h2>证据基础</h2>
+        <p class="lede">分三级标注。<span class="tag ok">已查证</span>可以直接上台讲；<span class="tag mix">有争议</span>要讲出争议本身，反而更可信；<span class="tag todo">待核实</span>上台前必须落实，否则不讲。</p>
+
+        <div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>DBT 技能 App 对暴食有效，但留存崩溃</div>
+            <div class="ev-how">Linardon 等 2024，「Resilience: eDBT」RCT，n=576（干预 287 / 等待 289），全程无专业指导。6 周客观暴食发作发生率比 0.69，进食障碍病理 d = −0.68，6–12 周持续改善。<strong>局限：6 周干预组脱落 48%，仅三分之一完成最后模块；被动等待组对照可能放大效应量；样本以白人为主。</strong></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>心理健康 App 普遍留存极差，且游戏化无用</div>
+            <div class="ev-how">十万名用户数据分析显示平均留存 5.5 天，多数人两天后停用。系统综述指出提醒与真人支持改善依从性，游戏化不能。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>热量记录与进食障碍症状相关</div>
+            <div class="ev-how">Levinson 等 2017：105 名确诊患者中约 75% 使用 MyFitnessPal，其中 73% 认为它加重了自己的进食障碍，且与症状严重度相关。Simpson 与 Mazzeo 2017：493 名大学生中使用热量追踪器者进食担忧与节食限制得分更高（已控制 BMI）。<strong>边界：横断面与自我报告，整体研究结论不一致，只能讲关联与主观归因，不能讲因果。</strong></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>破戒效应</div>
+            <div class="ev-how">源自 Marlatt 与 Gordon 的成瘾复发模型，正式术语为反调节性进食；有专门研究贪食症中破戒效应的文献（1993）。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>月经周期与发作频率</div>
+            <div class="ev-how">发作在排卵后、黄体中期显著增加，排卵前雌二醇上升期最低；雌二醇具保护性，孕酮拮抗其保护作用。Klump 团队系列工作。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>DBT-BED 的模块结构</div>
+            <div class="ev-how">Safer、Telch、Chen《Dialectical Behavior Therapy for Binge Eating and Bulimia》（Guilford，Linehan 作序），保留正念、情绪调节、痛苦耐受三模块，去掉人际效能，<strong>并包含一个专门定制的正念进食技能</strong>。源头是 Telch 1997 年 NIMH 资助的 BED 情绪调节技能训练手册；Telch、Agras、Linehan 2000 的初步试验中 82% 的参与者治疗结束时不再暴食。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>中国流行病学与治疗缺口</div>
+            <div class="ev-how">GBD 2019：中国 AN 年龄标化患病率 38.08/10 万，BN 75.21/10 万，1990–2019 均显著上升。中国健康与营养调查大样本女性中 7.04% 筛查阳性；青少年患病率估计 2.5%–6%。诊断率低、就诊延迟，治疗被指过度聚焦体重恢复。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>隐秘与羞耻是核心症状特征</div>
+            <div class="ev-how">秘密进食反映进食或身体相关羞耻，与抑郁及暴食行为相关；社交隐瞒与退缩是 BED 的心理社会后果。<strong>这是匿名设计的依据。</strong></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag mix">有争议</span>限制引发暴食</div>
+            <div class="ev-how">作为<strong>起病</strong>因素证据较好（Goldschmidt 十年纵向研究：节食者暴食起病风险更高）。作为 BED <strong>维持</strong>因素受挑战：Bartholomay 等 2023 发现当日限制不预测当日发作、跳餐不预测次日发作、治疗中限制下降与发作频率下降无关；仅"更长时间未进食预测次日风险"在高节食倾向亚组成立。作者认为这"可能部分解释了以针对饮食限制为核心的 BED 主流治疗方案效果有限"。<strong>台上要讲出这个争议，它比单方面断言更有说服力。</strong></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag mix">有争议</span>正念用于暴食</div>
+            <div class="ev-how">证据方向偏正面：Kristeller 与 Hallett 1999 的 MB-EAT 用于 BED 显示进食控制感与饥饿饱足觉察改善；有较新的系统综述与 meta 分析。<strong>需要区分的是</strong>：临床正念进食（针对解离与自动进食）与减肥语境的正念进食（"慢点吃就能少吃"）不是一回事，后者实质是节食。产品只做前者。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag todo">待核实</span>DBT 手册中剧烈运动与味觉自我安抚的 ED 改编</div>
+            <div class="ev-how"><strong>这两条目前是临床推理，不是引文。</strong>公开检索只能找到治疗中心的科普内容，没有权威来源明确写"ED 改编版删除这两项"。推理依据是：运动属代偿行为、通用自我安抚清单常直接写"吃一块你喜欢的食物"。<strong>需要翻 Safer/Telch/Chen 手册原文确认。若手册确实未处理，指出这一点本身就是贡献。</strong></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag todo">待核实</span>躯体与营养层的每一条数值与操作</div>
+            <div class="ev-how">糖原结合水比例、反跳性水肿的持续时间与幅度、假性 Bartter 综合征的表述、催吐后刷牙间隔、口服补液盐的适用条件、再喂养综合征的筛查阈值——<strong>逐条落实到可引用的临床来源</strong>。这是产品里唯一涉及生命风险的部分，被问倒一条，整章可信度归零。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>暴食障碍是患病率最高的进食障碍</div>
+            <div class="ev-how"><strong>Hudson 等 2007（NCS-R）原文</strong>：女性终生患病率 AN 0.9% / BN 1.5% / BED 3.5%；男性 0.3% / 0.5% / 2.0%。<strong>BED 高于 AN 与 BN 之和。</strong><em>注意：网上流传的「5.5% / 2% / 1.2%」是二手来源的讹传，不要用。</em>但 GBD 2019 只纳入了 AN 与 BN 两种，BED 与 OSFED 虽更常见却未被单独统计。<em>这本身就是"人最多、声音最小"的一个证据。</em></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>限制型是通往暴食谱系最大的一条来路</div>
+            <div class="ev-how">限制型厌食患者中<strong>约四到六成</strong>发展出暴食/清除型（Eddy 随访约 55%，2022 年荟萃约 42%；<em>62% 是文献上限，别当事实讲</em>）；厌食患者中 20–50% 转为贪食症（7 年纵向研究中 34%）；7 年间超过半数厌食女性在两个亚型间往返。反向（BN→AN）约 10%–27%。<strong>诊断本身高度不稳定。</strong>这条既支撑亲历经验与本产品的相关性，也支撑"上游拦截"这一未来方向。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>ED 专用共情聊天机器人已有重大事故先例</div>
+            <div class="ev-how">NEDA 的 Tessa 于 2023 年替换人工热线后不到一周下架：向进食障碍求助者提供热量计算方法、建议每周减重 1–2 磅、建议限制饮食，<strong>且在被告知用户患有进食障碍后仍继续推荐热量限制与节食</strong>。曝光者 Sharon Maxwell："Tessa 建议的每一件事，都正是当年导致我患上进食障碍的东西。"NEDA 最初公开否认，出示截图后删帖。<strong>这是"不做生成式共情对话"最有力的单一论据。</strong></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>康复转折点指向被理解与同伴连接</div>
+            <div class="ev-how">质性研究与元综合反复指向：被理解与被接纳的感受、与不评判者的连接、相似经历者的同伴支持（带来"被理解、被连接、不那么孤单、属于某个群体"）、生活角色重要性超过疾病身份。促进因素被总结为有同情心的个体化照护、同伴连接、亲历经验的整合。<strong>这既支持"缺情绪疏导"这条批评，也说明解法是同伴在场而非模拟共情。</strong></div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag ok">已查证</span>通用 AI 情绪支持赛道已有极高门槛</div>
+            <div class="ev-how">Woebot：14 项 RCT，产后抑郁工具获 FDA 突破性设备认定；局限为纯文本、脚本感、非为开放式情绪处理设计。Wysa：有同行评议研究，NHS 部分数字路径采用；<strong>明确声明不能处理危机与重症</strong>。此类研究流失率可达 61%。国内壹点灵 2024 付费咨询时长超 6 亿分钟、注册用户 4300 万。</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-claim"><span class="tag own">原创观察</span>同步在场作为留存机制</div>
+            <div class="ev-how">"定时匿名同步小组能改善这类工具的留存"目前没有直接证据，别硬凑引用。<strong>可支撑的推论是</strong>：文献显示提醒与类人支持有效、游戏化无效，而同步在场属于前者。就当作待验证的设计假设来讲，比伪装成结论更可信。</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="safety">
+        <div class="sec-label">Boundaries</div>
+        <h2>安全边界</h2>
+        <ul>
+          <li><strong>首屏声明</strong>不做诊断、不替代专业治疗</li>
+          <li><strong>再喂养闸门</strong>：首次使用筛查长期限制与低体重状态，命中则不进入自助流程，直接导向医疗监护</li>
+          <li><strong>红旗清单常驻可查</strong>，不埋在二级页面</li>
+          <li><strong>转介路径</strong>：可及的心理援助热线与有进食障碍专科的机构。号码与科室<strong>上台前逐个核实当前有效</strong>——一个失效的求助号码比没有更糟</li>
+          <li><strong>危机识别</strong>：出现自伤或自杀相关表述时切到危机路径，不继续常规流程</li>
+          <li><strong>不采集</strong>体重、热量、食物图像。数据本地优先，不出设备</li>
+          <li><strong>素材伦理</strong>：不从豆瓣小组、微博树洞扒真实患者的话做演示素材。用自己的或已公开发表的研究材料。演示中的示例内容<strong>必须在台上声明是示例</strong></li>
+        </ul>
+      </section>
+
+      <section id="open">
+        <div class="sec-label">Open</div>
+        <h2>未决问题</h2>
+        <ul class="asks">
+          <li><b>只有你能回答的三个问题（决定被听见层的全部文案）</b><span>评审提的"这个 app 给几年前的你，能解决当时的问题吗"是这批意见里最有价值的一条，而它必须由你的记忆来回答，不能由文献代答。需要的不是完整叙事，是三个具体的点：<br>① 有没有某一刻是转折？是什么触发的——一个人、一句话、一个事实、一次崩溃、一次体检结果？<br>② 最难的那段，你最想要但当时不存在的东西是什么？<br>③ 有没有哪一次是别人说了一句话，让你松开了一点？<em>那句话原样是什么。</em><br><strong>第三个的答案可以直接成为产品文案</strong>——那会是整个产品里最真的一句话，而且不需要你在台上说出它的来源。</span></li>
+          <li><b>要不要在台上披露</b><span>产品逻辑完全不依赖它，上面每一条都靠证据和设计判断站得住。<em>不建议按"声泪俱下"的方式做</em>（理由见演示脚本章）。若要说，一句、平着说、说完停住。</span></li>
+          <li><b>已解 · "此刻有 N 人在这里"</b><span>不再是"没有干净解法"。Southward 2013（n=107 BN/BED）测出情绪失调→暴食病理<strong>由孤独中介</strong>（95% CI 0.03–0.09），反向路径不成立——所以这个数字不是社交装饰，是<strong>直接打在中介变量上</strong>。三条防线：措辞落在窗口和难度上不落在行为上；<strong>人数为 0 或 1 时整块不显示</strong>（凌晨三点看到"还有 0 个人"比看不到更糟）；只在小组那一条和发作那一屏各出现一次。</span></li>
+          <li><b>半解 · 手册那两条改编</b><span><strong>味觉自我安抚已解，而且解法是她自己的。</strong>原技能"吃点好吃的安抚自己"在暴食侧等于强化，而重症 ED 做食物聚焦练习会加剧强迫思维——「一口水」保住味觉与口腔触觉通道，去掉食物、热量和破戒风险（Esplen 1998 那条 RCT 支撑意象部分）。<br><strong>剧烈运动那条仍未解——只能翻书</strong>（Safer／Telch／Chen 手册原文，搜索解决不了）。目前只能说"DBT 用于 ED 时通常改编掉这一项"，不能说"手册规定"。</span></li>
+          <li><b>已解 · 躯体层的临床来源</b><span>逐条落实完毕，见《11-证据-数据底册》：1 g 糖原结合 3.21±0.57 g 水（PMID 6811511）；停清除后 3–4 天出现水肿、病程 2–4 周、避免积极补液（50 mL/h）；再喂养 NICE 四条阈值 ＋ ASPEN 2020 分级 ＋ 恢复热量后 5 天危险窗 ＋ 硫胺素；血钾正常 3.7–5.1、&lt;2.5 需静脉补钾。<strong>并改掉了一处错：原写「碳酸氢钠水（小苏打）漱口」，文献里是清水或含氟漱口水。</strong></span></li>
+          <li><b>Resilience: eDBT 现在是否公开可用、有无中文版</b><span>影响"中文世界没有"这个论点的强度。需要实际查一下。</span></li>
+          <li><b>已定 · 产品名「退潮」</b><span>而且这个名字现在有了落点：s-empty 那句<strong>「太久没吃东西，那阵饿会像潮水一样涨起来」</strong>是全产品唯一一处把产品名交代清楚的地方，之后 s-passed 的「它每次都会退」才有上文。</span></li>
+          <li><b>仍未决 · 每日滋味对暴食侧是不是线索</b><span>这是滋味层唯一的真风险：线索驱动的渴望不快速消退。缓冲已经做了四层：不写欲望词、不加场景、<strong>夜里与那场前后只留标题＋「明早再看」</strong>、白天看过的夜里不再出现。判断依据是她自己给的——<em>吃播靠感官细节＋即时可得，产品拿掉了即时可得；白天做的是脱敏，夜里同一段文字做的就是挑逗。字没变，时段变了作用就反过来。</em><strong>要不要冒这个险由你定。</strong></span></li>
+          <li><b>仍未决 · 「我什么都不敢说」那一支</b><span>照护者端现有的卡治的是"忍不住说"。对不敢说的人，"先别开口"反而是加码。<strong>这是整套文案里最大的一个洞</strong>，需要单独写。</span></li>
+        </ul>
+      </section>
+
+      <footer class="end">
+        <p>选中任意文字可以写批注，右下角开关面板，可导出 JSON。改哪一条、砍哪一块，直接标在文档上。</p>
+      </footer>
+
+    </main>
+  </div>
+</div>
+<!-- ══════════════════════════════════════════════════════════════════
+     可批注层 · Annotator
+     用法：整段粘贴到文档 HTML 的最末尾即可，无需其他改动。
+     依赖：无。CSP 安全（纯内联，无外部资源）。
+     行为：选中正文文字 → 浮出「批注」→ 写批注 → 高亮并存入 localStorage
+           右下角按钮开关批注面板，可导出 JSON / 导入 JSON / 清空。
+     锚定：全局字符偏移 + 前后文快照，不修改正文 DOM，所以偏移长期有效。
+     ══════════════════════════════════════════════════════════════════ -->
+<style>
+  #anno-fab,#anno-panel,#anno-tip{
+    --a-bg:#FFFFFF; --a-sunk:#F2F3EF; --a-ink:#161A18; --a-ink2:#4A524D; --a-ink3:#7C857F;
+    --a-rule:#DFE2DB; --a-accent:#0F5E52; --a-accent-soft:#E2EDE9; --a-rust:#9A3B28;
+    --a-shadow:0 2px 6px rgba(22,26,24,.08),0 12px 32px -10px rgba(22,26,24,.22);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) #anno-fab,
+    :root:not([data-theme="light"]) #anno-panel,
+    :root:not([data-theme="light"]) #anno-tip{
+      --a-bg:#1A1E18; --a-sunk:#20241D; --a-ink:#E9EDE5; --a-ink2:#AAB3A6; --a-ink3:#7B857A;
+      --a-rule:#2E3429; --a-accent:#66C2AE; --a-accent-soft:#1B2D28; --a-rust:#D57F68;
+      --a-shadow:0 2px 6px rgba(0,0,0,.4),0 12px 32px -10px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] #anno-fab,
+  :root[data-theme="dark"] #anno-panel,
+  :root[data-theme="dark"] #anno-tip{
+    --a-bg:#1A1E18; --a-sunk:#20241D; --a-ink:#E9EDE5; --a-ink2:#AAB3A6; --a-ink3:#7B857A;
+    --a-rule:#2E3429; --a-accent:#66C2AE; --a-accent-soft:#1B2D28; --a-rust:#D57F68;
+    --a-shadow:0 2px 6px rgba(0,0,0,.4),0 12px 32px -10px rgba(0,0,0,.7);
+  }
+
+  /* 高亮：优先 CSS Custom Highlight API，不改 DOM */
+  ::highlight(anno-mark){ background:rgba(15,94,82,.16); text-decoration:underline;
+    text-decoration-color:rgba(15,94,82,.5); text-underline-offset:3px; }
+  ::highlight(anno-active){ background:rgba(169,101,26,.28); }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) ::highlight(anno-mark){ background:rgba(102,194,174,.20);
+      text-decoration-color:rgba(102,194,174,.6); }
+    :root:not([data-theme="light"]) ::highlight(anno-active){ background:rgba(215,154,85,.34); }
+  }
+  :root[data-theme="dark"] ::highlight(anno-mark){ background:rgba(102,194,174,.20);
+    text-decoration-color:rgba(102,194,174,.6); }
+  :root[data-theme="dark"] ::highlight(anno-active){ background:rgba(215,154,85,.34); }
+
+  /* 降级高亮层（无 Highlight API 时启用） */
+  #anno-layer{ position:absolute; inset:0; pointer-events:none; z-index:5; }
+  #anno-layer i{ position:absolute; background:rgba(15,94,82,.16);
+    border-bottom:1px solid rgba(15,94,82,.5); border-radius:2px; display:block; }
+  #anno-layer i.on{ background:rgba(169,101,26,.28); }
+
+  /* 选区浮标 */
+  #anno-tip{ position:absolute; z-index:9999; display:none;
+    background:var(--a-bg); color:var(--a-ink); border:1px solid var(--a-rule);
+    border-radius:7px; box-shadow:var(--a-shadow); padding:.3rem;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif; }
+  #anno-tip button{ all:unset; cursor:pointer; display:flex; align-items:center; gap:.4rem;
+    padding:.4rem .75rem; border-radius:5px; font-size:.85rem; font-weight:600; color:var(--a-accent); }
+  #anno-tip button:hover{ background:var(--a-accent-soft); }
+  #anno-tip button:focus-visible{ outline:2px solid var(--a-accent); outline-offset:1px; }
+
+  /* 悬浮按钮 */
+  #anno-fab{ position:fixed; right:1.1rem; bottom:1.1rem; z-index:9998;
+    width:52px; height:52px; border-radius:50%; border:1px solid var(--a-rule);
+    background:var(--a-bg); color:var(--a-accent); box-shadow:var(--a-shadow);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-family:ui-monospace,Menlo,monospace; font-size:.95rem; font-weight:700;
+    transition:transform .15s ease; }
+  #anno-fab:hover{ transform:translateY(-2px); }
+  #anno-fab:focus-visible{ outline:2px solid var(--a-accent); outline-offset:2px; }
+  #anno-fab svg{ width:21px; height:21px; }
+  #anno-fab .cnt{ position:absolute; top:-3px; right:-3px; min-width:19px; height:19px;
+    padding:0 5px; border-radius:10px; background:var(--a-accent); color:var(--a-bg);
+    font-size:.68rem; line-height:19px; text-align:center; display:none; }
+
+  /* 面板 */
+  #anno-panel{ position:fixed; top:0; right:0; bottom:0; width:min(360px,100vw); z-index:9999;
+    background:var(--a-bg); border-left:1px solid var(--a-rule); box-shadow:var(--a-shadow);
+    display:flex; flex-direction:column; transform:translateX(100%);
+    transition:transform .22s cubic-bezier(.4,0,.2,1);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    color:var(--a-ink); }
+  #anno-panel.open{ transform:translateX(0); }
+  #anno-panel header{ padding:.9rem 1rem; border-bottom:1px solid var(--a-rule);
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex:0 0 auto; }
+  #anno-panel header h3{ margin:0; font-size:.95rem; font-weight:600;
+    font-family:"Songti SC","SimSun",Georgia,serif; }
+  #anno-panel header .sub{ font-size:.72rem; color:var(--a-ink3); font-weight:400; margin-left:.4rem; }
+  #anno-close{ all:unset; cursor:pointer; padding:.3rem .5rem; border-radius:5px;
+    color:var(--a-ink3); font-size:1.15rem; line-height:1; }
+  #anno-close:hover{ background:var(--a-sunk); color:var(--a-ink); }
+  #anno-close:focus-visible{ outline:2px solid var(--a-accent); }
+
+  #anno-list{ flex:1 1 auto; overflow-y:auto; padding:.75rem; display:flex; flex-direction:column; gap:.6rem; }
+  #anno-list .empty{ color:var(--a-ink3); font-size:.85rem; text-align:center;
+    padding:2.5rem 1rem; line-height:1.7; }
+
+  .anno-item{ border:1px solid var(--a-rule); border-radius:7px; background:var(--a-bg);
+    padding:.7rem .8rem; cursor:pointer; }
+  .anno-item:hover{ border-color:var(--a-accent); }
+  .anno-item.on{ border-color:var(--a-accent); background:var(--a-accent-soft); }
+  .anno-item blockquote{ margin:0 0 .45rem; padding-left:.6rem;
+    border-left:2px solid var(--a-accent); font-size:.78rem; color:var(--a-ink2);
+    line-height:1.55; max-height:4.4em; overflow:hidden; }
+  .anno-item .note{ font-size:.87rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+  .anno-item .row{ display:flex; align-items:center; justify-content:space-between;
+    margin-top:.5rem; font-size:.7rem; color:var(--a-ink3); }
+  .anno-item .del{ all:unset; cursor:pointer; color:var(--a-ink3); padding:.15rem .4rem; border-radius:4px; }
+  .anno-item .del:hover{ color:var(--a-rust); background:var(--a-sunk); }
+  .anno-item .del:focus-visible{ outline:2px solid var(--a-rust); }
+  .anno-item .orphan{ color:var(--a-rust); font-size:.68rem; }
+
+  #anno-editor{ border-top:1px solid var(--a-rule); padding:.75rem; display:none; flex:0 0 auto; }
+  #anno-editor.show{ display:block; }
+  #anno-editor blockquote{ margin:0 0 .5rem; padding-left:.6rem; border-left:2px solid var(--a-accent);
+    font-size:.78rem; color:var(--a-ink2); line-height:1.55; max-height:4.4em; overflow:hidden; }
+  #anno-text{ width:100%; box-sizing:border-box; min-height:74px; resize:vertical;
+    border:1px solid var(--a-rule); border-radius:6px; background:var(--a-sunk); color:var(--a-ink);
+    padding:.55rem .65rem; font:inherit; font-size:.87rem; line-height:1.6; }
+  #anno-text:focus{ outline:2px solid var(--a-accent); outline-offset:-1px; }
+  #anno-editor .acts{ display:flex; gap:.5rem; margin-top:.55rem; }
+  #anno-editor button{ all:unset; cursor:pointer; padding:.42rem .9rem; border-radius:6px;
+    font-size:.83rem; font-weight:600; text-align:center; }
+  #anno-save{ background:var(--a-accent); color:var(--a-bg); flex:1; }
+  #anno-cancel{ color:var(--a-ink2); border:1px solid var(--a-rule)!important; }
+  #anno-editor button:focus-visible{ outline:2px solid var(--a-accent); outline-offset:1px; }
+
+  #anno-foot{ border-top:1px solid var(--a-rule); padding:.7rem .75rem;
+    display:flex; gap:.45rem; flex:0 0 auto; flex-wrap:wrap; }
+  #anno-foot button,#anno-foot label{ all:unset; cursor:pointer; flex:1; min-width:82px;
+    text-align:center; padding:.45rem .5rem; border-radius:6px; font-size:.78rem; font-weight:600;
+    border:1px solid var(--a-rule); color:var(--a-ink2); box-sizing:border-box; }
+  #anno-foot button:hover,#anno-foot label:hover{ background:var(--a-sunk); color:var(--a-ink); }
+  #anno-foot #anno-copy{ background:var(--a-accent); color:var(--a-bg); border-color:var(--a-accent); }
+  #anno-foot #anno-copy.done{ background:var(--a-accent-soft); color:var(--a-accent); }
+  #anno-foot button:focus-visible,#anno-foot label:focus-within{ outline:2px solid var(--a-accent); outline-offset:1px; }
+  #anno-file{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+  #anno-newtab{ display:none; text-decoration:none; }
+  #anno-newtab.show{ display:block; background:var(--a-accent-soft); color:var(--a-accent)!important;
+    border-color:var(--a-accent)!important; }
+  #anno-store{ flex:0 0 auto; font-size:.72rem; line-height:1.6; padding:.5rem .8rem;
+    border-bottom:1px solid var(--a-rule); display:none; }
+  #anno-store.show{ display:block; }
+  #anno-store.ok{ color:var(--a-ink3); }
+  #anno-store.bad{ color:var(--a-rust); background:rgba(154,59,40,.07); }
+  #anno-store b{ font-weight:700; }
+  #anno-fallback{ display:none; width:calc(100% - 1.5rem); margin:0 .75rem .75rem; height:120px;
+    box-sizing:border-box; border:1px solid var(--a-accent); border-radius:6px;
+    background:var(--a-sunk); color:var(--a-ink); padding:.5rem; font-size:.72rem;
+    font-family:ui-monospace,Menlo,monospace; resize:vertical; }
+  #anno-fallback.show{ display:block; }
+
+  @media (prefers-reduced-motion:reduce){ #anno-panel,#anno-fab{ transition:none!important; } }
+  @media print{ #anno-fab,#anno-panel,#anno-tip{ display:none!important; } }
+</style>
+
+<div id="anno-tip" data-anno-ui><button type="button" id="anno-add">✎ 批注</button></div>
+
+<button id="anno-fab" data-anno-ui type="button" aria-label="打开批注面板" title="批注（选中文字后可添加）">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+  <span class="cnt" id="anno-cnt">0</span>
+</button>
+
+<aside id="anno-panel" data-anno-ui aria-label="批注面板" aria-hidden="true">
+  <header>
+    <h3>批注<span class="sub" id="anno-sub">0 条</span></h3>
+    <button id="anno-close" type="button" aria-label="关闭批注面板">✕</button>
+  </header>
+  <div id="anno-store"></div>
+  <div id="anno-list"></div>
+  <div id="anno-editor">
+    <blockquote id="anno-quote"></blockquote>
+    <textarea id="anno-text" placeholder="写下你的批注……（⌘/Ctrl + Enter 保存）"></textarea>
+    <div class="acts">
+      <button id="anno-save" type="button">保存</button>
+      <button id="anno-cancel" type="button">取消</button>
+    </div>
+  </div>
+  <div id="anno-foot">
+    <button id="anno-link" type="button">复制回看链接</button>
+    <button id="anno-copy" type="button">复制 JSON</button>
+    <button id="anno-export" type="button">导出 JSON</button>
+    <a id="anno-newtab" target="_blank" rel="noopener" href="#">新窗口打开 ↗</a>
+    <label for="anno-file" tabindex="0" role="button">导入文件</label>
+    <input type="file" id="anno-file" accept="application/json,.json">
+    <button id="anno-paste" type="button">粘贴导入</button>
+    <button id="anno-clear" type="button">清空</button>
+  </div>
+  <textarea id="anno-fallback" aria-label="批注 JSON，请手动复制"></textarea>
+</aside>
+
+<script>
+(function(){
+  'use strict';
+
+  var DOCID = document.title || location.pathname;
+  var KEY   = 'anno:v1:' + DOCID;
+  var CTX   = 40;                       // 前后文快照长度，用于文档变更后重定位
+  var HAS_HL = (typeof Highlight === 'function') && !!(window.CSS && CSS.highlights);
+
+  var items = [];                       // {id,quote,note,start,end,before,after,created,_range,_orphan}
+  var pending = null;                   // 待保存的选区 {quote,start,end,before,after}
+  var activeId = null;
+  var layer = null;                     // 降级高亮层
+
+  var $ = function(id){ return document.getElementById(id); };
+  var tip=$('anno-tip'), fab=$('anno-fab'), panel=$('anno-panel'), list=$('anno-list'),
+      editor=$('anno-editor'), quoteEl=$('anno-quote'), textEl=$('anno-text'),
+      cntEl=$('anno-cnt'), subEl=$('anno-sub');
+
+  /* ---------- 文本索引：把正文所有文本节点串成一条全局字符流 ---------- */
+  function index(){
+    var out=[], off=0;
+    var w=document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode:function(n){
+        if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+        var p=n.parentElement;
+        while(p){
+          if(p.hasAttribute && p.hasAttribute('data-anno-ui')) return NodeFilter.FILTER_REJECT;
+          var t=p.tagName;
+          if(t==='SCRIPT'||t==='STYLE'||t==='NOSCRIPT') return NodeFilter.FILTER_REJECT;
+          p=p.parentElement;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while(w.nextNode()){
+      var n=w.currentNode;
+      out.push({n:n, s:off, e:off+n.nodeValue.length});
+      off+=n.nodeValue.length;
+    }
+    return out;
+  }
+  function fullText(idx){
+    var s=''; for(var i=0;i<idx.length;i++) s+=idx[i].n.nodeValue; return s;
+  }
+  function rangeToOffset(range, idx){
+    var a=null,b=null;
+    for(var i=0;i<idx.length;i++){
+      if(idx[i].n===range.startContainer) a=idx[i].s+range.startOffset;
+      if(idx[i].n===range.endContainer)   b=idx[i].s+range.endOffset;
+    }
+    return (a===null||b===null||b<=a) ? null : {start:a,end:b};
+  }
+  function offsetToRange(start,end,idx){
+    var r=document.createRange(), got=0;
+    for(var i=0;i<idx.length;i++){
+      var e=idx[i];
+      if(!(got&1) && start>=e.s && start<e.e){ r.setStart(e.n,start-e.s); got|=1; }
+      if(!(got&2) && end  > e.s && end  <=e.e){ r.setEnd(e.n,  end  -e.s); got|=2; }
+      if(got===3) break;
+    }
+    return got===3 ? r : null;
+  }
+
+  /* ---------- 重定位：偏移失效时用引文 + 前后文找回 ---------- */
+  function relocate(it, idx){
+    var r = offsetToRange(it.start, it.end, idx);
+    if(r && r.toString() === it.quote) return r;
+    var text = fullText(idx);
+    var probe = (it.before||'') + it.quote + (it.after||'');
+    var p = text.indexOf(probe);
+    if(p >= 0){
+      var s0 = p + (it.before||'').length;
+      return offsetToRange(s0, s0 + it.quote.length, idx);
+    }
+    var q = text.indexOf(it.quote);
+    if(q >= 0) return offsetToRange(q, q + it.quote.length, idx);
+    return null;
+  }
+
+  /* ---------- 高亮渲染 ---------- */
+  function paint(){
+    var idx = index();
+    for(var i=0;i<items.length;i++){
+      var r = relocate(items[i], idx);
+      items[i]._range = r;
+      items[i]._orphan = !r;
+    }
+    if(HAS_HL){
+      var hm=new Highlight(), ha=new Highlight();
+      for(var j=0;j<items.length;j++){
+        if(!items[j]._range) continue;
+        (items[j].id===activeId ? ha : hm).add(items[j]._range);
+      }
+      CSS.highlights.set('anno-mark', hm);
+      CSS.highlights.set('anno-active', ha);
+    }else{
+      if(!layer){
+        layer=document.createElement('div');
+        layer.id='anno-layer'; layer.setAttribute('data-anno-ui','');
+        document.body.appendChild(layer);
+      }
+      layer.textContent='';
+      var sx=window.scrollX, sy=window.scrollY;
+      for(var k=0;k<items.length;k++){
+        if(!items[k]._range) continue;
+        var rects=items[k]._range.getClientRects();
+        for(var m=0;m<rects.length;m++){
+          var b=rects[m]; if(b.width<1||b.height<1) continue;
+          var el=document.createElement('i');
+          if(items[k].id===activeId) el.className='on';
+          el.style.left=(b.left+sx)+'px'; el.style.top=(b.top+sy)+'px';
+          el.style.width=b.width+'px';    el.style.height=b.height+'px';
+          layer.appendChild(el);
+        }
+      }
+    }
+  }
+
+  /* ---------- 存储：localStorage 主，URL hash 备 ---------- */
+  var LS_OK = (function(){                 // 真实写读测试，沙箱 iframe 里会失败
+    try{
+      var t='__anno_t__'+Math.random();
+      localStorage.setItem(t,'1');
+      var ok = localStorage.getItem(t)==='1';
+      localStorage.removeItem(t);
+      return ok;
+    }catch(e){ return false; }
+  })();
+  var HASH_OK = (function(){
+    try{ history.replaceState(null,'',location.href); return true; }catch(e){ return false; }
+  })();
+
+  function slim(){                          // 压掉冗余字段，缩短 URL
+    return items.map(function(i){
+      return [i.id,i.quote,i.note,i.start,i.end,i.before,i.after,i.created];
+    });
+  }
+  function fat(a){
+    return (a||[]).map(function(r){
+      return {id:r[0],quote:r[1],note:r[2],start:r[3],end:r[4],
+              before:r[5],after:r[6],created:r[7]};
+    });
+  }
+  function b64e(s){
+    var u=new TextEncoder().encode(s), b='';
+    for(var i=0;i<u.length;i++) b+=String.fromCharCode(u[i]);
+    return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+  function b64d(s){
+    s=s.replace(/-/g,'+').replace(/_/g,'/');
+    var bin=atob(s), u=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+    return new TextDecoder().decode(u);
+  }
+
+  function syncHash(){
+    if(!HASH_OK) return;
+    try{
+      var h = items.length ? ('#n=' + b64e(JSON.stringify(slim()))) : '';
+      history.replaceState(null, '', location.pathname + location.search + h);
+    }catch(e){}
+  }
+  function save(){
+    if(LS_OK){
+      try{ localStorage.setItem(KEY, JSON.stringify(items.map(function(i){
+        return {id:i.id,quote:i.quote,note:i.note,start:i.start,end:i.end,
+                before:i.before,after:i.after,created:i.created}; }))); }catch(e){}
+    }
+    syncHash();
+  }
+  function load(){
+    var fromLS=[], fromHash=[];
+    if(LS_OK){
+      try{ fromLS = JSON.parse(localStorage.getItem(KEY)||'[]')||[]; }catch(e){}
+    }
+    try{
+      var m=/[#&]n=([^&]+)/.exec(location.hash||'');
+      if(m) fromHash = fat(JSON.parse(b64d(m[1])));
+    }catch(e){}
+    var seen={}; items=[];
+    fromLS.concat(fromHash).forEach(function(x){
+      if(x && x.quote && x.note && !seen[x.id]){ seen[x.id]=1; items.push(x); }
+    });
+    if(fromHash.length && LS_OK) save();   // hash 恢复的顺手落盘
+  }
+
+  function storeBanner(){
+    var el=$('anno-store'); if(!el) return;
+    if(LS_OK){
+      el.className='show ok';
+      el.innerHTML='✓ 批注已存到本机浏览器，关掉页面重开仍在。';
+    }else{
+      el.className='show bad';
+      el.innerHTML='⚠ <b>这个页面禁用了本机存储</b>，批注只保存在当前地址栏里。'+
+                   '离开前请点下方<b>「复制回看链接」</b>，用那条链接重进即可恢复；'+
+                   '或点<b>「导出 JSON」</b>存成文件。';
+    }
+  }
+
+  /* ---------- 列表渲染 ---------- */
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function render(){
+    cntEl.textContent = items.length;
+    cntEl.style.display = items.length ? 'block' : 'none';
+    subEl.textContent = items.length + ' 条';
+    list.textContent='';
+    if(!items.length){
+      var d=document.createElement('div');
+      d.className='empty';
+      d.textContent='还没有批注。\n在正文里选中一段文字，就能写批注。';
+      list.appendChild(d);
+      return;
+    }
+    var sorted = items.slice().sort(function(a,b){ return a.start-b.start; });
+    sorted.forEach(function(it){
+      var el=document.createElement('article');
+      el.className='anno-item'+(it.id===activeId?' on':'');
+      el.tabIndex=0;
+      el.innerHTML =
+        '<blockquote>'+esc(it.quote)+'</blockquote>'+
+        '<div class="note">'+esc(it.note)+'</div>'+
+        '<div class="row"><span>'+new Date(it.created).toLocaleString('zh-CN')+
+        (it._orphan?' · <span class="orphan">原文已变动</span>':'')+
+        '</span><button class="del" type="button" aria-label="删除这条批注">删除</button></div>';
+      el.addEventListener('click', function(ev){
+        if(ev.target.classList.contains('del')){
+          ev.stopPropagation();
+          items = items.filter(function(x){ return x.id!==it.id; });
+          if(activeId===it.id) activeId=null;
+          save(); paint(); render();
+          return;
+        }
+        activeId = (activeId===it.id) ? null : it.id;
+        paint(); render();
+        if(it._range){
+          var rc=it._range.getBoundingClientRect();
+          window.scrollTo({ top: window.scrollY + rc.top - window.innerHeight/3,
+                            behavior: 'smooth' });
+        }
+      });
+      el.addEventListener('keydown', function(ev){
+        if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); el.click(); }
+      });
+      list.appendChild(el);
+    });
+  }
+
+  /* ---------- 选区 → 浮标 ---------- */
+  function hideTip(){ tip.style.display='none'; }
+
+  document.addEventListener('selectionchange', function(){
+    var sel=document.getSelection();
+    if(!sel || sel.isCollapsed || !sel.rangeCount){ hideTip(); return; }
+    var r=sel.getRangeAt(0);
+    if(!r.toString().trim()){ hideTip(); return; }
+    var host=r.commonAncestorContainer;
+    host = host.nodeType===1 ? host : host.parentElement;
+    if(host && host.closest && host.closest('[data-anno-ui]')){ hideTip(); return; }
+    var b=r.getBoundingClientRect();
+    if(!b.width && !b.height){ hideTip(); return; }
+    tip.style.display='block';
+    var w=tip.offsetWidth||96, h=tip.offsetHeight||36;
+    var left=Math.min(Math.max(8, b.left+window.scrollX+b.width/2-w/2),
+                      window.scrollX+document.documentElement.clientWidth-w-8);
+    var top=b.top+window.scrollY-h-8;
+    if(top < window.scrollY+4) top=b.bottom+window.scrollY+8;
+    tip.style.left=left+'px'; tip.style.top=top+'px';
+  });
+
+  $('anno-add').addEventListener('mousedown', function(ev){ ev.preventDefault(); });
+  $('anno-add').addEventListener('click', function(){
+    var sel=document.getSelection();
+    if(!sel||!sel.rangeCount) return;
+    var r=sel.getRangeAt(0), idx=index(), off=rangeToOffset(r, idx);
+    if(!off) return;
+    var text=fullText(idx);
+    pending = {
+      quote : r.toString(),
+      start : off.start,
+      end   : off.end,
+      before: text.slice(Math.max(0,off.start-CTX), off.start),
+      after : text.slice(off.end, off.end+CTX)
+    };
+    hideTip(); sel.removeAllRanges();
+    quoteEl.textContent = pending.quote;
+    editor.classList.add('show');
+    textEl.value='';
+    open(true);
+    textEl.focus();
+  });
+
+  /* ---------- 保存 / 取消 ---------- */
+  function commit(){
+    var v=textEl.value.trim();
+    if(!pending || !v){ return; }
+    items.push({
+      id: 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),
+      quote:pending.quote, note:v, start:pending.start, end:pending.end,
+      before:pending.before, after:pending.after, created:new Date().toISOString()
+    });
+    pending=null; editor.classList.remove('show'); textEl.value='';
+    save(); paint(); render();
+  }
+  $('anno-save').addEventListener('click', commit);
+  $('anno-cancel').addEventListener('click', function(){
+    pending=null; editor.classList.remove('show'); textEl.value='';
+  });
+  textEl.addEventListener('keydown', function(ev){
+    if((ev.metaKey||ev.ctrlKey) && ev.key==='Enter'){ ev.preventDefault(); commit(); }
+    if(ev.key==='Escape'){ pending=null; editor.classList.remove('show'); textEl.value=''; }
+  });
+
+  /* ---------- 面板开关 ---------- */
+  function open(v){
+    panel.classList.toggle('open', v);
+    panel.setAttribute('aria-hidden', v?'false':'true');
+  }
+  fab.addEventListener('click', function(){ open(!panel.classList.contains('open')); });
+  $('anno-close').addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(ev){
+    if(ev.key==='Escape' && panel.classList.contains('open') && document.activeElement!==textEl) open(false);
+  });
+
+  /* ---------- 复制 / 导出 / 导入 / 清空 ---------- */
+  function payload(){
+    return {
+      document   : DOCID,
+      url        : location.href,
+      exported_at: new Date().toISOString(),
+      count      : items.length,
+      annotations: items.slice().sort(function(a,b){return a.start-b.start;}).map(function(i){
+        return { id:i.id, quote:i.quote, note:i.note,
+                 anchor:{ start:i.start, end:i.end,
+                          context_before:i.before, context_after:i.after },
+                 created_at:i.created, resolved:!i._orphan };
+      })
+    };
+  }
+  function jsonText(){ return JSON.stringify(payload(), null, 2); }
+
+  var copyBtn=$('anno-copy'), fallbackEl=$('anno-fallback');
+  function copied(ok){
+    copyBtn.textContent = ok ? '✓ 已复制' : '↓ 手动复制';
+    copyBtn.classList.add('done');
+    setTimeout(function(){ copyBtn.textContent='复制 JSON'; copyBtn.classList.remove('done'); }, 2200);
+  }
+  function manualCopy(txt){
+    fallbackEl.value = txt;
+    fallbackEl.classList.add('show');
+    fallbackEl.focus(); fallbackEl.select();
+    var ok=false;
+    try{ ok = document.execCommand('copy'); }catch(e){ ok=false; }
+    copied(ok);
+    if(ok) setTimeout(function(){ fallbackEl.classList.remove('show'); }, 400);
+  }
+  copyBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注可复制。'); return; }
+    var txt=jsonText();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ copied(true); },
+                                              function(){ manualCopy(txt); });
+    }else{ manualCopy(txt); }
+  });
+
+  var linkBtn=$('anno-link');
+  linkBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注。'); return; }
+    syncHash();
+    var url;
+    try{
+      url = HASH_OK ? location.href
+                    : (location.origin+location.pathname+location.search+'#n='+b64e(JSON.stringify(slim())));
+    }catch(e){ url = location.href; }
+    var done=function(ok){
+      linkBtn.textContent = ok?'✓ 链接已复制':'↓ 手动复制';
+      setTimeout(function(){ linkBtn.textContent='复制回看链接'; },2400);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){done(true);},function(){
+        fallbackEl.value=url; fallbackEl.classList.add('show');
+        fallbackEl.focus(); fallbackEl.select(); done(false); });
+    }else{
+      fallbackEl.value=url; fallbackEl.classList.add('show');
+      fallbackEl.focus(); fallbackEl.select();
+      var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+      done(ok); if(ok) setTimeout(function(){ fallbackEl.classList.remove('show'); },400);
+    }
+  });
+
+  var expBtn=$('anno-export');
+  function fileName(){ return DOCID.replace(/[\\/:*?"<>|]/g,'_').slice(0,60) + '-批注.json'; }
+  function expFlash(t){ expBtn.textContent=t; setTimeout(function(){ expBtn.textContent='导出 JSON'; },2600); }
+
+  expBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注可导出。'); return; }
+    var txt=jsonText();
+
+    // ⓪ Artifact 沙箱里唯一被授权的存盘通道（需在发布时声明 downloads 能力）
+    if(window.claude && typeof window.claude.use === 'function'){
+      Promise.resolve(window.claude.use('downloads')).then(function(dl){
+        if(!dl){ pickerOrLegacy(txt); return; }   // 未授权 / 未声明 / 加载失败
+        return dl.save({ filename: fileName(), data: txt })
+          .then(function(){ expFlash('✓ 已保存'); })
+          .catch(function(e){
+            var c = e && e.code;
+            if(c === 'declined' || c === 'rate_limited'){ expFlash('已取消'); return; }
+            pickerOrLegacy(txt);   // unavailable / bad_request 等一律退回原降级链
+          });
+      }).catch(function(){ pickerOrLegacy(txt); });
+      return;
+    }
+    pickerOrLegacy(txt);
+  });
+
+  function pickerOrLegacy(txt){
+    // ① 真正的「另存为」对话框，沙箱 iframe 里也能用
+    if(window.showSaveFilePicker){
+      window.showSaveFilePicker({
+        suggestedName: fileName(),
+        types:[{description:'JSON', accept:{'application/json':['.json']}}]
+      }).then(function(h){ return h.createWritable(); })
+        .then(function(w){ return w.write(txt).then(function(){ return w.close(); }); })
+        .then(function(){ expFlash('✓ 已保存'); })
+        .catch(function(e){ if(e && e.name==='AbortError') return; legacy(txt); });
+      return;
+    }
+    legacy(txt);
+  }
+
+  function legacy(txt){
+    // ② 传统下载；沙箱无 allow-downloads 时会静默失败，故补一条提示
+    var ok=false;
+    try{
+      var blob=new Blob([txt],{type:'application/json'});
+      var url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download=fileName(); a.rel='noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+      ok=true;
+    }catch(e){}
+    if(ok && IN_FRAME){
+      // 沙箱 iframe 无法确认下载是否被拦，直接摆出两条一定走得通的路
+      expFlash('若无反应见下方');
+      fallbackEl.value=txt; fallbackEl.classList.add('show');
+      fallbackEl.focus(); fallbackEl.select();
+      var b=$('anno-store');
+      if(b){ b.className='show bad';
+        b.innerHTML='⬇ <b>没弹出下载？</b>本页嵌在沙箱里，浏览器禁止它下载文件。两条路都能走通：'+
+          '① 上方文本框已全选，<b>⌘/Ctrl+C</b> 复制后自己存成 .json；'+
+          '② 点右下角 <b>「新窗口打开 ↗」</b>，在新标签页里导出就正常了（批注会跟着一起过去）。'; }
+    }else if(!ok){ manualCopy(txt); }
+  }
+
+  /* 新窗口打开：脱离 iframe 后下载可用，且 hash 里带着批注一起过去 */
+  var IN_FRAME = (function(){ try{ return window.self!==window.top; }catch(e){ return true; } })();
+  var newtab=$('anno-newtab');
+  if(IN_FRAME && newtab){
+    newtab.classList.add('show');
+    newtab.addEventListener('click', function(){ syncHash(); newtab.href=location.href; });
+    newtab.addEventListener('mouseenter', function(){ syncHash(); newtab.href=location.href; });
+    newtab.href=location.href;
+  }
+
+  /* 粘贴导入：跨环境（artifact ↔ 本地文件）迁移批注用 */
+  $('anno-paste').addEventListener('click', function(){
+    fallbackEl.value='';
+    fallbackEl.placeholder='把批注 JSON 粘贴到这里，然后按 ⌘/Ctrl + Enter 导入';
+    fallbackEl.setAttribute('data-mode','import');
+    fallbackEl.classList.add('show');
+    fallbackEl.focus();
+  });
+  fallbackEl.addEventListener('keydown', function(ev){
+    if((ev.metaKey||ev.ctrlKey) && ev.key==='Enter'
+       && fallbackEl.getAttribute('data-mode')==='import'){
+      ev.preventDefault();
+      var n=importJSON(fallbackEl.value);
+      if(n>=0){
+        fallbackEl.classList.remove('show');
+        fallbackEl.removeAttribute('data-mode');
+        fallbackEl.value='';
+      }
+    }
+    if(ev.key==='Escape'){
+      fallbackEl.classList.remove('show');
+      fallbackEl.removeAttribute('data-mode');
+    }
+  });
+
+  function importJSON(raw){
+    try{
+      var d=JSON.parse(raw);
+      var incoming=(d.annotations||d||[]).map(function(x){
+        var an=x.anchor||{};
+        return { id:x.id||('a'+Math.random().toString(36).slice(2,9)),
+                 quote:x.quote||'', note:x.note||x.comment||'',
+                 start:an.start!=null?an.start:x.start,
+                 end:an.end!=null?an.end:x.end,
+                 before:an.context_before!=null?an.context_before:(x.before||''),
+                 after:an.context_after!=null?an.context_after:(x.after||''),
+                 created:x.created_at||x.created||new Date().toISOString() };
+      }).filter(function(x){ return x.quote && x.note; });
+      var seen={}, n=0;
+      items.forEach(function(i){ seen[i.id]=1; });
+      incoming.forEach(function(x){ if(!seen[x.id]){ items.push(x); seen[x.id]=1; n++; } });
+      save(); paint(); render(); open(true);
+      alert(n ? ('已导入 '+n+' 条批注。') : '没有新批注可导入（可能都已存在）。');
+      return n;
+    }catch(e){ alert('这个 JSON 读不出来，请确认是本工具导出/复制的内容。'); return -1; }
+  }
+
+  $('anno-file').addEventListener('change', function(ev){
+    var f=ev.target.files && ev.target.files[0];
+    if(!f) return;
+    var fr=new FileReader();
+    fr.onload=function(){
+      try{
+        var d=JSON.parse(fr.result);
+        var incoming=(d.annotations||d||[]).map(function(x){
+          var an=x.anchor||{};
+          return { id:x.id||('a'+Math.random().toString(36).slice(2,9)),
+                   quote:x.quote||'', note:x.note||'',
+                   start:an.start!=null?an.start:x.start,
+                   end:an.end!=null?an.end:x.end,
+                   before:an.context_before!=null?an.context_before:(x.before||''),
+                   after:an.context_after!=null?an.context_after:(x.after||''),
+                   created:x.created_at||x.created||new Date().toISOString() };
+        }).filter(function(x){ return x.quote && x.note; });
+        var seen={}; items.forEach(function(i){ seen[i.id]=1; });
+        incoming.forEach(function(x){ if(!seen[x.id]){ items.push(x); seen[x.id]=1; } });
+        save(); paint(); render(); open(true);
+      }catch(e){ alert('这个 JSON 读不出来，请确认是本工具导出的文件。'); }
+      ev.target.value='';
+    };
+    fr.readAsText(f);
+  });
+  $('anno-file').previousElementSibling.addEventListener('keydown', function(ev){
+    if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); $('anno-file').click(); }
+  });
+
+  $('anno-clear').addEventListener('click', function(){
+    if(!items.length) return;
+    if(!confirm('确定清空全部 '+items.length+' 条批注？此操作不可撤销，建议先导出。')) return;
+    items=[]; activeId=null; save(); paint(); render();
+  });
+
+  /* ---------- 点击高亮定位到批注 ---------- */
+  document.addEventListener('click', function(ev){
+    if(ev.target.closest && ev.target.closest('[data-anno-ui]')) return;
+    var hit=null;
+    for(var i=0;i<items.length;i++){
+      var r=items[i]._range; if(!r) continue;
+      var rects=r.getClientRects();
+      for(var m=0;m<rects.length;m++){
+        var b=rects[m];
+        if(ev.clientX>=b.left&&ev.clientX<=b.right&&ev.clientY>=b.top&&ev.clientY<=b.bottom){ hit=items[i]; break; }
+      }
+      if(hit) break;
+    }
+    if(hit){ activeId=hit.id; paint(); render(); open(true); }
+  });
+
+  /* ---------- 降级层需要跟随重排 ---------- */
+  if(!HAS_HL){
+    var t=null, re=function(){ clearTimeout(t); t=setTimeout(paint,120); };
+    window.addEventListener('resize', re);
+    window.addEventListener('scroll', re, {passive:true});
+  }
+
+  /* ---------- 启动 ---------- */
+  load(); paint(); render(); storeBanner();
+  window.addEventListener('load', function(){ paint(); });
+  // 关页面/切走前兜底再存一次
+  window.addEventListener('pagehide', save);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='hidden') save(); });
+})();
+</script>
+
+</body></html>

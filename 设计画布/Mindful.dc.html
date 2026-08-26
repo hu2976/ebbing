@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;700&display=swap">
+  <style>
+    :root{
+      --n1:#171310; --n2:#1F1A15;
+      --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#83786A;
+      --hair:rgba(244,237,227,.10); --hair2:rgba(244,237,227,.05);
+      --brass:#C9A063; --jade:#8CC1AA;
+      --disp:"Cormorant Garamond","Noto Serif SC",Georgia,serif;
+      --body:"Noto Serif SC","Songti SC",Georgia,serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
+      -webkit-font-smoothing:antialiased}
+    a{color:var(--brass);text-decoration:none} a:hover{color:#DDBA85}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+    @keyframes breathe{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+    .slot{display:flex;align-items:center;gap:15px;border-bottom:1px solid var(--hair2);
+      padding:15px 0;min-height:56px}
+    .slot .t{font-family:var(--disp);font-size:24px;font-weight:300;line-height:1;
+      min-width:74px;letter-spacing:.01em}
+    .slot .d{font-size:13px;color:var(--paper2);line-height:1.6}
+    .slot.now .t{color:var(--jade)}
+    .two{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:10px}
+    .two button{cursor:pointer;background:linear-gradient(166deg,#25201A 0%,#1C1712 100%);
+      border:1px solid rgba(140,193,170,.3);border-radius:3px;min-height:64px;padding:16px 12px;
+      font-family:var(--disp);font-size:19px;font-weight:400;color:var(--jade);
+      display:flex;flex-direction:column;align-items:center;gap:5px}
+    .two button span{font-family:var(--body);font-size:11px;color:var(--paper3);letter-spacing:.1em}
+  </style>
+</helmet>
+
+<div style="width:390px;min-height:844px;padding:54px 24px 32px;display:flex;flex-direction:column;gap:19px;background:radial-gradient(120% 55% at 50% -10%, #251E17 0%, rgba(37,30,23,0) 62%), var(--n1)">
+
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:11px">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#83786A" stroke-width="1.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--jade);box-shadow:0 0 8px var(--jade);animation:breathe 4.5s ease-in-out infinite"></span>
+      <span style="font-size:12px;color:var(--jade)">此刻 23 人在</span>
+    </div>
+  </div>
+
+  <div style="font-family:var(--disp);font-size:34px;font-weight:300;line-height:1.24">一起正念</div>
+
+  <div class="two">
+    <button>正念<span>十五分钟</span></button>
+    <button>冥想<span>十分钟</span></button>
+  </div>
+
+  <!-- 说清屏上有什么，剩下的就自动没了。
+       原来这里是四个「没有」，那会把「被看见」逐个请上屏。 -->
+  <div style="background:var(--n2);border-radius:3px;padding:16px 17px;font-family:var(--disp);font-size:17px;line-height:1.85">
+    屏幕上只有一个数字：<br><span style="color:var(--jade)">此刻多少人在。</span>
+  </div>
+
+  <div style="font-family:var(--disp);font-size:17px;line-height:1.85;color:var(--paper2)">到点进来，跟着做完，结束就结束。</div>
+
+  <div style="border-top:1px solid var(--hair2);padding-top:14px">
+    <div style="font-size:10px;letter-spacing:.22em;color:var(--paper3);margin-bottom:4px">今天三场</div>
+    <div class="slot now"><span class="t">17:00</span><span class="d">饭前那场 · 五分钟</span></div>
+    <div class="slot"><span class="t">20:30</span><span class="d">晚上那场 · 十五分钟 · 含一口水</span></div>
+    <div class="slot" style="border-bottom:none"><span class="t">22:30</span><span class="d">夜里那场 · 十分钟</span></div>
+  </div>
+
+  <div style="flex-grow:1;min-height:6px"></div>
+
+  <button style="cursor:pointer;background:none;border:1px solid rgba(140,193,170,.42);border-radius:3px;min-height:54px;padding:15px;font-family:var(--disp);font-size:18px;color:var(--jade)">到点叫我</button>
+
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+    <span style="font-size:13px;color:var(--paper2)">声音：关</span>
+    <span style="font-size:11px;color:var(--paper3);text-align:right;line-height:1.6">会出声，<br>注意周围有没有人</span>
+  </div>
+
+  <div style="font-size:11px;line-height:1.8;color:var(--paper3);border-top:1px solid var(--hair2);padding-top:13px">
+    时间按发作峰值前移。周末减为两场。
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!-- 用 view 而不是 button：原型的按钮样式全是自定义的，小程序 button 的默认样式很难压干净 -->
+<view class="view in{{seq}} s-{{sid}}" style="padding-top:{{topPad}}px">
+
+  <!-- 潮水是环境不是插图：铺屏底、不占文档流、不接手势。三态见 index.js 的 TIDE -->
+  <canvas wx:if="{{tideMode}}" type="2d" id="tide" class="tide-bg {{tideMode}}"></canvas>
+
+  <!-- 入口屏的雾。三层不同速度、不同方向，同一层里不重复——
+       所以看不出周期，也看不出是三个 div。不接手势、不占文档流。 -->
+  <view wx:if="{{sid==='entry'}}" class="haze">
+    <view class="hz h1"></view><view class="hz h2"></view><view class="hz h3"></view>
+  </view>
+
+  <view class="page">
+  <view class="nav {{root ? 'root' : ''}}">
+    <view wx:if="{{!root}}" class="navbtn" hover-class="tap" bindtap="back">← 返回</view>
+  </view>
+
+  <block wx:for="{{blocks}}" wx:for-item="b" wx:for-index="i" wx:key="i">
+
+    <rich-text wx:if="{{b.k==='h'}}"     class="s-h"    nodes="{{b.t}}"></rich-text>
+    <rich-text wx:elif="{{b.k==='h2'}}"  class="s-h2"   nodes="{{b.t}}"></rich-text>
+    <rich-text wx:elif="{{b.k==='p'}}"   class="s-p"    nodes="{{b.t}}"></rich-text>
+    <!-- 短的 s 直接显示；长的是机制解释，收成一行「为什么」，点开才展开 -->
+    <rich-text wx:elif="{{b.k==='s' && !b.long}}" class="s-s" nodes="{{b.t}}"></rich-text>
+    <view wx:elif="{{b.k==='s'}}" class="swrap">
+      <view wx:if="{{!b.open && b.lead}}" class="sbtn" hover-class="tap"
+            data-i="{{i}}" bindtap="toggleS">为什么<text class="chev">›</text></view>
+      <rich-text wx:elif="{{b.open}}" class="s-s open" nodes="{{b.t}}" data-i="{{i}}" bindtap="toggleS"></rich-text>
+    </view>
+    <rich-text wx:elif="{{b.k==='box'}}" class="s-box"  nodes="{{b.t}}"></rich-text>
+    <rich-text wx:elif="{{b.k==='num'}}" class="s-num"  nodes="{{b.t}}"></rich-text>
+    <!-- 食物名可点：进完整卡片。带 go 才可点 -->
+    <view wx:elif="{{b.k==='food' && b.go}}" class="s-food fgo" hover-class="tap"
+          data-id="{{b.go}}" bindtap="go"><rich-text nodes="{{b.t}}"></rich-text><text class="chev">›</text></view>
+    <rich-text wx:elif="{{b.k==='food'}}" class="s-food" nodes="{{b.t}}"></rich-text>
+    <view wx:elif="{{b.k==='ti'}}"  class="s-ti">{{b.t}}</view>
+    <view wx:elif="{{b.k==='hr'}}"  class="s-hr"></view>
+    <!-- 撑开的空档。只有 entry 在用 -->
+    <view wx:elif="{{b.k==='gap'}}" class="s-gap"></view>
+    <!-- 一张牌。牌面是那样食物的颜色，四角有牌角标，字是手写体 -->
+    <view wx:elif="{{b.k==='card'}}" class="deck">
+      <text wx:if="{{b.md}}" class="pday">{{b.md}}</text>
+      <view class="pcard tx-{{b.tex}}" style="--deep:{{b.deep}};--lit:{{b.lit}}">
+        <view class="pgrain"></view>
+        <view class="pgloss"></view>
+        <text class="pcorner tl">{{b.food}}</text>
+        <text class="pcorner br">{{b.food}}</text>
+        <view class="pmid">
+          <text class="pname">{{b.food}}</text>
+          <view class="prule"></view>
+          <rich-text class="pdesc" nodes="{{b.desc}}"></rich-text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 七张反应卡的陈列。线条勾动物形态，理想的两张有光 -->
+    <view wx:elif="{{b.k==='animals'}}" class="beasts">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="go"
+            class="bcard {{x.cls}} {{x.ideal ? 'ideal' : ''}}" hover-class="tap"
+            data-id="{{x.go}}" bindtap="go">
+        <view class="bart"></view>
+        <text class="bt">{{x.t}}</text>
+        <text class="ba">「{{x.animal}}」</text>
+      </view>
+    </view>
+
+    <!-- 卡内顶部那只动物 -->
+    <view wx:elif="{{b.k==='beast'}}" class="bhead {{b.cls}} {{b.ideal ? 'ideal' : ''}}">
+      <view class="bart big"></view>
+    </view>
+
+    <!-- 书架：一层放三张牌，牌立在板上。今天那张微微抽出来一点 -->
+    <view wx:elif="{{b.k==='wall'}}" class="shelf">
+      <block wx:for="{{b.rows}}" wx:for-item="row" wx:for-index="ri" wx:key="ri">
+        <view class="srow">
+          <view wx:for="{{row}}" wx:for-item="x" wx:key="day"
+                class="spine {{x.on ? 'on' : ''}} {{x.today ? 'out' : ''}}"
+                style="--deep:{{x.deep}};--lit:{{x.lit}}"
+                hover-class="tap" data-day="{{x.day}}" bindtap="tapWall">
+            <text class="sd">{{x.md}}</text>
+            <text class="sf">{{x.food}}</text>
+          </view>
+        </view>
+        <view class="sboard"></view>
+      </block>
+    </view>
+
+    <!-- 星空：一晚一颗。亮一点暗一点，都在天上 -->
+    <!-- 一颗星 = 一晚。点它出那一晚。10rpx 的点点不动，所以外面套一个 72rpx 的触区 -->
+    <view wx:elif="{{b.k==='sky'}}" class="sky">
+      <view wx:for="{{b.stars}}" wx:for-item="n" wx:key="day" class="starhit"
+            style="left:{{n.x}}%;top:{{n.y}}%"
+            data-day="{{n.day}}" data-label="{{n.label}}" bindtap="tapStar">
+        <view class="star {{n.dim}} {{star.day === n.day ? 'on' : ''}}"></view>
+      </view>
+    </view>
+    <view wx:if="{{b.k==='sky'}}" class="skyread">
+      <text wx:if="{{star}}">{{star.md}}　<text class="sk-l">{{star.label}}</text></text>
+      <text wx:else class="none">点一颗星</text>
+    </view>
+
+    <!-- 睡眠三档。选了会存，然后进星空 -->
+    <view wx:elif="{{b.k==='sleeppick'}}" class="spick">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="i" class="sp-b {{x.on ? 'on' : ''}}"
+            hover-class="tap" data-i="{{x.i}}" bindtap="pickSleep">{{x.t}}</view>
+    </view>
+
+    <!-- 到点叫我：真排一个前台提醒 -->
+    <view wx:elif="{{b.k==='remind'}}" class="s-b remind {{b.on ? 'on' : ''}}"
+          hover-class="tap" data-i="{{i}}" bindtap="setRemind">{{b.on ? '到点会叫你 · 再点取消' : b.t}}</view>
+
+    <!-- 三张卡：一个念头 + 它的解释。不摞成条文 -->
+    <view wx:elif="{{b.k==='cards3'}}" class="c3">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="n" class="c3card">
+        <view class="c3dot"></view>
+        <text class="c3t">{{x.t}}</text>
+        <rich-text class="c3p" nodes="{{x.p}}"></rich-text>
+      </view>
+    </view>
+
+    <!-- 食物色带。eat 屏顶上那一条，颜色和质感来自那一支口味 -->
+    <view wx:elif="{{b.k==='foodband'}}" class="fband" style="--deep:{{b.deep}};--lit:{{b.lit}}">
+      <view class="fgrain"></view>
+      <text class="ftext">{{b.t}}</text>
+    </view>
+
+    <!-- two 的两支：各自可点，点进去是各自的建议 -->
+    <view wx:elif="{{b.k==='two2'}}" class="twoway">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="go" class="tw" hover-class="tap"
+            data-id="{{x.go}}" bindtap="go">
+        <text class="twt">{{x.t}}</text>
+        <text class="twh">{{x.hint}}</text>
+        <text class="chev">›</text>
+      </view>
+    </view>
+
+    <!-- 清单：可勾多条。勾中的有一个实心方块 -->
+    <view wx:elif="{{b.k==='checks'}}" class="checks">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="i" class="chk {{x.on ? 'on' : ''}}"
+            hover-class="tap" data-i="{{x.i}}" data-b="{{i}}" bindtap="toggleCheck">
+        <view class="cbox"><view class="cmark"></view></view>
+        <text class="ctext">{{x.t}}</text>
+      </view>
+    </view>
+
+    <!-- 清单后面那个按钮 -->
+    <view wx:elif="{{b.k==='gatego'}}" class="s-b big gatego" hover-class="tap"
+          bindtap="gateGo">{{b.t}}</view>
+
+    <!-- 开关 -->
+    <view wx:elif="{{b.k==='sw'}}" class="swrow" hover-class="tap"
+          data-i="{{i}}" bindtap="toggleSw">
+      <text class="swk">{{b.t}}</text>
+      <text class="swh">{{b.hint}}</text>
+      <view class="swt {{b.on ? 'on' : ''}}"><view class="swd"></view></view>
+    </view>
+
+    <!-- 警示块：躯体安全的例外。不折叠 -->
+    <view wx:elif="{{b.k==='warn'}}" class="s-warn">
+      <text class="wt">必须动</text>
+      <rich-text class="wb" nodes="{{b.t}}"></rich-text>
+    </view>
+
+    <view wx:elif="{{b.k==='q'}}" class="s-q" hover-class="tap"
+          data-id="{{b.go}}" bindtap="go">{{b.t}}<text class="chev">›</text></view>
+    <view wx:elif="{{b.k==='b'}}" class="s-b {{b.cls}}" hover-class="tap"
+          data-id="{{b.go}}" bindtap="go">{{b.t}}</view>
+    <view wx:elif="{{b.k==='bbig'}}" class="s-b big" hover-class="tap"
+          data-id="{{b.go}}" bindtap="go">{{b.t}}</view>
+
+    <view wx:elif="{{b.k==='row'}}" class="s-row">
+      <text class="rk">{{b.t}}</text><text class="rv">{{b.v}}</text>
+    </view>
+
+    <!-- 正反问。选了会存，选中的那个有描边 -->
+    <view wx:elif="{{b.k==='pair2'}}" class="s-pair">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="t" class="s-b cl flat"
+            hover-class="tap" data-id="{{x.go}}" bindtap="go">{{x.t}}</view>
+    </view>
+
+    <view wx:elif="{{b.k==='foot'}}" class="s-foot">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="t" class="footbtn" hover-class="tap"
+            data-id="{{x.go}}" bindtap="go">{{x.t}}</view>
+    </view>
+
+    <!-- 六格：没有连续天数、没有百分比、没有月历。空格用虚线不用红色 -->
+    <!-- 六格 = 一天六次进食。每格独立可点，点进去记一个词；已记的格子染那个词的颜色 -->
+    <view wx:elif="{{b.k==='cells'}}" class="cells">
+      <view wx:for="{{b.cells}}" wx:for-item="c" wx:key="i" class="cell {{c.on ? 'on' : 'e'}}"
+            hover-class="tap" data-i="{{c.i}}" bindtap="tapCell"
+            style="{{c.color ? 'border-color:' + c.color + ';background:' + c.color + '1F' : ''}}"></view>
+    </view>
+
+    <!-- 词就是词：颜色只用来认出是哪个词，不用来说它值多少 -->
+    <view wx:elif="{{b.k==='words'}}" class="words">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="w" class="word" hover-class="tap"
+            style="{{x.known ? 'color:'+x.color : ''}}" data-w="{{x.w}}" bindtap="tapWord">
+        <view wx:if="{{x.known}}" class="dot" style="background:{{x.color}}"></view>{{x.w}}
+      </view>
+    </view>
+
+    <view wx:elif="{{b.k==='pick'}}" class="pick">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="t" class="pickbtn {{x.wide?'wide':''}}"
+            hover-class="tap" data-v="{{x.t}}" bindtap="setPick">{{x.t}}</view>
+    </view>
+
+    <!-- 此刻多少人在：整个界面唯一会自己变的数字。0 或 1 时整块不显示 -->
+    <block wx:elif="{{b.k==='online'}}">
+      <view wx:if="{{onlineN>1}}" class="online">此刻 {{onlineN}} 人在</view>
+    </block>
+
+    <view wx:elif="{{b.k==='player'}}" class="player {{b.on?'on':''}}" hover-class="tap"
+          data-i="{{i}}" bindtap="tapPlay">
+      <text class="pl-ico">{{b.on?'‖':'▶'}}</text>
+      <text class="pl-t">{{b.t}}</text>
+      <view class="pl-bar"><view class="pl-fill" style="width:{{b.on?'100%':'0%'}}"></view></view>
+    </view>
+
+    <!-- 情绪瓶子：底座上不写数量——一出现数量就变成计次 -->
+    <view wx:elif="{{b.k==='machine'}}">
+      <view class="machine">
+        <view class="neck"></view>
+        <view class="glass">
+          <!-- 珠子在 canvas 里。重力和"跟着手机晃"要每帧解位置，DOM 做不到 -->
+          <canvas type="2d" id="jarcv" class="jarcv" bindtouchstart="tapJar"></canvas>
+          <!-- 玻璃在珠子前面 -->
+          <view class="gloss"></view>
+        </view>
+        <view class="base"><text>八月</text></view>
+      </view>
+      <!-- 点一颗球：只出主题词。要看那天的全貌，自己点「展开看看」 -->
+      <view class="readout">
+        <block wx:if="{{pick}}">
+          <view class="rd-day">{{pick.md}}</view>
+          <view wx:if="{{pick.theme}}" class="rd-theme" style="color:{{pick.color}}">{{pick.theme}}</view>
+          <view wx:else class="rd-theme rd-non">这天没记</view>
+          <view wx:if="{{pick.theme}}" class="rd-open" hover-class="tap" bindtap="toggleSlip">
+            {{slipOpen ? '收起来' : '展开看看'}}</view>
+        </block>
+        <text wx:else class="none">点一颗球</text>
+      </view>
+      <!-- 云雾散开，下面是那天的纸条：六格的词 + 产品对那一天说的一句 -->
+      <view wx:if="{{slipOpen}}" class="slipwrap">
+        <view class="fog">
+          <view class="pf pf1"></view><view class="pf pf2"></view><view class="pf pf3"></view>
+        </view>
+        <view class="slip">
+          <view wx:for="{{pick.slots}}" wx:for-item="q" wx:key="i" class="sl-row {{q.on ? '' : 'off'}}">
+            <text class="sl-n">{{q.i + 1}}</text>
+            <view class="sl-dot" style="{{q.on ? 'background:' + q.color : ''}}"></view>
+            <text class="sl-w">{{q.w}}</text>
+          </view>
+          <view wx:if="{{pick.sum}}" class="sl-sum">{{pick.sum}}</view>
+        </view>
+      </view>
+    </view>
+
+
+    <!-- 滋味卡。材质是抽象的焦皮与橙芯，不是一盘菜的写实图——
+         写实会把线索做强，而这一层唯一的真风险就是线索 -->
+    <view wx:elif="{{b.k==='taste'}}" class="tcard">
+      <view wx:if="{{b.mat}}" class="mat">
+        <canvas type="2d" id="mat" class="matcv"></canvas>
+        <view class="steam"><view class="sm s1"></view><view class="sm s2"></view><view class="sm s3"></view></view>
+      </view>
+      <view class="tbody {{b.go ? 'go' : ''}}" hover-class="{{b.go ? 'tap' : ''}}"
+            data-id="{{b.go}}" bindtap="{{b.go ? 'go' : ''}}">
+        <view wx:if="{{b.ti}}" class="s-ti">{{b.ti}}</view>
+        <view class="tline">
+          <rich-text class="s-food" nodes="{{b.food}}"></rich-text>
+          <text wx:if="{{b.go}}" class="chev">›</text>
+        </view>
+        <rich-text wx:if="{{b.p}}" class="s-p tp" nodes="{{b.p}}"></rich-text>
+        <view wx:if="{{b.s}}" class="topen">{{b.s}}</view>
+      </view>
+    </view>
+
+    <!-- 五个角度。没有好坏轴——色/香/味/声/质地都只问"它是什么"。
+         placeholder 是提示不是要求，空着走开是允许的。 -->
+    <view wx:elif="{{b.k==='aspects'}}" class="asp">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="k" class="asp-row">
+        <text class="asp-k">{{x.k}}</text>
+        <input class="asp-in" value="{{x.v}}" placeholder="{{x.hint}}"
+               data-i="{{index}}" bindinput="aspIn" bindblur="aspBlur"
+               placeholder-class="asp-ph" />
+        <!-- 那一句提示。主语是句子不是人，且只出一次。 -->
+        <view wx:if="{{x.say}}" class="asp-say">{{x.say}}</view>
+      </view>
+      <view class="asp-ok" hover-class="tap" bindtap="aspSave">存下来</view>
+    </view>
+
+    <!-- 她以前写过的那几条。只显示日期，不显示第几条——计数就是打卡。 -->
+    <view wx:elif="{{b.k==='pastline'}}" class="past">
+      <text class="past-at">{{b.at}}</text>
+      <text class="past-t">{{b.t}}</text>
+    </view>
+
+    <!-- 四个人。并列，不排名——排名就是评价。
+         上一页要说清每个人会怎么说，否则她不知道找谁。 -->
+    <view wx:elif="{{b.k==='mentors'}}" class="mens">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="id" class="men">
+        <view class="men-h"><text class="men-n">{{x.name}}</text><text class="men-g">{{x.tag}}</text></view>
+        <text class="men-i">{{x.intro}}</text>
+        <text class="men-l">{{x.lead}}</text>
+      </view>
+    </view>
+
+    <!-- 说点什么。⚠️ 写不出来能直接走，按钮不写「提交」。 -->
+    <view wx:elif="{{b.k==='mentorin'}}" class="mif">
+      <textarea class="mif-in" value="{{b.v}}" bindinput="menIn" maxlength="200"
+                placeholder="今天发生了什么，或者心里那句话" placeholder-class="mif-ph"
+                auto-height show-confirm-bar="{{false}}" />
+      <view class="asp-ok" hover-class="tap" bindtap="menGo">说给他们听</view>
+    </view>
+
+    <!-- 聊。她说的靠右，他们说的靠左带名字。 -->
+    <view wx:elif="{{b.k==='chat'}}" class="chat">
+      <view wx:if="{{b.to}}" class="chat-to">在和{{b.to}}说</view>
+      <view wx:for="{{b.msgs}}" wx:for-item="m" wx:key="index"
+            class="msg {{m.me ? 'mine' : ''}}">
+        <view wx:if="{{!m.me}}" class="msg-w"><text class="msg-n">{{m.who}}</text><text class="msg-g">{{m.tag}}</text></view>
+        <!-- 还没写完就只说「在想」。⚠️ 不放兜底文案占位——
+             她会当成回答读完，十几秒后那段字突然换掉，等于产品说完又改口。 -->
+        <view wx:if="{{m.pending}}" class="msg-p">在想</view>
+        <rich-text wx:else class="msg-t" nodes="{{m.t}}"></rich-text>
+      </view>
+      <!-- 还在等谁。名字而已，没有转圈也没有进度条。 -->
+      <view wx:if="{{b.waiting.length}}" class="chat-wait">
+        <text wx:for="{{b.waiting}}" wx:for-item="w" wx:key="*this">{{w}}　</text>
+      </view>
+      <!-- 挑一位单独接着聊。四个人一起说过话之后才出现。 -->
+      <view wx:if="{{b.pick.length}}" class="chat-pick">
+        <text class="chat-pl">想单独跟谁说</text>
+        <view class="chat-ps">
+          <view wx:for="{{b.pick}}" wx:for-item="p" wx:key="id" class="chat-p"
+                hover-class="tap" data-id="{{p.id}}" bindtap="menTo">{{p.name}}</view>
+        </view>
+      </view>
+      <!-- 输入框吸在底部，像和人说话 -->
+      <view class="chat-bar">
+        <input class="chat-in" value="{{chatIn}}" bindinput="menIn" confirm-type="send"
+               bindconfirm="menSend" placeholder="接着说" placeholder-class="mif-ph" />
+        <view class="chat-send" hover-class="tap" bindtap="menSend">说</view>
+      </view>
+      <view class="chat-foot" hover-class="tap" bindtap="menCopy">把这段复制走</view>
+    </view>
+
+    <!-- 以前说过的。点一条回去接着聊。只有日期和主题，不显示第几次。 -->
+    <view wx:elif="{{b.k==='talks'}}" class="oth">
+      <view wx:if="{{!b.items.length}}" class="oth-row"><text class="oth-t">还没有。</text></view>
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="id" class="oth-row"
+            hover-class="tap" data-id="{{x.id}}" bindtap="menOpen">
+        <text class="oth-t">{{x.t}}</text><text class="chev">›</text>
+      </view>
+    </view>
+
+    <!-- 别人写的。没有 ID、没有回复、没有点赞——读到的是句子，不是人。 -->
+    <view wx:elif="{{b.k==='others'}}" class="oth">
+      <view wx:for="{{b.items}}" wx:for-item="x" wx:key="at" class="oth-row">
+        <text class="oth-at">{{x.at}}</text>
+        <text class="oth-t">{{x.t}}</text>
+      </view>
+    </view>
+
+    <!-- 松紧：用力 1.4 秒、松开 4.6 秒、停 1 秒。一轮 7 秒。
+         方形而不是圆形，收紧而不是胀大——和呼吸圆一眼分得开 -->
+    <view wx:elif="{{b.k==='relax'}}" class="relax">
+      <view class="rx-out"></view>
+      <view class="rx-mid"></view>
+      <view class="rx-core"></view>
+      <view class="rx-cue"><text class="tight">紧</text><text class="loose">松</text></view>
+    </view>
+
+    <!-- 呼吸：吸 4 · 停 1 · 呼 6，一轮 11 秒。呼比吸长 -->
+    <view wx:elif="{{b.k==='breath'}}" class="breath">
+      <view class="halo"></view>
+      <view class="ripple"></view>
+      <view class="ripple r2"></view>
+      <view class="ripple r3"></view>
+      <view class="ring"></view>
+      <view class="core"></view>
+      <view class="cue"><text class="in">吸</text><text class="out">呼</text></view>
+    </view>
+
+  </block>
+
+  <!-- 第四层折叠。PRD 语气原则：解释与非主线放动作后面且可折叠。
+       块型只有 hr/ti/q/foot 四种，所以复用主链的 class 而不是复制整条渲染链。
+       箭头沿用主链的 › 转向，不新引一套字形。 -->
+  <view wx:if="{{fold.length}}" class="foldwrap">
+    <view class="morebtn" hover-class="tap" bindtap="toggleMore">
+      <text>{{moreOpen ? '收起' : foldLabel}}</text>
+      <text class="chev mchev {{moreOpen ? 'up' : ''}}">›</text>
+    </view>
+    <block wx:if="{{moreOpen}}">
+    <block wx:for="{{fold}}" wx:for-item="b" wx:key="index">
+      <view wx:if="{{b.k==='ti'}}"   class="s-ti">{{b.t}}</view>
+      <view wx:elif="{{b.k==='hr'}}" class="s-hr"></view>
+      <view wx:elif="{{b.k==='q'}}"  class="s-q" hover-class="tap"
+            data-id="{{b.go}}" bindtap="go">{{b.t}}<text class="chev">›</text></view>
+      <!-- p / s / box 也要有：help 折进去的是 ti+p×4+s，
+           原来折叠区只认 ti/hr/q，所以点开是空白的 -->
+      <rich-text wx:elif="{{b.k==='p'}}" class="s-p" nodes="{{b.t}}"></rich-text>
+      <rich-text wx:elif="{{b.k==='box'}}" class="s-box" nodes="{{b.t}}"></rich-text>
+      <rich-text wx:elif="{{b.k==='s' && !b.long}}" class="s-s" nodes="{{b.t}}"></rich-text>
+      <rich-text wx:elif="{{b.k==='s'}}" class="s-s" nodes="{{b.t}}"></rich-text>
+      <view wx:elif="{{b.k==='warn'}}" class="s-warn">
+        <text class="wt">必须动</text><rich-text class="wb" nodes="{{b.t}}"></rich-text>
+      </view>
+    </block>
+    </block>
+  </view>
+  </view>
+</view>

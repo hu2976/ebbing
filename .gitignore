@@ -1,0 +1,19 @@
+# 截图产物。14M，而且是构建出来的——每次跑 shot.mjs 都会重生成。
+# ⚠️ 它们在工程目录里，微信开发者工具的"代码质量"会把整个工程算进主包，
+#    于是报"主包尺寸应小于 1.5M 未通过"。project.config.json 的
+#    packOptions.ignore 已排除 .sync-mp，所以打包上传不会带上。
+04-小程序/.sync-mp/out/
+
+# 本机偏好，不是项目的一部分
+project.private.config.json
+.DS_Store
+**/.DS_Store
+
+# 依赖
+node_modules/
+
+# ⚠️ 云函数的密钥走云开发控制台的环境变量（OPENROUTER_KEY），
+#    代码里从来没有它。这几条是防手滑。
+.env
+*.key
+**/secrets.json

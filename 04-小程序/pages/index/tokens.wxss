@@ -1,0 +1,29 @@
+/* 本文件由 .sync-mp/gen.mjs 生成，不要手改。
+   源：设计画布/System.dc.html（视觉唯一源）*/
+page{
+      --n1:#171310; --n2:#1F1A15; --n3:#2A231C;
+      --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#968979;
+      --hair:rgba(244,237,227,.10); --hair2:rgba(244,237,227,.05);
+      --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+      /* 字体走过两版弯路，记下来免得再踩：
+         v1 Cormorant Garamond + Noto Serif SC —— 小程序是系统 WebView 不下载网络字体，
+            两个 token 一起回退成同一个系统宋体，字族层次全塌（等于没设字体）。
+         v2 标题宋体 + 正文黑体 —— 层次造出来了，但深色底 + 大号宋体细笔画是悬疑片
+            字幕的视觉语言，她的原话是"跟恐怖片一样"。
+         v3（现在）标题与正文同族，层次靠字重与字号；引文单独给楷体。
+            这个产品要的是灵动温暖，不是文学庄重。 */
+      --disp:-apple-system,"PingFang SC","HarmonyOS Sans SC","Source Han Sans SC",sans-serif;
+      --body:-apple-system,"PingFang SC","HarmonyOS Sans SC","Source Han Sans SC",sans-serif;
+      /* 引文／她自己写的那句／"饭就是饭"这类：楷体有手写起伏，像便签不像医嘱。
+         只用在小面积引文——大标题用楷体会散，用宋体会压人。 */
+      /* 引文／牌面。楷体在小字号上笔画会糊成一团、显得呆板（她说"字体死板"）。
+         华文行楷有连笔，一眼就是手写；退到华文楷体，再退到系统楷体。
+         iOS 有 STXingkai／STKaiti，Mac 也有；安卓两个都没有，回退到系统衬线。 */
+      --hand:"STXingkai","Xingkai SC","STKaiti","Kaiti SC",KaiTi,"Noto Serif CJK SC",serif;
+      --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    }
+/* 原型/画布里 body 与 * 那两条全局基础层。少了 color 的症状是"文案不见了"，
+   少了 box-sizing 的症状是"边框显示不全"——两个都踩过。 */
+page{ background:var(--n1); color:var(--paper); font-family:var(--body);
+      -webkit-font-smoothing:antialiased; }
+view, text, rich-text, canvas, image{ box-sizing:border-box; }

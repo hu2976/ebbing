@@ -1,0 +1,39 @@
+{
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": false,
+    "uglifyFileName": false,
+    "enhance": true,
+    "packNpmRelationList": [],
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "useCompilerPlugins": false,
+    "compileWorklet": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "condition": false
+  },
+  "compileType": "miniprogram",
+  "miniprogramRoot": "04-小程序/",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": ".sync-mp"
+      }
+    ],
+    "include": []
+  },
+  "appid": "wxce8f350340bbea30",
+  "editorSetting": {},
+  "cloudfunctionRoot": "04-小程序/cloudfunctions/"
+}

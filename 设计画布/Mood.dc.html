@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;700&display=swap">
+  <style>
+    :root{
+      --n1:#171310; --n2:#1F1A15;
+      --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#83786A;
+      --hair:rgba(244,237,227,.10); --hair2:rgba(244,237,227,.05);
+      --brass:#C9A063; --jade:#8CC1AA;
+      --disp:"Cormorant Garamond","Noto Serif SC",Georgia,serif;
+      --body:"Noto Serif SC","Songti SC",Georgia,serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
+      -webkit-font-smoothing:antialiased}
+    a{color:var(--brass);text-decoration:none} a:hover{color:#DDBA85}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{display:flex;align-items:center;gap:8px;cursor:pointer;
+      background:none;border:1px solid rgba(244,237,227,.13);border-radius:22px;
+      min-height:44px;padding:10px 15px 10px 13px;
+      font-family:var(--body);font-size:15px;color:var(--paper)}
+    .chip:hover{border-color:rgba(244,237,227,.32)}
+    .chip i{width:9px;height:9px;border-radius:50%;display:block;flex:none}
+    .chip.on{border-color:rgba(201,160,99,.6);background:rgba(201,160,99,.07)}
+    .grp{font-size:10px;letter-spacing:.22em;color:var(--paper3);margin-bottom:2px}
+  </style>
+</helmet>
+
+<div style="width:390px;min-height:844px;padding:54px 24px 32px;display:flex;flex-direction:column;gap:20px;background:radial-gradient(120% 55% at 50% -10%, #251E17 0%, rgba(37,30,23,0) 62%), var(--n1)">
+
+  <div style="display:flex;align-items:center;gap:11px">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#83786A" stroke-width="1.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    <span style="font-size:11px;letter-spacing:.2em;color:var(--paper3)">今天怎么样</span>
+  </div>
+
+  <div style="font-family:var(--disp);font-size:29px;font-weight:300;line-height:1.42">
+    写下感受吧，<br>一个词就够。
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div class="grp">心情</div>
+    <div class="chips">
+      <sc-for list="{{mood}}" as="w" hint-placeholder-count="10">
+        <button class="chip"><i style="{{w.dot}}"></i>{{w.t}}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div class="chips">
+      <sc-for list="{{risk}}" as="w" hint-placeholder-count="4">
+        <button class="chip"><i style="{{w.dot}}"></i>{{w.t}}</button>
+      </sc-for>
+    </div>
+    <!-- 高风险词记下后多一句，把那场摆到手边。
+         依据：负性情绪与内疚在发作前 4 小时上升。 -->
+    <div style="font-size:11px;line-height:1.7;color:var(--paper3);padding-left:2px">
+      记的是这几个词时，下一屏会多一句，把那场摆到手边
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div class="grp">滋味</div>
+    <div class="chips">
+      <sc-for list="{{taste}}" as="w" hint-placeholder-count="10">
+        <button class="chip"><i style="{{w.dot}}"></i>{{w.t}}</button>
+      </sc-for>
+      <button class="chip" style="border-style:dashed;color:var(--paper2)">＋ 自己写</button>
+    </div>
+  </div>
+
+  <div style="flex-grow:1;min-height:6px"></div>
+
+  <div style="font-size:11px;line-height:1.8;color:var(--paper3);border-top:1px solid var(--hair2);padding-top:14px">
+    二十四个词等饱和、等明度，只转色相。颜色只用来认出是哪个词，不用来说它值多少。
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const MOOD  = ['平静','轻松','满足','踏实','有力气','高兴','还行','说不上来','累','烦'];
+    const RISK  = ['空','孤单','羞耻','紧张'];
+    const TASTE = ['咸','甜','烫','脆','香','软','酸','辣','凉','鲜'];
+    const ALL = MOOD.concat(RISK, TASTE);
+    const dot = (w) => {
+      const h = Math.round(ALL.indexOf(w) * 360 / ALL.length);
+      return 'background:radial-gradient(circle at 34% 28%, hsl(' + h + ' 66% 78%), hsl(' + h + ' 54% 58%) 100%);'
+           + 'box-shadow:0 0 7px hsl(' + h + ' 60% 60% / .6)';
+    };
+    const wrap = (list) => list.map(t => ({ t: t, dot: dot(t) }));
+    return { mood: wrap(MOOD), risk: wrap(RISK), taste: wrap(TASTE) };
+  }
+}
+</script>
+</body>
+</html>

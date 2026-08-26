@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;700&display=swap">
+  <style>
+    :root{
+      --n1:#171310; --n2:#1F1A15; --n3:#2A231C;
+      --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#83786A;
+      --hair:rgba(244,237,227,.10); --hair2:rgba(244,237,227,.05);
+      --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+      --disp:"Cormorant Garamond","Noto Serif SC",Georgia,serif;
+      --body:"Noto Serif SC","Songti SC",Georgia,serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
+      -webkit-font-smoothing:antialiased}
+    a{color:var(--brass);text-decoration:none} a:hover{color:#DDBA85}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+    @keyframes breathe{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.35)}}
+  </style>
+</helmet>
+
+<div style="width:390px;min-height:844px;padding:54px 24px 32px;display:flex;flex-direction:column;gap:18px;background:radial-gradient(120% 55% at 50% -10%, #251E17 0%, rgba(37,30,23,0) 62%), radial-gradient(90% 38% at 50% 106%, #1E1913 0%, rgba(30,25,19,0) 60%), var(--n1)">
+
+  <!-- 不画假状态栏：真机的系统状态栏会占这一条。顶部只留安全区。 -->
+  <div style="display:flex;align-items:baseline;justify-content:space-between">
+    <div style="font-family:var(--disp);font-size:19px;font-weight:500;letter-spacing:.16em;color:{{accent}}">退潮</div>
+    <div style="font-size:11px;letter-spacing:.14em;color:var(--paper3)">八月二十一日 · 夜里</div>
+  </div>
+
+  <!-- 层 3：夜里那场提到最上面。全屏唯一会自己变的数字。 -->
+  <div style="background:linear-gradient(160deg,#241D16 0%,var(--n2) 70%);border:1px solid var(--hair);border-radius:3px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:flex-end;gap:10px">
+      <div style="font-family:var(--disp);font-size:40px;font-weight:300;line-height:.9;letter-spacing:.01em">22:30</div>
+      <div style="font-size:13px;color:var(--paper2);padding-bottom:5px">夜里那场 · 十分钟</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--jade);box-shadow:0 0 9px var(--jade);animation:breathe 4.5s ease-in-out infinite"></span>
+      <span style="font-size:13px;color:var(--jade)">此刻 12 人在</span>
+    </div>
+  </div>
+
+  <!-- 层 1 供给：一口水。夜里从滋味腾出来的位置。 -->
+  <div style="display:flex;align-items:center;gap:12px;border:1px solid rgba(140,193,170,.32);border-radius:3px;padding:15px 18px;min-height:52px">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{jade}}" stroke-width="1.3" stroke-linecap="round"><path d="M12 3.5c3.6 4.2 6 7.2 6 10.1A6 6 0 0 1 6 13.6c0-2.9 2.4-5.9 6-10.1z"/></svg>
+    <span style="font-size:15px;color:var(--jade)">试试含一口水，慢慢感受</span>
+  </div>
+
+  <!-- 今天的滋味：夜里只留标题。拿掉感官细节，线索就不成立。 -->
+  <div style="display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--hair2);padding-top:15px">
+    <div style="font-size:10px;letter-spacing:.2em;color:var(--paper3)">今天的滋味</div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between">
+      <span style="font-family:var(--disp);font-size:23px;font-weight:400;color:{{accent}}">烤红薯</span>
+      <span style="font-size:12px;color:var(--paper3)">明早再看</span>
+    </div>
+  </div>
+
+  <!-- 她自己写的那句：夜里直接显示，不做入口。多一次点击多一次放弃的机会。 -->
+  <div style="border-left:1.5px solid {{accent}};padding:3px 0 3px 15px;display:flex;flex-direction:column;gap:7px">
+    <div style="font-size:10px;letter-spacing:.2em;color:var(--paper3)">你写给夜里的</div>
+    <div style="font-family:var(--disp);font-size:21px;font-weight:400;line-height:1.62;color:var(--paper)">先睡。<br>醒了再说。</div>
+  </div>
+
+  <div style="flex-grow:1;min-height:14px"></div>
+
+  <!-- 层 1 主体。收成一个入口，不预设你是为暴食来的。 -->
+  <button style="border:none;cursor:pointer;background:linear-gradient(165deg,#2E251C 0%,#231D16 100%);border:1px solid rgba(201,160,99,.42);border-radius:3px;min-height:72px;padding:20px;font-family:var(--disp);font-size:21px;font-weight:400;color:var(--paper);letter-spacing:.03em;box-shadow:0 14px 30px -18px rgba(0,0,0,.9), inset 0 1px 0 rgba(244,237,227,.05)">我现在不太好</button>
+
+  <!-- 层 0：位置永不移动。细线、低饱和，不与层 1 争视觉。 -->
+  <div style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--hair2);padding-top:14px">
+    <span style="font-size:12px;color:var(--paper3)">身体不舒服</span>
+    <span style="font-size:12px;color:rgba(203,126,98,.78)">什么时候必须去医院</span>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844},"accent":{"editor":"color","default":"#C9A063","options":["#C9A063","#8CC1AA","#CB7E62","#B49BC4"]}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      accent: this.props.accent ?? '#C9A063',
+      jade: '#8CC1AA'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;700&display=swap">
+  <style>
+    :root{
+      --n1:#171310; --n2:#1F1A15;
+      --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#83786A;
+      --hair:rgba(244,237,227,.10); --hair2:rgba(244,237,227,.05);
+      --brass:#C9A063; --jade:#8CC1AA;
+      --disp:"Cormorant Garamond","Noto Serif SC",Georgia,serif;
+      --body:"Noto Serif SC","Songti SC",Georgia,serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
+      -webkit-font-smoothing:antialiased}
+    a{color:var(--brass);text-decoration:none} a:hover{color:#DDBA85}
+
+    /* 潮汐 —— 产品的中心隐喻，也是名字的来源。
+       画的是水，不是雾：一条由三个不同周期叠出来的波线，
+       线下是水体的渐层，线上散墨点，最后压一层纸纹。
+       屏上不出现任何倒计时数字——看着秒数走本身会制造焦虑。 */
+    .tide{position:relative;height:150px;border-radius:3px;overflow:hidden;
+      background:linear-gradient(180deg,#0E0B09 0%,#131010 46%,#191512 100%);
+      -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+      mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+    .tide canvas{display:block;width:100%;height:100%}
+
+    .pick{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:9px}
+    .pick button{cursor:pointer;background:none;border:1px solid rgba(244,237,227,.16);
+      border-radius:3px;min-height:56px;padding:14px 10px;font-family:var(--disp);
+      font-size:17px;font-weight:400;color:var(--paper);letter-spacing:.02em}
+    .pick button:hover{border-color:rgba(201,160,99,.55)}
+    .pick .wide{grid-column:1 / -1;font-size:15px;color:var(--paper2)}
+  </style>
+</helmet>
+
+<div style="width:390px;min-height:844px;padding:54px 24px 32px;display:flex;flex-direction:column;gap:18px;background:radial-gradient(120% 55% at 50% -10%, #251E17 0%, rgba(37,30,23,0) 62%), var(--n1)">
+
+  <div style="display:flex;align-items:center;gap:11px">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#83786A" stroke-width="1.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    <span style="font-size:11px;letter-spacing:.2em;color:var(--paper3)">很想吃</span>
+  </div>
+
+  <div style="font-family:var(--disp);font-size:38px;font-weight:300;line-height:1.16;letter-spacing:.01em">饿了。</div>
+
+  <div style="font-family:var(--disp);font-size:20px;font-weight:400;line-height:1.72;color:var(--paper)">
+    太久没吃东西，<br>饿的感觉会像潮水一样涨起来。
+  </div>
+
+  <div class="tide"><canvas class="tide-cv"></canvas></div>
+
+  <!-- 先问再给。原来这一屏直接派一份餐盘结构——那是在派活。 -->
+  <div style="border-top:1px solid var(--hair2);padding-top:17px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:var(--disp);font-size:21px;font-weight:400">想吃点什么样的？</div>
+    <div class="pick">
+      <button>热乎乎的</button>
+      <button>冰冰凉的</button>
+      <button>软的、好咽的</button>
+      <button>有嚼头的</button>
+      <button class="wide">说不上来</button>
+    </div>
+  </div>
+
+  <div style="flex-grow:1;min-height:6px"></div>
+
+  <button style="cursor:pointer;background:none;border:1px solid var(--hair);border-radius:3px;min-height:48px;padding:13px;font-family:var(--body);font-size:14px;color:var(--paper2)">下一餐怎么吃</button>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.tide(); }
+  componentWillUnmount() { if (this.raf) cancelAnimationFrame(this.raf); }
+
+  tide() {
+    const cv = document.querySelector('.tide-cv');
+    if (!cv || !cv.getContext) return;
+    const W = cv.clientWidth || 342, H = cv.clientHeight || 150;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const g = cv.getContext('2d');
+    g.scale(dpr, dpr);
+
+    // 纸纹：生成一次，之后每帧只贴。没有它，墨看起来就是塑料。
+    const grain = document.createElement('canvas');
+    grain.width = W; grain.height = H;
+    const gg = grain.getContext('2d');
+    const id = gg.createImageData(W, H);
+    for (let i = 0; i < id.data.length; i += 4) {
+      const v = 130 + Math.random() * 125;
+      id.data[i] = v; id.data[i + 1] = v - 7; id.data[i + 2] = v - 18;
+      id.data[i + 3] = Math.random() * 13;
+    }
+    gg.putImageData(id, 0, 0);
+
+    // 墨点：小点多、大晕少（幂分布），各自漂移速度不同
+    const P = [];
+    for (let i = 0; i < 160; i++) {
+      P.push({
+        px: Math.random(),
+        off: Math.random() * 2 - 1,
+        r: 3 + Math.pow(Math.random(), 2.3) * 32,
+        a: 0.012 + Math.random() * 0.052,
+        sp: 0.0035 + Math.random() * 0.014,
+        ph: Math.random() * Math.PI * 2
+      });
+    }
+
+    // 三个周期叠加，所以看不出是正弦
+    const wave = (x, t) => H * 0.54
+      + Math.sin((x / W) * 6.1 + t * 0.40) * 13
+      + Math.sin((x / W) * 10.7 - t * 0.26) * 7
+      + Math.sin((x / W) * 2.4 + t * 0.59) * 5.5;
+
+    const still = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let t = 0;
+    const self = this;
+
+    function frame() {
+      g.clearRect(0, 0, W, H);
+
+      // 水体
+      g.beginPath();
+      g.moveTo(0, H);
+      for (let x = 0; x <= W; x += 4) g.lineTo(x, wave(x, t));
+      g.lineTo(W, H); g.closePath();
+      const wg = g.createLinearGradient(0, H * 0.30, 0, H);
+      wg.addColorStop(0, 'rgba(232,224,210,0.028)');
+      wg.addColorStop(0.55, 'rgba(214,190,150,0.048)');
+      wg.addColorStop(1, 'rgba(201,160,99,0.082)');
+      g.fillStyle = wg; g.fill();
+
+      // 墨点：叠加模式，重叠处自然变浓，像洇开
+      g.globalCompositeOperation = 'lighter';
+      for (const p of P) {
+        const x = (((p.px + t * p.sp) % 1.22) - 0.11) * W;
+        const y = wave(x, t) + p.off * 28 + Math.sin(t * 0.75 + p.ph) * 4;
+        const fade = 1 - Math.min(1, Math.abs(p.off));
+        if (fade <= 0.02) continue;
+        const rr = p.r * (0.86 + 0.28 * Math.sin(t * 0.45 + p.ph));
+        const a = p.a * fade;
+        const rg = g.createRadialGradient(x, y, 0, x, y, rr);
+        rg.addColorStop(0, 'rgba(242,234,220,' + a.toFixed(4) + ')');
+        rg.addColorStop(0.42, 'rgba(226,206,176,' + (a * 0.5).toFixed(4) + ')');
+        rg.addColorStop(1, 'rgba(226,206,176,0)');
+        g.fillStyle = rg;
+        g.beginPath(); g.arc(x, y, rr, 0, 6.2832); g.fill();
+      }
+      g.globalCompositeOperation = 'source-over';
+
+      // 波脊：一道极细的亮线，两端淡出
+      g.beginPath();
+      for (let x = 0; x <= W; x += 3) {
+        const y = wave(x, t);
+        x ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      const cg = g.createLinearGradient(0, 0, W, 0);
+      cg.addColorStop(0, 'rgba(242,234,220,0)');
+      cg.addColorStop(0.22, 'rgba(242,234,220,0.15)');
+      cg.addColorStop(0.78, 'rgba(242,234,220,0.15)');
+      cg.addColorStop(1, 'rgba(242,234,220,0)');
+      g.strokeStyle = cg; g.lineWidth = 1; g.stroke();
+
+      g.globalAlpha = 0.55; g.drawImage(grain, 0, 0, W, H); g.globalAlpha = 1;
+
+      t += 0.0105;
+      if (!still) self.raf = requestAnimationFrame(frame);
+    }
+    frame();
+  }
+
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

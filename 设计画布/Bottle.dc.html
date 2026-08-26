@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;700&display=swap">
+  <style>
+    :root{
+      --n1:#171310; --n2:#1F1A15;
+      --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#83786A;
+      --hair:rgba(244,237,227,.10); --hair2:rgba(244,237,227,.05);
+      --brass:#C9A063; --jade:#8CC1AA;
+      --disp:"Cormorant Garamond","Noto Serif SC",Georgia,serif;
+      --body:"Noto Serif SC","Songti SC",Georgia,serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
+      -webkit-font-smoothing:antialiased}
+    a{color:var(--brass);text-decoration:none} a:hover{color:#DDBA85}
+    /* 玻璃罩 */
+    .jar{position:relative;width:274px;height:274px;border-radius:50%;overflow:hidden;
+      background:
+        radial-gradient(56% 44% at 30% 22%, rgba(244,237,227,.085), rgba(244,237,227,0) 62%),
+        radial-gradient(130% 108% at 50% 4%, #2B241C 0%, #14100D 58%, #0D0A08 100%);
+      box-shadow:0 0 0 1px rgba(244,237,227,.075) inset,
+                 0 34px 60px -30px rgba(0,0,0,.95),
+                 0 0 66px -20px rgba(201,160,99,.14)}
+    /* 罩内的一道弧光，玻璃感全靠它 */
+    .jar::after{content:"";position:absolute;left:13%;top:7%;width:36%;height:24%;
+      border-radius:50%;background:linear-gradient(148deg,rgba(244,237,227,.13),rgba(244,237,227,0) 72%);
+      filter:blur(6px);pointer-events:none}
+    .orb{position:absolute;border-radius:50%;transform:translate(-50%,-50%);display:block}
+    /* 球上不画表情：笑脸哭脸会给每个词判好坏 */
+    .orb::after{content:"";position:absolute;left:27%;top:19%;width:30%;height:26%;
+      border-radius:50%;background:rgba(255,255,255,.26);filter:blur(3.4px)}
+    .base{width:206px;height:40px;margin-top:-11px;
+      border-radius:0 0 15px 15px / 0 0 24px 24px;
+      background:linear-gradient(180deg,#D9B577 0%,#A98551 34%,#6E5631 72%,#4E3C22 100%);
+      box-shadow:0 16px 26px -14px rgba(0,0,0,.92), inset 0 1px 0 rgba(255,240,214,.34);
+      display:flex;align-items:center;justify-content:center;position:relative}
+    /* 座上不写数量。写了就成了计次。 */
+    .base::before{content:"";position:absolute;inset:6px 12px auto;height:1px;
+      background:rgba(255,240,214,.20)}
+    .base span{font-family:var(--disp);font-size:15px;font-weight:500;color:#3A2C18;
+      letter-spacing:.22em;background:rgba(0,0,0,.13);border-radius:10px;padding:1px 16px}
+  </style>
+</helmet>
+
+<div style="width:390px;min-height:844px;padding:54px 24px 32px;display:flex;flex-direction:column;gap:16px;background:radial-gradient(120% 55% at 50% -10%, #251E17 0%, rgba(37,30,23,0) 62%), var(--n1)">
+
+  <div style="display:flex;align-items:center;gap:11px">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#83786A" stroke-width="1.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    <span style="font-family:var(--disp);font-size:22px;font-weight:400;letter-spacing:.05em">情绪瓶子</span>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;padding:8px 0 2px">
+    <div class="jar">
+      <sc-for list="{{orbs}}" as="orb" hint-placeholder-count="19">
+        <span class="orb" style="{{orb.css}}"></span>
+      </sc-for>
+    </div>
+    <div class="base"><span>八月</span></div>
+  </div>
+
+  <!-- 大字说立场 -->
+  <div style="font-family:var(--disp);font-size:22px;font-weight:400;line-height:1.68;padding-top:6px">
+    颜色都不一样，都可以在这儿。<br>合起来才是你。
+  </div>
+
+  <!-- 小字说数据。「谁的都是」是这一屏唯一的共通人性。 -->
+  <div style="display:flex;flex-direction:column;gap:9px;border-top:1px solid var(--hair2);padding-top:15px">
+    <div style="font-size:13px;line-height:1.85;color:var(--paper2)">晚上十点之后、一个人的时候，这些词比较密。谁的都是。</div>
+    <div style="font-size:13px;line-height:1.85;color:var(--paper2)">「满足」「踏实」多半写在一顿饭之后。</div>
+  </div>
+
+  <div style="flex-grow:1;min-height:8px"></div>
+
+  <button style="cursor:pointer;background:none;border:1px solid var(--hair);border-radius:3px;min-height:50px;padding:14px;font-family:var(--body);font-size:14px;color:var(--paper2)">再写一个</button>
+
+  <div style="font-size:11px;line-height:1.75;color:var(--paper3)">没有连续天数，没有目标，也不给这段时间打分。</div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844},"count":{"editor":"int","default":19,"min":1,"max":31,"section":"内容"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 二十四个词等饱和、等明度，只转色相。颜色只用来认出是哪个词，不用来说它值多少。
+    const WORDS = ['平静','轻松','满足','踏实','有力气','高兴','还行','说不上来','累','烦',
+                   '空','孤单','羞耻','紧张',
+                   '咸','甜','烫','脆','香','软','酸','辣','凉','鲜'];
+    const hue = w => Math.round(WORDS.indexOf(w) * 360 / WORDS.length);
+    const SEED = ['还行','累','满足','紧张','甜','孤单','踏实','烦','空','香',
+                  '轻松','羞耻','脆','平静','说不上来','有力气','凉','高兴','软',
+                  '酸','辣','咸','鲜','烫','踏实','满足','还行','累','空','甜','香'];
+
+    const n = Math.max(1, Math.min(31, this.props.count ?? 19));
+    const S = 274, R = S / 2 - 13;
+
+    // 几何堆叠：从底往上一行行摆，每行宽度由该高度的弦长决定。一个球堆不需要物理引擎。
+    const pile = (d) => {
+      const out = [], gap = d * 0.9;
+      let i = 0, row = 0;
+      while (i < n && row < 16) {
+        const y = R - d / 2 - row * gap * 0.87;
+        if (y < -R + d / 2) break;
+        const half = Math.sqrt(Math.max(0, R * R - y * y)) - d / 2;
+        if (half <= 0) { row++; continue; }
+        const cnt = Math.max(1, Math.floor((2 * half) / gap)), span = (cnt - 1) * gap;
+        for (let c = 0; c < cnt && i < n; c++, i++) {
+          out.push({ x: -span / 2 + c * gap + (row % 2 ? gap * 0.14 : -gap * 0.14), y: y });
+        }
+        row++;
+      }
+      return out;
+    };
+    // 球径按数量收缩，保证一个月三十一天也摆得下
+    let d = Math.min(37, Math.sqrt(0.78 * Math.PI * R * R / n));
+    let pos = pile(d);
+    for (let k = 0; k < 22 && pos.length < n; k++) { d *= 0.92; pos = pile(d); }
+
+    const orbs = pos.slice(0, n).map((p, i) => {
+      const h = hue(SEED[i % SEED.length]);
+      const css = 'left:' + (S / 2 + p.x).toFixed(1) + 'px;top:' + (S / 2 + p.y).toFixed(1) + 'px;'
+        + 'width:' + d.toFixed(1) + 'px;height:' + d.toFixed(1) + 'px;'
+        + 'background:radial-gradient(circle at 34% 27%, hsl(' + h + ' 66% 79%), hsl(' + h + ' 54% 61%) 46%, hsl(' + h + ' 48% 44%) 100%);'
+        + 'box-shadow:0 0 ' + (d * 0.46).toFixed(1) + 'px hsl(' + h + ' 60% 60% / .52),'
+        + '0 0 ' + (d * 1.05).toFixed(1) + 'px hsl(' + h + ' 56% 56% / .22),'
+        + 'inset 0 -2px 6px rgba(0,0,0,.26)';
+      return { css: css };
+    });
+    return { orbs: orbs };
+  }
+}
+</script>
+</body>
+</html>

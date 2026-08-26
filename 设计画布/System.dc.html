@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+    :root{
+      --n1:#171310; --n2:#1F1A15; --n3:#2A231C;
+      --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#968979;
+      --hair:rgba(244,237,227,.10); --hair2:rgba(244,237,227,.05);
+      --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+      /* 字体走过两版弯路，记下来免得再踩：
+         v1 Cormorant Garamond + Noto Serif SC —— 小程序是系统 WebView 不下载网络字体，
+            两个 token 一起回退成同一个系统宋体，字族层次全塌（等于没设字体）。
+         v2 标题宋体 + 正文黑体 —— 层次造出来了，但深色底 + 大号宋体细笔画是悬疑片
+            字幕的视觉语言，她的原话是"跟恐怖片一样"。
+         v3（现在）标题与正文同族，层次靠字重与字号；引文单独给楷体。
+            这个产品要的是灵动温暖，不是文学庄重。 */
+      --disp:-apple-system,"PingFang SC","HarmonyOS Sans SC","Source Han Sans SC",sans-serif;
+      --body:-apple-system,"PingFang SC","HarmonyOS Sans SC","Source Han Sans SC",sans-serif;
+      /* 引文／她自己写的那句／"饭就是饭"这类：楷体有手写起伏，像便签不像医嘱。
+         只用在小面积引文——大标题用楷体会散，用宋体会压人。 */
+      /* 引文／牌面。楷体在小字号上笔画会糊成一团、显得呆板（她说"字体死板"）。
+         华文行楷有连笔，一眼就是手写；退到华文楷体，再退到系统楷体。
+         iOS 有 STXingkai／STKaiti，Mac 也有；安卓两个都没有，回退到系统衬线。 */
+      --hand:"STXingkai","Xingkai SC","STKaiti","Kaiti SC",KaiTi,"Noto Serif CJK SC",serif;
+      --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
+      -webkit-font-smoothing:antialiased}
+    a{color:var(--brass);text-decoration:none} a:hover{color:#DDBA85}
+    .k{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+      color:var(--paper3)}
+    .v{font-family:var(--mono);font-size:11px;color:var(--paper2)}
+    .sec{display:flex;flex-direction:column;gap:14px;padding:26px 0;
+      border-top:1px solid var(--hair2)}
+    .sw{display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:10px}
+    .sw div{display:flex;flex-direction:column;gap:6px}
+    .sw i{display:block;height:56px;border-radius:2px;border:1px solid var(--hair2)}
+    .ring{display:flex;flex-wrap:wrap;gap:9px}
+    .ring i{width:30px;height:30px;border-radius:50%;display:block}
+    .row2{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:26px}
+    .row3{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:18px}
+    .spec{display:flex;flex-direction:column;gap:8px}
+    .rule{background:var(--n2);border-radius:2px;padding:15px 17px;display:flex;
+      flex-direction:column;gap:5px}
+    .rule b{font-size:14px;font-weight:500}
+    .rule span{font-size:12.5px;line-height:1.75;color:var(--paper2)}
+  </style>
+</helmet>
+
+<div style="width:960px;padding:44px 48px 48px;display:flex;flex-direction:column;background:var(--n1)">
+
+  <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:22px">
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <span class="k">设计系统 · 给 UI</span>
+      <span style="font-family:var(--disp);font-size:36px;font-weight:300;letter-spacing:.01em">夜里的暖</span>
+    </div>
+    <div style="max-width:340px;font-size:12.5px;line-height:1.8;color:var(--paper2)">
+      暖来自材质和光，不来自饱和度。深夜发作时高饱和暖色和插画是刺激，不是安抚——所以底色是暖调的黑，暖感由黄铜与一点灯光给。
+    </div>
+  </div>
+
+  <!-- 中性色 -->
+  <div class="sec">
+    <span class="k">中性色 · 全部带暖偏，没有一个是中性灰</span>
+    <div class="sw">
+      <div><i style="background:#100D0B"></i><span class="v">#100D0B　最深</span></div>
+      <div><i style="background:#171310"></i><span class="v">#171310　底</span></div>
+      <div><i style="background:#1F1A15"></i><span class="v">#1F1A15　面</span></div>
+      <div><i style="background:#2A231C"></i><span class="v">#2A231C　抬起</span></div>
+      <div><i style="background:#F4EDE3"></i><span class="v">#F4EDE3　字</span></div>
+      <div><i style="background:#BDB1A1"></i><span class="v">#BDB1A1　次级字</span></div>
+    </div>
+  </div>
+
+  <!-- 强调色 -->
+  <div class="sec">
+    <span class="k">强调色 · 三个，各只做一件事</span>
+    <div class="row3">
+      <div class="spec">
+        <i style="display:block;height:52px;border-radius:2px;background:linear-gradient(180deg,#D9B577,#8E6E3E)"></i>
+        <span class="v">#C9A063　黄铜</span>
+        <span style="font-size:12.5px;line-height:1.7;color:var(--paper2)">品名、滋味、主入口的描边。<b style="color:var(--paper)">全屏最暖的东西</b>，用得最省。</span>
+      </div>
+      <div class="spec">
+        <i style="display:block;height:52px;border-radius:2px;background:#8CC1AA"></i>
+        <span class="v">#8CC1AA　青玉</span>
+        <span style="font-size:12.5px;line-height:1.7;color:var(--paper2)">只给<b style="color:var(--paper)">在场人数</b>和一口水。全屏唯一会自己变的东西就是这个颜色。</span>
+      </div>
+      <div class="spec">
+        <i style="display:block;height:52px;border-radius:2px;background:#CB7E62"></i>
+        <span class="v">#CB7E62　陶土</span>
+        <span style="font-size:12.5px;line-height:1.7;color:var(--paper2)">只给急救线与「身体不太对」。<b style="color:var(--paper)">低饱和，不与主入口争视觉。</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 情绪色环 -->
+  <div class="sec">
+    <span class="k">情绪色环 · 二十四个词，等饱和等明度，只转色相</span>
+    <div class="ring">
+      <sc-for list="{{ring}}" as="o" hint-placeholder-count="24">
+        <i style="{{o.css}}" title="{{o.w}}"></i>
+      </sc-for>
+    </div>
+    <span style="font-size:12.5px;line-height:1.8;color:var(--paper2);max-width:640px">
+      色相 = 词在词库里的位置 × 15°。<b style="color:var(--paper)">颜色只用来认出是哪个词，不用来说它值多少。</b>
+      如果高兴是亮黄、羞耻是暗灰，情绪瓶子就成了记分板。球上不画表情，同理。
+    </span>
+  </div>
+
+  <!-- 字体 -->
+  <div class="sec">
+    <span class="k">字体 · 两款，app 里不用等宽</span>
+    <div class="row2">
+      <div class="spec">
+        <span class="v">Cormorant Garamond　·　Georgia 兜底</span>
+        <span style="font-family:var(--disp);font-size:44px;font-weight:300;line-height:1.1">22:30　饿了。</span>
+        <span style="font-size:12.5px;line-height:1.7;color:var(--paper2)">标题、时刻、数字。300 与 400 两个字重，不用更粗的。</span>
+      </div>
+      <div class="spec">
+        <span class="v">Noto Serif SC　·　Songti SC 兜底</span>
+        <span style="font-family:var(--body);font-size:19px;line-height:1.85">皮焦得裂开一道口子，里面是橙的。很烫。</span>
+        <span style="font-size:12.5px;line-height:1.7;color:var(--paper2)"><b style="color:var(--paper)">正文也是衬线</b>——衬线读得慢一点，而这个产品的每一句都该被慢慢读。</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:26px;align-items:baseline;padding-top:6px">
+      <span style="font-family:var(--disp);font-size:36px;font-weight:300">36 标题</span>
+      <span style="font-family:var(--disp);font-size:22px">22 段首</span>
+      <span style="font-family:var(--body);font-size:17px">17 正文</span>
+      <span style="font-family:var(--body);font-size:14px;color:var(--paper2)">14 次级</span>
+      <span style="font-family:var(--body);font-size:11px;letter-spacing:.2em;color:var(--paper3)">11 标签</span>
+    </div>
+  </div>
+
+  <!-- 控件 -->
+  <div class="sec">
+    <span class="k">控件 · 触区下限 44，主入口下限 64</span>
+    <div class="row3">
+      <button style="cursor:pointer;background:linear-gradient(165deg,#2E251C,#231D16);border:1px solid rgba(201,160,99,.42);border-radius:3px;min-height:70px;padding:19px;font-family:var(--disp);font-size:20px;color:var(--paper);box-shadow:0 14px 30px -18px rgba(0,0,0,.9), inset 0 1px 0 rgba(244,237,227,.05)">主入口 70</button>
+      <button style="cursor:pointer;background:linear-gradient(168deg,#26201A,#1D1813);border:1px solid rgba(244,237,227,.13);border-radius:3px;min-height:64px;padding:18px;font-family:var(--disp);font-size:19px;color:var(--paper)">分岔项 64</button>
+      <button style="cursor:pointer;background:none;border:1px solid rgba(244,237,227,.10);border-radius:3px;min-height:46px;padding:12px;font-family:var(--body);font-size:14px;color:var(--paper2)">次级 46</button>
+    </div>
+    <div class="row3" style="padding-top:4px">
+      <button style="cursor:pointer;background:none;border:1px solid rgba(140,193,170,.32);border-radius:3px;min-height:52px;padding:15px;font-family:var(--body);font-size:15px;color:var(--jade)">青玉 · 一口水</button>
+      <button style="cursor:pointer;background:none;border:1px solid rgba(203,126,98,.5);border-radius:3px;min-height:52px;padding:15px;font-family:var(--disp);font-size:17px;color:var(--clay)">陶土 · 身体不太对</button>
+      <div style="display:flex;align-items:center;gap:9px;border:1px solid rgba(244,237,227,.13);border-radius:22px;min-height:44px;padding:10px 15px 10px 13px;font-size:15px;justify-content:center">
+        <span style="width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 34% 28%,hsl(120 66% 78%),hsl(120 54% 58%));box-shadow:0 0 7px hsl(120 60% 60% / .6)"></span>词 chip 44
+      </div>
+    </div>
+  </div>
+
+  <!-- 六格 -->
+  <div class="sec">
+    <span class="k">六格 · 本身就是入口，不需要文字标签</span>
+    <div style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:6px;max-width:430px">
+      <i style="height:38px;border-radius:2px;display:block;border:1px solid rgba(244,237,227,.22)"></i>
+      <i style="height:38px;border-radius:2px;display:block;border:1px solid rgba(244,237,227,.22)"></i>
+      <i style="height:38px;border-radius:2px;display:block;border:1px solid rgba(244,237,227,.22)"></i>
+      <i style="height:38px;border-radius:2px;display:block;border:1px solid rgba(140,193,170,.7);background:rgba(140,193,170,.07)"></i>
+      <i style="height:38px;border-radius:2px;display:block;border:1px dashed rgba(244,237,227,.10)"></i>
+      <i style="height:38px;border-radius:2px;display:block;border:1px dashed rgba(244,237,227,.10)"></i>
+    </div>
+    <span style="font-size:12.5px;line-height:1.8;color:var(--paper2)">
+      空格用虚线，<b style="color:var(--paper)">不用红色、不用感叹号</b>。无连续天数、无百分比、无月历——用等级衡量进度会造成压力，而游戏化不降低脱落。
+    </span>
+  </div>
+
+  <!-- 三条铁律 -->
+  <div class="sec">
+    <span class="k">文案三条铁律 · 屏级执行见定稿册</span>
+    <div class="row3">
+      <div class="rule"><b>说有什么，不说没什么</b><span>否定句要被读懂，脑子必须先把被否定的东西造出来。要拆掉计数，就整屏不提次数。<br>例外只给急救：否定此刻一个手部动作、且紧跟身体理由。</span></div>
+      <div class="rule"><b>念出来，念整屏</b><span>不会对着坐在旁边的人说出口的句子，就是机械的。而且要连整屏一起念——单句读着对，放回整屏可能撞词。</span></div>
+      <div class="rule"><b>屏幕上只有食物</b><span>「1800」和「够不够」是做产品判断的语言，不是给用户的语言。判断依据写文档，屏上只有桌上有几样。</span></div>
+    </div>
+  </div>
+
+  <!-- 动效 -->
+  <div class="sec">
+    <span class="k">动效 · 三处，各有理由，全部跟随系统的减少动态设置</span>
+    <div class="row3">
+      <div class="rule"><b>呼吸　吸 4 · 停 1 · 呼 6</b><span>一轮 11 秒，<b style="color:var(--paper)">呼比吸长</b>——那是降低生理唤起的那一半，不是装饰。缩放 .80→1.10，青玉，外圈涟漪每 3.6 秒荡一次。</span></div>
+      <div class="rule"><b>潮汐　canvas</b><span>三个周期叠出波线（6.1 / 10.7 / 2.4 波数，反向漂移），线下水体渐层，线上 160 个墨点按幂分布定大小、叠加模式重叠成浓淡，最后压一层纸纹。<b style="color:var(--paper)">没有纸纹，墨看起来就是塑料。</b>屏上不出现倒计时数字。</span></div>
+      <div class="rule"><b>在场人数　4.5 秒一次</b><span>全屏唯一会自己变的东西。<b style="color:var(--paper)">人数为 0 或 1 时整块不显示</b>——凌晨三点看到「还有 0 个人」比看不到更糟。</span></div>
+    </div>
+  </div>
+
+  <!-- 食物材质 -->
+  <div class="sec">
+    <span class="k">食物材质 · 抽象，不写实</span>
+    <div class="row2">
+      <div class="spec">
+        <span style="font-size:12.5px;line-height:1.8;color:var(--paper2)">
+          每一样食物给一份材质配方：底色渐层 ＋ 一层 feTurbulence 碎纹 ＋ 一道不规则裂口透出的芯色 ＋ 热气。
+          烤红薯＝焦皮／橙芯／三缕热气。<b style="color:var(--paper)">不用照片，不画一盘菜。</b>
+        </span>
+        <span style="font-size:12.5px;line-height:1.8;color:var(--paper2)">
+          写实会把线索做强，而这一层唯一的真风险就是线索——线索驱动的渴望不快速消退。
+          <b style="color:var(--paper)">所以夜里那张卡不加质感，只留标题＋「明早再看」。</b>那条规则现在承担的工作比以前更重。
+        </span>
+      </div>
+      <div class="spec">
+        <span class="v">配方位　HomeDay.dc.html　&lt;defs&gt;</span>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px">
+          <div style="display:flex;flex-direction:column;gap:5px"><i style="display:block;height:44px;border-radius:2px;background:linear-gradient(160deg,#2C2016,#1B120C 46%,#241A11)"></i><span class="v">焦皮</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><i style="display:block;height:44px;border-radius:2px;background:radial-gradient(circle at 50% 52%,#FFC97E,#E88F3A 34%,#B45A18 72%,#6E320D)"></i><span class="v">橙芯</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><i style="display:block;height:44px;border-radius:2px;background:#C2611B;opacity:.5"></i><span class="v">透光</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><i style="display:block;height:44px;border-radius:2px;background:#1A1009"></i><span class="v">裂口边</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 刻意没做的 -->
+  <div class="sec">
+    <span class="k">刻意没做的 · 参考图上有，这里全部去掉</span>
+    <div class="row3">
+      <div class="rule"><b>积分 · 等级 · 计数</b><span>参考图的「20 分／Upgrade」和底座上的「15」。不做连续天数、进度条、成就徽章——<b style="color:var(--paper)">瓶座上一出现数量就变成计次</b>，所以写「八月」。</span></div>
+      <div class="rule"><b>球上的表情</b><span>笑脸哭脸会给每个词判好坏，而记词那一屏定过「词就是词」。没有脸，它就只是那天记下的那个词。</span></div>
+      <div class="rule"><b>假状态栏</b><span>参考图顶上那条「9:41 · 信号 · 电池」。<b style="color:var(--paper)">真机的系统状态栏会叠在上面</b>，画一条假的会重影。顶部只留安全区。</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":960,"height":2020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const WORDS = ['平静','轻松','满足','踏实','有力气','高兴','还行','说不上来','累','烦',
+                   '空','孤单','羞耻','紧张',
+                   '咸','甜','烫','脆','香','软','酸','辣','凉','鲜'];
+    const ring = WORDS.map((w, i) => {
+      const h = Math.round(i * 360 / WORDS.length);
+      return {
+        w: w,
+        css: 'background:radial-gradient(circle at 34% 27%, hsl(' + h + ' 66% 79%), hsl(' + h + ' 54% 61%) 46%, hsl(' + h + ' 48% 44%) 100%);'
+           + 'box-shadow:0 0 12px hsl(' + h + ' 60% 60% / .5), inset 0 -2px 5px rgba(0,0,0,.26)'
+      };
+    });
+    return { ring: ring };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# 截图产物。13M，而且它们在工程目录里会被算进小程序主包
+# （project.config.json 的 packOptions.ignore 已经排除了整个 .sync-mp）
+out/
