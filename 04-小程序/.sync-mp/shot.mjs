@@ -293,8 +293,15 @@ const RENDER = {
 })();</script>`;
   },
 };
+/* 六格。真机上 prep 会给下一个空格标 next（那格慢慢亮一下，是「这里可以点」
+   的唯一信号 —— 六格没有文字标签），这里照标，否则截图里看不到那个提示。
+   just（刚记完的一次性反馈）不标：它只在从记录屏回来的那一帧存在，静态截图没有那个时刻。 */
 const cells = (on) => '<div class="cells">' + Array.from({ length: 6 },
-  (_, i) => `<div class="cell ${i === on ? 'on' : i > on ? 'e' : ''}"></div>`).join('') + '</div>';
+  (_, i) => {
+    const cls = i === on ? 'on' : i > on ? 'e' : '';
+    const next = i === on + 1 ? ' next' : '';
+    return `<div class="cell ${cls}${next}"></div>`;
+  }).join('') + '</div>';
 
 /* home 的第四层在 index.js 的 draw() 里被折进 .foldwrap，这里照做 */
 function build(sid) {

@@ -191,7 +191,8 @@
     <!-- 六格：没有连续天数、没有百分比、没有月历。空格用虚线不用红色 -->
     <!-- 六格 = 一天六次进食。每格独立可点，点进去记一个词；已记的格子染那个词的颜色 -->
     <view wx:elif="{{b.k==='cells'}}" class="cells">
-      <view wx:for="{{b.cells}}" wx:for-item="c" wx:key="i" class="cell {{c.on ? 'on' : 'e'}}"
+      <view wx:for="{{b.cells}}" wx:for-item="c" wx:key="i"
+            class="cell {{c.on ? 'on' : 'e'}} {{c.next ? 'next' : ''}} {{c.just ? 'just' : ''}}"
             hover-class="tap" data-i="{{c.i}}" bindtap="tapCell"
             style="{{c.color ? 'border-color:' + c.color + ';background:' + c.color + '1F' : ''}}"></view>
     </view>

@@ -509,9 +509,18 @@ Page({
          现在填充状态来自本机记录。 */
       case 'cells': case 'cellsGo': {
         const meals = LOGD.dayMeals();
+        /* next：下一个该记的那格。六格没有文字标签（那是刻意的），
+           所以「这里可以点」这件事必须由视觉说 —— 竞品的首页都有一个
+           明确的「今天记录了吗」入口，这一格就是这个产品的说法。
+           just：刚记完回到首页的那一格，亮一次就停，是静默完成的反馈。 */
+        const next = meals.findIndex((x) => !x);
+        const just = this.justCell;
+        this.justCell = -1;
         return { k: 'cells', go: k === 'cellsGo' ? a[1] : '',
           cells: meals.map((w, i) => ({
             i, w: w || '', on: !!w,
+            next: i === next,
+            just: i === just,
             color: w && D.HUE[w] !== undefined ? D.col(w) : '',
           })) };
       }
@@ -880,6 +889,7 @@ Page({
   },
   tapWord(e) {
     const w = e.currentTarget.dataset.w;
+    let idxJustSet = -1;
     if (D.HUE[w] !== undefined) {
       D.LAST = w;
       /* 词存到那一餐上。球是"这一天"，在 startJar 里由当天所有词聚合出来——
@@ -890,13 +900,30 @@ Page({
         : Math.max(0, meals.findIndex((x) => !x));
       const before = meals.filter(Boolean).length;
       LOGD.setMeal(idx, w);
+      idxJustSet = idx;
       this.mealIdx = null;
       /* 当天第一次记 → 罐子里多一颗，播落球；之后 → 那颗球换个颜色，弹一下 */
       const days = LOGD.balls(D.HUE);
       if (before === 0) this.newball = days.length - 1;
       else { this.newball = -1; this.recolor = days.length - 1; }
     }
-    const to = D.HUE[w] !== undefined ? 'logged' : 'home';
+    /* 记完直接回首页，不再经过 logged 屏。
+       查了一圈市面上的记录类 app（Daylio 五个脸、How We Feel 的词云），
+       常规路径都是「点入口 → 选一个 → 完成」两步，选完就存、自动回主界面。
+       这里原来是四步：点格子 → 点词 → 点「好了」→ 回首页。
+       多出来的那一步是 logged 屏，屏上写着「但这只是一个词，
+       它不代表对你的任何评价」—— 那句话第一次看是这个产品的立场，
+       第三十次就是每天多点一下。所以只在第一次记的时候给它。
+       之后走静默完成：回首页，那一格自己亮起来（见 cells 的 justSet）。 */
+    let to = 'home';
+    if (D.HUE[w] !== undefined) {
+      if (!wx.getStorageSync('logged:seen')) {
+        wx.setStorageSync('logged:seen', 1);
+        to = 'logged';
+      } else {
+        this.justCell = idxJustSet;       // 首页给这一格一次「刚记上」的反馈
+      }
+    }
     this.pushHistory(to);
     this.cur = to;
     this.draw();

@@ -115,6 +115,26 @@
 .cell.on{ border-color:rgba(140,193,170,.7); background:rgba(140,193,170,.07); }
 .cell.e{ border-style:dashed; border-color:rgba(244,237,227,.10); }
 
+/* ── 六格的两个新状态 ──────────────────────────────────────
+   六格没有文字标签（PRD：本身就是入口，不需要标签），代价是
+   「这里可以点」这件事没人说。市面上的记录类 app 首页都有一个明确的
+   「今天记录了吗」入口 —— next 就是这个产品的说法：
+   下一个该记的那格慢慢亮一下再暗回去，四秒一轮。
+   不用箭头不用文字不用红点，那些都会变成催促。 */
+.cell.next{ border-color:rgba(201,160,99,.34); animation:cellwait 4s ease-in-out infinite; }
+@keyframes cellwait{
+  0%,100%{ background:rgba(201,160,99,.02) }
+  50%    { background:rgba(201,160,99,.09) }
+}
+/* 刚记完回到首页：这一格亮一次就停。
+   静默完成 —— 不弹提示条、不撒花，那些是给成就感设计的，这个产品不给分。 */
+.cell.just{ animation:celljust 1.1s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes celljust{
+  0%  { transform:scale(1);    box-shadow:0 0 0 0 rgba(201,160,99,.42) }
+  38% { transform:scale(1.10); box-shadow:0 0 0 7rpx rgba(201,160,99,.16) }
+  100%{ transform:scale(1);    box-shadow:0 0 0 0 rgba(201,160,99,0) }
+}
+
 /* ── 词 chip 44：颜色只用来认出是哪个词，不用来说它值多少 ───────── */
 .words{ display:flex; flex-wrap:wrap; gap:14rpx; margin:20rpx 0 0; }
 .word{ display:inline-flex; align-items:center; justify-content:center; gap:10rpx;
