@@ -45,6 +45,11 @@ try { LOGM.seedIfEmpty(require(R + '/data/screens.js').HUE || {}); } catch (e) {
 D.CLOCK = clock;
 if (!ALL && !D.SCREENS[id]) { console.error('没有这一屏：' + id); process.exit(1); }
 
+/* ⚠️ 元素选择器（.base text 那三条）在真机上选的是小程序的 <text> 组件，
+   而这里铺的是 HTML。凡是被这类规则命中的地方，标签要照抄真机的名字 ——
+   浏览器把 <text> 当未知元素按 inline 渲染，CSS 选得中，行为足够接近。
+   写成 <span> 就静默失效，字色字号全不生效，而截图看不出哪里不对。
+   已知需要照抄的：.base text / .cue text / .rx-cue text。 */
 const rpx2px = (css) => css.replace(/([0-9.]+)rpx/g, (_, n) => (n * K).toFixed(3) + 'px');
 const tokens = rpx2px(fs.readFileSync(R + '/pages/index/tokens.wxss', 'utf8')
   .replace(/\/\*[\s\S]*?\*\//g, ''));
@@ -224,9 +229,15 @@ const RENDER = {
   },
   sleeppick: (b) => '<div class="spick">'
         + b.slice(1).map((t) => `<div class="sp-b">${t}</div>`).join('') + '</div>',
-  breath:() => '<div class="breath"><div class="halo"></div><div class="ring"></div><div class="core"></div></div>',
+  /* 结构照抄 index.wxml：少了 ripple 三层和 cue，截图里就没有涟漪、
+     也没有「吸／呼」那两个字 —— 而 .cue text 定义了那两个字的全部样式
+     （绝对定位、字号、颜色、11 秒一轮的动画），span 选不中，只能用 text。 */
+  breath:() => '<div class="breath"><div class="halo"></div>'
+    + '<div class="ripple"></div><div class="ripple r2"></div><div class="ripple r3"></div>'
+    + '<div class="ring"></div><div class="core"></div>'
+    + '<div class="cue"><text class="in">吸</text><text class="out">呼</text></div></div>',
   relax:() => '<div class="relax"><div class="rx-out"></div><div class="rx-mid"></div><div class="rx-core"></div>'
-        + '<div class="rx-cue"><span class="tight">紧</span></div></div>',
+        + '<div class="rx-cue"><text class="tight">紧</text><text class="loose">松</text></div></div>',
   write:(b) => `<div class="wwrap"><div class="wtext" style="color:var(--paper3)">${esc(b[1])}</div></div>`,
   sw:   (b) => `<div class="swrow"><span class="swk">${b[1]}</span><span class="swh">${esc(b[2])}</span>`
         + '<span class="swt"><span class="swd"></span></span></div>',
@@ -255,7 +266,7 @@ const RENDER = {
     return `<div class="machine"><div class="neck"></div><div class="glass">`
       + `<canvas id="jarcv" class="jarcv" width="${JARM.JAR}" height="${JARM.JAR}"></canvas>`
       + `<div class="gloss"></div></div>`
-      + '<div class="base"><span>八月</span></div></div>'
+      + '<div class="base"><text>八月</text></div></div>'
       + `<script>${inject}
 (function(){
   var J=${JARM.JAR}, R=J/2-5, days=${JSON.stringify(days)};
