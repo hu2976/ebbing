@@ -235,18 +235,15 @@ Page({
     const care = (options && options.role) === 'care';
     D = care ? CARE : PATIENT;
     this.care = care;
-    this.stack = [];
-    /* 记住上次在 entry 选的那一边。
-       原则是「不预设她是谁」，而这里记的是**她自己说过的话** —— 记住它
-       不叫预设身份，叫不让她每天重说一遍。凌晨三点打开的人，不该先过
-       一道门才够得着「我现在不太好」。
-       退路：选「为了一个我在意的人」→ worry 有返回键能回 entry 重选；
-       选「为自己」→ 回不去，但那本来就是设计（患者端首页没有任何通往
-       照护者端的入口，那一端走独立小程序码）。
-       notyet（「我还没打算改变」）不记 —— 它是个临时的态度，不是分流。 */
-    const side = wx.getStorageSync('entry:side');
-    this.cur = care ? 'care' : ((side === 'home' || side === 'worry') ? side : 'entry');
-    this.newball = -1; this.recolor = -1;
+    /* ⚠️ 试过在这儿记住上次在 entry 选的那一边（少点一次），撤回了。
+       entry 那道分流是这个产品理念的核心展示点（不预设你是谁），
+       现场演示必须每次可达 —— 记住之后自己这台手机就再也回不到它。
+       （评委各自扫码是新用户、storage 空的，看得到；断的只有演示者那台。）
+       补救方案全试过：长按重置不可发现、折叠区加入口要占 home 仅剩的 5px、
+       「当天有效」在同一天演示两次照样锁死。
+       一个功能需要另一个功能来补救它引入的问题，通常是它本身不该有。
+       黑客松之后如果要，正确的做法是先有一个「设置」的落点，再把它放进去。 */
+    this.stack = []; this.cur = care ? 'care' : 'entry'; this.newball = -1; this.recolor = -1;
     /* 演示种子：只在完全没有记录时写一次，真实使用不会覆盖 */
     if (!care) LOGD.seedIfEmpty(D.HUE);
 
@@ -836,11 +833,6 @@ Page({
 
   go(e) {
     const id = e.currentTarget.dataset.id;
-    /* 从 entry 走出去的那一下记下来，下次直接落到这一边（见 onLoad）。
-       在 entry 重选会覆盖，所以点错了回到 entry 再选一次就改回来了。 */
-    if (this.cur === 'entry' && (id === 'home' || id === 'worry')) {
-      wx.setStorageSync('entry:side', id);
-    }
     /* 不是从书架点进来的，就把上次记的那一天清掉——否则从首页进也会显示那天 */
     if (id === 'taste-card') this.wallDay = null;
     /* 写／看别人写的，都要知道是哪样食物。从当前那张卡上取。 */
