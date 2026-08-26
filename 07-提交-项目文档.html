@@ -1,0 +1,1226 @@
+<title>退潮项目文档</title>
+
+<style>
+  :root{
+    --ground:#F7F8F4; --surface:#FFFFFF; --sunk:#EDEFE8;
+    --ink:#161A18; --ink2:#4A524D; --ink3:#7C857F;
+    --rule:#DDE1D8; --rule-soft:#E8EBE3;
+    --accent:#0F5E52; --accent-soft:#E2EDE9; --accent-ink:#0B463D;
+    --rust:#9A3B28; --rust-soft:#F4E7E3;
+    --sand:#8A6A2F; --sand-soft:#F2ECDD;
+    --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,system-ui,sans-serif;
+    --serif:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",Georgia,serif;
+    --mono:ui-monospace,"SF Mono","Menlo",monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#141713; --surface:#1A1E18; --sunk:#20241D;
+      --ink:#E9EDE5; --ink2:#AAB3A6; --ink3:#7B857A;
+      --rule:#2E3429; --rule-soft:#252A21;
+      --accent:#66C2AE; --accent-soft:#1B2D28; --accent-ink:#8FD6C5;
+      --rust:#D57F68; --rust-soft:#2A1F1B;
+      --sand:#C7A860; --sand-soft:#26221A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#141713; --surface:#1A1E18; --sunk:#20241D;
+    --ink:#E9EDE5; --ink2:#AAB3A6; --ink3:#7B857A;
+    --rule:#2E3429; --rule-soft:#252A21;
+    --accent:#66C2AE; --accent-soft:#1B2D28; --accent-ink:#8FD6C5;
+    --rust:#D57F68; --rust-soft:#2A1F1B;
+    --sand:#C7A860; --sand-soft:#26221A;
+  }
+
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); font-size:16.5px; line-height:1.75;
+    -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:840px; margin:0 auto; padding:56px 24px 140px; }
+
+  h1{ font-family:var(--serif); font-size:40px; line-height:1.2; margin:0 0 4px; }
+  .sub{ color:var(--ink3); font-size:14.5px; margin:0 0 14px; }
+  .slogan{ font-family:var(--serif); font-size:22px; color:var(--accent-ink);
+    margin:0 0 24px; }
+  .meta{ display:flex; flex-wrap:wrap; gap:6px 22px; font-size:14px;
+    color:var(--ink2); padding:16px 0; border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule); margin-bottom:8px; }
+  .meta b{ color:var(--ink3); font-weight:600; font-size:12.5px;
+    letter-spacing:.06em; margin-right:6px; }
+
+  h2{ font-family:var(--serif); font-size:26px; margin:60px 0 6px; padding-top:22px;
+    border-top:1px solid var(--rule); line-height:1.35; }
+  h2 .n{ color:var(--ink3); font-family:var(--mono); font-size:14px; margin-right:12px; }
+  h3{ font-size:17.5px; margin:34px 0 8px; }
+  h4{ font-size:15px; margin:22px 0 6px; color:var(--ink2); }
+  p{ margin:12px 0; }
+  ul,ol{ margin:12px 0; padding-left:22px; }
+  li{ margin:6px 0; }
+  code{ font-family:var(--mono); font-size:.87em; background:var(--sunk);
+    padding:1px 5px; border-radius:3px; }
+  a{ color:var(--accent-ink); }
+
+  .lede{ font-family:var(--serif); font-size:19.5px; line-height:1.7;
+    margin:24px 0; padding-left:18px; border-left:3px solid var(--accent); }
+  .claim{ font-family:var(--serif); font-size:22px; line-height:1.6;
+    margin:26px 0; padding:22px 26px; background:var(--surface);
+    border:1px solid var(--rule); border-radius:3px; }
+  .claim em{ font-style:normal; color:var(--accent-ink); }
+
+  .box{ background:var(--surface); border:1px solid var(--rule);
+    border-radius:3px; padding:17px 21px; margin:20px 0; }
+  .box.warn{ background:var(--rust-soft); border-color:var(--rust); }
+  .box.acc{ background:var(--accent-soft); border-color:var(--accent); }
+  .lbl{ font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ink3); display:block; margin-bottom:8px; font-weight:600; }
+  .box.warn .lbl{ color:var(--rust); }
+  .box.acc .lbl{ color:var(--accent-ink); }
+
+  .scroll{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; margin:20px 0; font-size:15px; }
+  th,td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--rule-soft);
+    vertical-align:top; }
+  th{ font-size:12.5px; letter-spacing:.06em; color:var(--ink3); text-transform:uppercase;
+    border-bottom:1px solid var(--rule); font-weight:600; }
+  td.n{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td.no{ color:var(--rust); }
+  td.yes{ color:var(--accent-ink); }
+
+  pre{ background:var(--sunk); border:1px solid var(--rule-soft); border-radius:3px;
+    padding:14px 16px; overflow-x:auto; font-family:var(--mono); font-size:13px;
+    line-height:1.65; margin:16px 0; }
+
+  .say{ font-family:var(--serif); font-size:17px; background:var(--sunk);
+    border-radius:3px; padding:9px 14px; margin:6px 6px 6px 0; display:inline-block; }
+  .say.no{ color:var(--rust); }
+  .say.ok{ color:var(--accent-ink); }
+
+  .step{ display:flex; gap:14px; margin:10px 0; padding:12px 15px;
+    background:var(--surface); border:1px solid var(--rule); border-radius:3px; }
+  .step .k{ font-family:var(--mono); font-size:11.5px; color:var(--ink3);
+    white-space:nowrap; padding-top:3px; min-width:52px; }
+  .step .v{ flex:1; }
+
+  .foot{ margin-top:80px; padding-top:22px; border-top:1px solid var(--rule);
+    color:var(--ink3); font-size:13.5px; }
+</style>
+
+<div class="wrap">
+
+<h1>退潮 · ebbing</h1>
+<p class="slogan">我们让她重新拥有形容词。</p>
+
+<div class="meta">
+  <span><b>赛道</b>软件应用 · 滴水穿石</span>
+  <span><b>命题</b>eazo「她创所需 · 为你而做」 · 萨福「爱与生俱来，AI 唤醒本能」</span>
+  <span><b>参赛</b>个人</span>
+  <span><b>仓库</b><a href="https://github.com/hu2976/ebbing">github.com/hu2976/ebbing</a> · <code>shenicest-fission</code></span>
+</div>
+
+<p class="lede">面向进食障碍全谱系（暴食 / 厌食 / 贪食）患者及照护者的匿名自助微信小程序。无账号、无登录、数据不出设备。<br>
+62 屏可跑，接了云函数与模型，构建期 15 项自检——其中四项断言的不是功能，是这个产品的立场。</p>
+
+<h2><span class="n">01</span>项目背景</h2>
+
+<h3>不是"和食物的关系出了问题"</h3>
+
+<p>主流叙事把进食障碍讲成失控——binge eating 字面就是"失控进食"。但真正的机制是反的：</p>
+
+<div class="claim">
+  <em>进食障碍不是失控，是掌控用错了地方。</em><br>
+  她们不缺自律。她们的自律是全场最强的。问题是它指向了「少吃」。
+</div>
+
+<p>一个人不能掌控一切，于是从食物下手——因为食物是唯一可以被完全掌控的东西。限制是掌控，暴食是限制的反弹，清除是对"已经发生"的掌控。三侧共享同一个结构。</p>
+
+<p>由此推出的第一条否决：<strong>任何"算给她看"的产品都在喂病</strong>。算热量、算 GI、算吸收率、算这一顿之后会怎样——每一个都是给一个掌控欲过剩、且算术能力极强的人一件更精密的仪器。</p>
+
+<h3>而语言先塌了</h3>
+
+<p>一个人对食物的语言只剩下数字。她说不出「香」，只能说「多少卡」。<strong>所有产品都在给她更准的数字。</strong></p>
+
+<h3>三条来自调研的事实</h3>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:26%">事实</th><th>出处与含义</th></tr></thead>
+<tbody>
+<tr><td><strong>要解的是留存不是有效性</strong></td><td>Linardon 2024 的 RCT（n=576）已证 DBT 技能 App 有效，但 6 周脱落 48%、仅 1/3 完成最后模块。Zainal 2025 的 meta（117 试验 / 279,791 人）：<strong>脱落更低的试验有提醒、有人的接触、且无游戏化</strong>。</td></tr>
+<tr><td><strong>躯体那一层是空的</strong></td><td>30+ 产品调研：Juniver 覆盖清除型贪食却零字提电解质与清除后护理；单独检索这一类，结果全是文献与治疗中心科普页，<strong>无任何消费级产品</strong>。</td></tr>
+<tr><td><strong>生成式对话在这个人群里是危险的</strong></td><td>Tessa（NEDA）对已告知患 ED 的用户仍推荐热量限制，一周下架。Pucci 2026 临床标注 268 对中<strong>仅 44.7% 安全</strong>。CCDH：ChatGPT 对假装 13 岁者给 0 卡计划并教其隐瞒家人。Bilen 2026：五个主流模型给青少年餐单平均低估 695 kcal。</td></tr>
+</tbody>
+</table></div>
+
+<h2><span class="n">02</span>目标用户</h2>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:22%">谁</th><th>什么时候打开</th><th>她需要什么</th></tr></thead>
+<tbody>
+<tr><td><strong>患者端</strong><br><span style="color:var(--ink3);font-size:13.5px">暴食 / 厌食 / 贪食全谱系</span></td><td>大部分是日常——今天的滋味卡、六格、找个人说说话。<br>少部分是急性期：很想吃 / 正在吃 / 吃完了 / 吃不下。</td><td><strong>不被评价地过完这一天</strong>。急性期需要的是此刻手上能做的一件事，不是分析。</td></tr>
+<tr><td><strong>照护者端</strong><br><span style="color:var(--ink3);font-size:13.5px">妈妈、爸爸、伴侣、室友、朋友</span></td><td>她刚说了一句话，对方不知道该怎么接。</td><td>知道自己那句好心的话正在起什么作用。核心是<strong>行为翻译器</strong>，不是话术库。</td></tr>
+</tbody>
+</table></div>
+
+<div class="box warn">
+  <span class="lbl">两端硬隔离</span>
+  <p style="margin:0">不做患者↔照护者绑定，不共享任何数据。暴食是隐秘的，没人希望身边人知道。照护者自己下载，两端从数据到代码彻底分开——<code>chk.mjs</code> 有一条断言专门检查 <code>care.js</code> 没有引用患者端数据。</p>
+</div>
+
+<h3>一条设计前提上的更正</h3>
+<p>早期版本用「照护者几乎全是女性」来论证选题契合女性主题。<strong>这是错的</strong>——照护劳动过度落在女性身上是需要被改变的现状，不是产品的用户画像。现在照护者端按真实使用者写，不预设性别与身份。</p>
+
+<h2><span class="n">03</span>技术栈</h2>
+
+<h3>形态本身是产品决策，不是技术妥协</h3>
+
+<div class="claim">
+  一个需要下载安装的东西，<em>在她最需要的那一刻不会被打开。</em><br>
+  小程序用过一次就在「最近使用」里。
+</div>
+
+<p>凌晨三点她不会去应用商店搜索、下载、注册。产品定义里"还开着"这句话，靠的就是这个形态。</p>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:20%">层</th><th>做法</th></tr></thead>
+<tbody>
+<tr><td>形态</td><td>微信小程序，走体验版（不过审，扫码即用）。<strong>62 屏 = 一个页面</strong>，单页换内容</td></tr>
+<tr><td>存储</td><td>记录、情绪、滋味、对话全部 <code>wx.setStorageSync</code>。<strong>数据不出设备</strong>——既是隐私设计，也省掉整个后端</td></tr>
+<tr><td>内容层</td><td>屏级文案的唯一源是可交互原型，<code>screens.js</code> 由 <code>gen.mjs</code> 生成。<em>手改生成物会被覆盖</em></td></tr>
+<tr><td>唯一的云函数</td><td><code>cloudfunctions/talk</code>：四个人各自回应一段话。<strong>无状态</strong>——历史由前端每次带上来，用完就没了</td></tr>
+<tr><td>模型</td><td>OpenRouter。<strong>密钥在云函数的环境变量里</strong>，前端拿不到，反编译也拿不到</td></tr>
+<tr><td>物理</td><td>情绪瓶子是 <code>canvas 2d</code> + 位置约束松弛（PBD），每帧解位置，接加速度计</td></tr>
+<tr><td>构建期工具</td><td><code>gen.mjs</code> 生成 · <code>chk.mjs</code> 15 项自检 · <code>shot.mjs</code> 用真实 WXSS 渲进 headless Chrome 量一屏装不装得下</td></tr>
+</tbody>
+</table></div>
+
+<h3>规模</h3>
+<pre>患者端     62 屏 · 489 块 · 42 种块型
+照护者端   22 屏 · 13 种块型 · 20 条课程
+代码       约 4300 行 JS（不含生成物与截图）
+自检       15 项，含 4 条立场断言，exit code 非 0 即构建失败</pre>
+
+<h2><span class="n">04</span>创新点</h2>
+
+<h3>一 · 让 AI 说话，但不让 AI 乱说</h3>
+
+<p>模型只出现在「四个人」这一层，三道护栏，缺一不可：</p>
+
+<pre>人设     四个人各守各的流派，能说的范围各自更窄
+   ↓
+后置检查  提示词是请求，检查才是保证
+   ↓
+兜底     不合格不重试、不改写，退回人写的那段</pre>
+
+<div class="box acc">
+<span class="lbl">为什么"各守流派"是安全设计不是文风设计</span>
+<p style="margin:0 0 10px"><strong>岸</strong>（先过这一阵，只给手上动作）· <strong>回声</strong>（那句话是谁说的，只拆念头）· <strong>同路</strong>（不用先感觉好）· <strong>地面</strong>（此刻的身体）</p>
+<p style="margin:0"><em>一个只能给手上动作的人，说不出饮食建议；一个只拆念头的人，不会去评价她的身体。</em>四条窄路比一条宽路安全，也比一条宽路好听——四个声音不会糊成同一个。</p>
+</div>
+
+<p><strong>不合格的输出不改写。</strong>改写等于在有害内容上打补丁，而补丁过的那句仍然是模型写的。Pucci 2026 记录的失败模式里就有"免责声明之后照样给建议"——所以不能靠模型自己声明安全。</p>
+
+<p>也<strong>不用真人名</strong>：精神分析对进食障碍的经典解释是口欲期固着、对母亲的攻击、拒绝性成熟。把这套话对患者说出来，是把病因归到她的欲望和家庭关系上——<em>而那不是模型跑偏，是忠实还原人设的结果。</em></p>
+
+<h3>二 · 门槛不是正能量过滤器，是「描述 vs 判断」过滤器</h3>
+
+<p>「我写的滋味」让她从<strong>色 / 香 / 味 / 声 / 质地</strong>五个角度写下自己记得的样子。想让这条进公共池，要过一道门槛：</p>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:24%">她写</th><th style="width:16%">结果</th><th>屏上那句</th></tr></thead>
+<tbody>
+<tr><td>恶心</td><td class="no">不进公共池</td><td>「这是判断，不是味道。」</td></tr>
+<tr><td>像屎一样</td><td class="no">不进公共池</td><td>「这是个比喻。」</td></tr>
+<tr><td><strong>入口即化</strong></td><td class="no"><strong>同样不进</strong></td><td>理由和「恶心」<strong>一模一样</strong>——都不是描述</td></tr>
+<tr><td><strong>臭 / 酸了 / 发苦 / 黏手 / 凉了</strong></td><td class="yes"><strong>放行</strong></td><td>那是真实的气味。臭豆腐、臭鳜鱼、蓝纹奶酪</td></tr>
+</tbody>
+</table></div>
+
+<div class="claim">
+  规则对称，不偏向好话。<br>
+  <em>我们不要求她说好话，只要求她说的是味道。</em>
+</div>
+
+<p>如果只让填愉快的感受，那是另一种压力。</p>
+
+<h3>三 · 存下来、上时间线、上卡面是三个不同的权限</h3>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:16%">层</th><th style="width:34%">有什么</th><th>为什么</th></tr></thead>
+<tbody>
+<tr><td><strong>存</strong></td><td>她写什么都存，永远在她自己手机里</td><td><strong>产品从头到尾没有否定过她任何一个字</strong></td></tr>
+<tr><td><strong>时间线</strong></td><td>全都在，包括「恶心」</td><td>变化要看得见。同一样食物写过很多条，按日期排开——<em>恢复的证据是她自己写出来的，不是产品替她改的</em></td></tr>
+<tr><td><strong>卡面</strong></td><td>只放过了门槛的那条</td><td>那张卡她每天会再看到一次。把最难受那句挂在最显眼的地方，等于每天提醒她一次</td></tr>
+</tbody>
+</table></div>
+
+<p>这三层是绕了很久才拆开的。此前「拒绝还是引导、删掉是不是强权」这个死结解不开，正是因为把<strong>存下来</strong>和<strong>给别人看</strong>捆在了一起。它们本来就是两个不同的权限。</p>
+
+<h3>四 · 产品最后会把自己说的话还给她</h3>
+
+<p>第一天卡面上是产品写的滋味描述。她写过之后，那段话被换成她自己的。<strong>用久了，整本卡都是她写的。</strong></p>
+
+<h3>五 · 立场是机器验证的，不是文档里的声明</h3>
+
+<pre>node .sync-mp/chk.mjs</pre>
+
+<p>15 项里有四项断言的不是功能，是这个产品的立场：</p>
+
+<div class="step"><div class="k">断言 1</div><div class="v"><strong>写了「恶心」必须存得下来</strong> —— 存 ≠ 给别人看</div></div>
+<div class="step"><div class="k">断言 2</div><div class="v"><strong>「入口即化」必须和「恶心」同罪</strong> —— 门槛对称，不偏向好话</div></div>
+<div class="step"><div class="k">断言 3</div><div class="v"><strong>润色过的串联必须被退回</strong> —— 她写的每个词都要原样留在结果里。<em>如果 AI 把「黏手」改成「绵密」，她并没有重新拥有形容词，拥有的是 AI 的</em></div></div>
+<div class="step"><div class="k">断言 4</div><div class="v"><strong>患者端一个临床词都不许有</strong> —— 症状／患者／疾病／治疗／康复</div></div>
+
+<p>任何一条塌了，构建失败。<strong>评委问「你怎么保证 AI 不写内容」，答案是一行命令，不是一段话。</strong></p>
+
+<h3>命题契合</h3>
+
+<div class="box acc">
+<span class="lbl">eazo「她创所需 · 为你而做」</span>
+<p style="margin:0">「把『她每天经历的事』，做成一个以前没人替她做过的 App」——这就是这个产品的定义。而<strong>中文世界确实没有</strong>：GBD 2019 中国 BN 患病率约为 AN 两倍，但诊疗聚焦体重恢复；30+ 产品调研里，躯体层是整个品类的空白。</p>
+</div>
+
+<div class="box acc">
+<span class="lbl">萨福「爱与生俱来，AI 唤醒本能」</span>
+<p style="margin:0 0 10px">命题原文：「知道自己很累，却分不清是身体累还是精神累；知道自己想要点什么，却说不清那是什么」「<strong>忘记了身体的每一个感官都是爱的容器</strong>」。</p>
+<div class="scroll"><table style="margin:0">
+<thead><tr><th style="width:44%">命题说的</th><th>产品里的</th></tr></thead>
+<tbody>
+<tr><td>分不清身体累还是精神累</td><td><strong>地面</strong>：手是凉的还是温的，肩膀端着没有</td></tr>
+<tr><td>说不清自己想要什么</td><td><strong>我写的滋味</strong>：五个角度，把形容词还给她</td></tr>
+<tr><td>与他人的关系始于与自己的关系</td><td><strong>先写后看</strong>：没写完自己的，看不到别人写的</td></tr>
+<tr><td>身体的每一个感官都是爱的容器</td><td>色 / 香 / 味 / <strong>声</strong> / 质地——五个角度就是五个感官</td></tr>
+</tbody>
+</table></div>
+<p style="margin:10px 0 0"><em>「先写后看」这条规则当初定它的理由是"防止她照着别人写"，纯功能考虑。而萨福那句"与他人的关系始于与自己的关系"，正是这条规则的哲学表述——两边独立推到了同一个地方。</em></p>
+</div>
+
+<h2><span class="n">05</span>团队分工</h2>
+
+<p><strong>个人参赛。</strong>产品决策、调研、文案、设计、前端、云函数、自检工具，全部一人完成。</p>
+
+<p>唯一的外部输入是<strong>亲历</strong>：作者本人是限制型厌食症康复者。这不是情绪素材，是四条写进 PRD 的产品约束——</p>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:30%">亲历输入</th><th>变成了什么</th></tr></thead>
+<tbody>
+<tr><td><strong>产品不制造动机</strong><br><span style="color:var(--ink3);font-size:13.5px">「改变发生在她想改变的时候」</span></td><td>产品服务已决定的人，且必须有「我还没打算改变」的入口</td></tr>
+<tr><td><strong>热量作下限而非上限</strong></td><td>判断标准是"够不够"不是"多不多"。<em>但那是做产品判断的语言，不是给用户的语言</em>——屏上只有桌上有几样</td></tr>
+<tr><td><strong>冲突制造症状</strong><br><span style="color:var(--ink3);font-size:13.5px">藏食是掌控欲不是浪费</span></td><td>照护者端从话术库改成<strong>行为翻译器</strong>，核心句「你的批评正在生产你想制止的那个行为」</td></tr>
+<tr><td><strong>那句起作用的话</strong></td><td>「你的人生才刚刚开始，只有你能定义自己」——对应"干错一件事天就塌了"，即破戒效应的同一结构。原样放进发作中那一屏</td></tr>
+</tbody>
+</table></div>
+
+<h2><span class="n">06</span>开发过程</h2>
+
+<p class="lede">这一节写的是被推翻的部分。一个人做完整个产品，最能证明工程能力的不是功能列表，是<strong>每一次改动背后可查的理由</strong>。</p>
+
+<h3>选题被推翻八次</h3>
+
+<p>每一次的否决理由都留了档：生物可利用度计算器（不够扎人）· LLM 营养评测基准（不回扣女性）· 清除后躯体层（仍是"算给她看"）· 「现在吃得下什么」（限制侧框架，暴食侧不适用）· 混合餐时间曲线（算不了"之后"）· 让患者当食物库录入员（<strong>那要的正是极度的精确——把症状的核心动作包装成美德</strong>）· 接回食物记忆（记忆对这个人群常是创伤）。</p>
+
+<p>第八版才落到「把形容词还给她」。<strong>那个探针还顺手杀死了一个我自己提的论点</strong>：为验证"AI 系统性高估中餐营养"，跑了 5 个模型 × 6 组生熟配对，结果是"没扣"9 组 / "扣了"8 组——随机方差，不是有方向的偏差。<em>论点不成立，方案当场作废。</em></p>
+
+<h3>文案定稿的那把尺子</h3>
+
+<div class="claim">
+  <em>把句子念出来。如果不会对着坐在旁边的人这么说，它就是机械的。</em>
+</div>
+
+<p>用这把尺子过了 26 屏，改掉五处：</p>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:38%">原来</th><th>改成</th></tr></thead>
+<tbody>
+<tr><td>空着的格子不是失分，是一个洞</td><td>空着的格子不用补。它只说明那会儿没吃上</td></tr>
+<tr><td>水会自己退，你不用看着它</td><td>今天之后可能会觉得肿，秤上也会重一点。那是水，几天就下去了<br><span style="color:var(--ink3);font-size:13.5px">——先说现象再说它是水，顺序反过来才看得懂</span></td></tr>
+<tr><td>不用记下来，也不用算进什么</td><td>不用记下来。也不用算成这个月的第几次</td></tr>
+<tr><td>空太久了，身体会自己来找</td><td>太久没吃东西，那阵饿会自己涨起来</td></tr>
+<tr><td>只是摆在这儿，不是结论</td><td>就是这么放着。不是要说你什么</td></tr>
+</tbody>
+</table></div>
+
+<p>更早一轮里，三版热量下限文案被一句话推掉：<strong>「量不够这样的话其实本质上也是评价」</strong>——三版的最后一句主语全是"你"，都在下判断，哪怕判的是"不是你的错"。<em>否定式的评价仍然是评价。</em></p>
+
+<h3>三个真实的技术坑</h3>
+
+<div class="step"><div class="k">字体</div><div class="v"><strong>走过三版。</strong>v1 用网络字体——小程序是系统 WebView 不下载，两个 token 一起回退成同一个宋体，字族层次全塌。v2 标题宋体+正文黑体，深色底大号宋体像悬疑片字幕。v3 同族苹方，层次靠字重和字号，引文单独给楷体。</div></div>
+
+<div class="step"><div class="k">情绪瓶子</div><div class="v">从 CSS 关键帧改到 <code>canvas 2d</code> + PBD 物理——因为需求从"重力效果"变成"跟着手机晃"，而<strong>关键帧只能播一条事先算好的轨迹</strong>。踩过的坑：珠子出生点写在罐外，容器约束第 0 帧把它瞬移到内壁，而速度是 <code>(x-px)/dt</code> 回写的，那段瞬移被当成一帧走完 → 垂直速度炸到自由落体的四倍，珠子是被<em>弹射</em>进去的。出生点挪进内壁后反弹帧数归零。</div></div>
+
+<div class="step"><div class="k">截图工具</div><div class="v"><code>shot.mjs</code> 的顶部留白算错了 47px，于是一批"测出来装下"的屏在真机上是超的。它必须和运行时的 <code>topPad</code> 一致：<code>(statusBarHeight || 20) + 40</code>。</div></div>
+
+<h3>接模型那天拍错的六个数</h3>
+
+<p>这一段值得单独写，因为它是<strong>"效果一般"的真实原因往往在参数里，不在设计里</strong>的实例：</p>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:26%">拍错的</th><th>后果</th></tr></thead>
+<tbody>
+<tr><td><code>max_tokens = 3000</code></td><td>它<strong>不是上限保护，是模型的写作预算</strong>——给多少就写多少，于是每次 16 秒。改成 400，变 3 秒</td></tr>
+<tr><td>调小之后</td><td><strong>reasoning 模型直接返回空</strong>（思考就把额度花完）。<em>真正的解不是调数字，是换非 reasoning 模型</em>——在这两个错误之间来回撞了两轮</td></tr>
+<tr><td>云函数执行超时 3 秒</td><td>平台默认值。四个人并发一定超时。<strong>默认值不是合理值，是平台不知道你要干什么时的保守值</strong></td></tr>
+<tr><td><code>MIN = 8</code>（回复最短字数）</td><td>把「肩膀松一下。」这种<strong>正确的回答</strong>拦掉 → 退回模板 → <em>用户抱怨的"太干"，一部分是护栏自己造成的</em></td></tr>
+</tbody>
+</table></div>
+
+<p><strong>护栏拦错的代价不是"少一句话"，是用户永远看到模板。</strong></p>
+
+<h3>护栏的三次"列词漏了"</h3>
+
+<p>内容检测规则改过三轮，每次都是同一个错——<strong>在列词，不在列模式</strong>：</p>
+
+<ul>
+<li>表里有「我知道你」，模型说的是「我知道」 → 改成 <code>/我(懂|听见|明白|知道|感受|陪)/</code></li>
+<li>表里有「你很棒」，模型说的是「你已经很棒了」 → 改成按结构盖：<code>(很|真|挺)(棒|好|厉害)|已经.{0,4}(很好|不错)</code></li>
+<li><strong>无标记的比喻拦不住</strong>（「不是松松土就能拔掉的野草」）→ 加物象表，因为这个产品的词表只有食物、身体、动作，出现潮水/牢笼/野草几乎一定是比喻</li>
+</ul>
+
+<p>反向也踩过：用 <code>/—{2,}/</code> 拦 markdown 分割线，<strong>把中文破折号误杀了</strong>——而破折号在那 26 屏文案里到处在用。<em>每加一条规则，都要拿该放行的真实样本试一遍。</em></p>
+
+<h3>一个被自己的注释骗了的 bug</h3>
+
+<p>多轮对话第二轮开始没有回应。查了很久，因为 <code>_hist()</code> 的注释写着「只带这一位说过的和她说过的」——<strong>但代码不分人</strong>，把四个人的话全传给每一位。模型看到自己"说过"别人的话，人设串掉，输出被护栏拦下。</p>
+
+<div class="claim">
+  <em>注释写了意图、代码没实现，比没注释更坏。</em><br>
+  读代码时会以为那件事已经做了，于是去别处找原因。
+</div>
+
+<h3>删掉的一个假功能</h3>
+
+<p>有一屏「答两个问题，这里给你的东西会更准」，两个答案存进了本地——<strong>但全工程没有任何一处读它们</strong>，而屏上明写着答「有」会多出哪两屏，那两屏本来就一直在。</p>
+
+<p><strong>看起来在工作的开关比缺功能更伤</strong>：用户答完发现什么都没变，下次就不信这个产品说的话。整屏删除，连带清掉块型、事件处理和存储层的三个函数——<em>删屏要连着删存储层，否则下次有人会以为那两个标记还有意义。</em></p>
+
+<h2><span class="n">07</span>后续计划</h2>
+
+<h3>上线：门槛不在技术</h3>
+
+<div class="box warn">
+<p style="margin:0">微信小程序涉及<strong>心理健康</strong>内容需要<strong>前置审批</strong>，而个人主体账号申请不了——不是审得慢，是这条路对个人开发者是关着的。</p>
+</div>
+
+<div class="claim">
+  <em>所以这类产品在中文世界里做不出来。不是没人想做。</em>
+</div>
+
+<p>这句话比"中文世界没有"更硬：<strong>是有结构性障碍</strong>。上线路径因此是明确的——<strong>企业主体 + 医疗机构合作</strong>，而这恰好接上商业模式。</p>
+
+<h3>商业化：让付费方不是脆弱的那一方</h3>
+
+<p><strong>不走的四条</strong>：不向患者收订阅（付费墙挡在急性期前面是灾难）· 不做广告（进食障碍用户 + 广告定向 = 减肥广告精准投放）· 不做数据变现 · 不把急性期流量导向按分钟计费的心理咨询。</p>
+
+<p><strong>走的一条</strong>：机构授权——高校心理中心 / 专科院外延伸 / 企业 EAP。进食障碍在大学生中高发而学校普遍无专门工具；出院后空窗期正是复发高发期；EAP 通常不覆盖进食障碍。<em>付费方明确、预算明确、且不是脆弱的那一方。</em></p>
+
+<h3>产品上接下来要做的三件</h3>
+
+<div class="step"><div class="k">近</div><div class="v"><strong>公共池可写入。</strong>现在「别人写的」是静态数据（读不需要后端）。要让她写的进公共池，需要后端 + 审核 —— 门槛已经有了（三层判定），差的是入库和人工复核那一环。</div></div>
+<div class="step"><div class="k">中</div><div class="v"><strong>定时小组的真实在线人数。</strong>目前写死。这是产品里唯一该会变的数字——孤独是已被测出的中介变量（Southward 2013，n=107 BN/BED，95% CI 0.03–0.09，反向路径不成立）。</div></div>
+<div class="step"><div class="k">远</div><div class="v"><strong>营养与躯体层接方法学。</strong>作者的专业方向是中餐成品菜的微量营养素推算（USDA 保留因子表的正确取法、干货复水后计入分母、汤喝不喝的差异）。这一层现在是文案，可以变成计算——<em>但必须绕开"算给她看"那条红线：算的是桌上有几样，不是她吃了多少。</em></div></div>
+
+<h2><span class="n">08</span>怎么跑起来</h2>
+
+<pre># 微信开发者工具打开仓库根目录（miniprogramRoot 指向 04-小程序/）
+
+node 04-小程序/.sync-mp/gen.mjs          # 从原型生成屏数据
+node 04-小程序/.sync-mp/chk.mjs          # 15 项自检
+node 04-小程序/.sync-mp/shot.mjs --all   # 量每屏装不装得下</pre>
+
+<p><strong>「四个人」需要云函数</strong>：部署 <code>04-小程序/cloudfunctions/talk</code>，在云开发控制台给它配环境变量 <code>OPENROUTER_KEY</code>。<em>不配也能跑</em>——那一层会退回人写的话。</p>
+
+<h2><span class="n">09</span>不做清单</h2>
+
+<p>在这个领域，不做什么比做什么更能体现判断：</p>
+
+<ul>
+<li>不记录体重、不画曲线、不计算 BMI</li>
+<li>不做连续打卡天数、进度条、成就徽章 <span style="color:var(--ink3);font-size:13.5px">——meta 分析指出提醒与真人支持能改善依从性，游戏化不能</span></li>
+<li>不做用户之间的互动：无发帖、回复、私信、关注、个人主页 <span style="color:var(--ink3);font-size:13.5px">——进食障碍匿名社区的默认失败模式是变成 pro-ana，靠公约挡不住，只能靠结构上没有通道</span></li>
+<li>不做食物图像识别 <span style="color:var(--ink3);font-size:13.5px">——识别通往量化</span></li>
+<li>不给食物贴道德标签，无"健康/不健康"分类</li>
+<li><strong>不做生成式共情对话</strong></li>
+</ul>
+
+<h3>语气原则（可逐屏审查的硬规则）</h3>
+<p>任何一屏第一句话不得是指令或提问 · 每一屏都必须有一个不是任务的选项 · 不用「应该」「建议你」「正确做法是」 · 解释放在动作后面且可折叠 · 不出现进度、评价、总结性判断。</p>
+
+<p>三把尺子：<strong>说有什么，不说没什么</strong> · <strong>念出来，念整屏</strong> · <strong>屏幕上只有食物</strong>。</p>
+
+<p class="foot">
+仓库 <a href="https://github.com/hu2976/ebbing">github.com/hu2976/ebbing</a> · Tag <code>shenicest-fission</code><br>
+更详细的产品文档见仓库内《03-路演-PRD与四分钟脚本》；调研见《10-证据-竞品地形》《11-证据-数据底册》。<br>
+选中任意正文可批注。批注存在浏览器本地，按文档标题索引——<strong>标题改了批注会丢</strong>。
+</p>
+
+</div>
+<!-- ══════════════════════════════════════════════════════════════════
+     可批注层 · Annotator
+     用法：整段粘贴到文档 HTML 的最末尾即可，无需其他改动。
+     依赖：无。CSP 安全（纯内联，无外部资源）。
+     行为：选中正文文字 → 浮出「批注」→ 写批注 → 高亮并存入 localStorage
+           右下角按钮开关批注面板，可导出 JSON / 导入 JSON / 清空。
+     锚定：全局字符偏移 + 前后文快照，不修改正文 DOM，所以偏移长期有效。
+     ══════════════════════════════════════════════════════════════════ -->
+<style>
+  #anno-fab,#anno-panel,#anno-tip{
+    --a-bg:#FFFFFF; --a-sunk:#F2F3EF; --a-ink:#161A18; --a-ink2:#4A524D; --a-ink3:#7C857F;
+    --a-rule:#DFE2DB; --a-accent:#0F5E52; --a-accent-soft:#E2EDE9; --a-rust:#9A3B28;
+    --a-shadow:0 2px 6px rgba(22,26,24,.08),0 12px 32px -10px rgba(22,26,24,.22);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) #anno-fab,
+    :root:not([data-theme="light"]) #anno-panel,
+    :root:not([data-theme="light"]) #anno-tip{
+      --a-bg:#1A1E18; --a-sunk:#20241D; --a-ink:#E9EDE5; --a-ink2:#AAB3A6; --a-ink3:#7B857A;
+      --a-rule:#2E3429; --a-accent:#66C2AE; --a-accent-soft:#1B2D28; --a-rust:#D57F68;
+      --a-shadow:0 2px 6px rgba(0,0,0,.4),0 12px 32px -10px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] #anno-fab,
+  :root[data-theme="dark"] #anno-panel,
+  :root[data-theme="dark"] #anno-tip{
+    --a-bg:#1A1E18; --a-sunk:#20241D; --a-ink:#E9EDE5; --a-ink2:#AAB3A6; --a-ink3:#7B857A;
+    --a-rule:#2E3429; --a-accent:#66C2AE; --a-accent-soft:#1B2D28; --a-rust:#D57F68;
+    --a-shadow:0 2px 6px rgba(0,0,0,.4),0 12px 32px -10px rgba(0,0,0,.7);
+  }
+
+  /* 高亮：优先 CSS Custom Highlight API，不改 DOM */
+  ::highlight(anno-mark){ background:rgba(15,94,82,.16); text-decoration:underline;
+    text-decoration-color:rgba(15,94,82,.5); text-underline-offset:3px; }
+  ::highlight(anno-active){ background:rgba(169,101,26,.28); }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) ::highlight(anno-mark){ background:rgba(102,194,174,.20);
+      text-decoration-color:rgba(102,194,174,.6); }
+    :root:not([data-theme="light"]) ::highlight(anno-active){ background:rgba(215,154,85,.34); }
+  }
+  :root[data-theme="dark"] ::highlight(anno-mark){ background:rgba(102,194,174,.20);
+    text-decoration-color:rgba(102,194,174,.6); }
+  :root[data-theme="dark"] ::highlight(anno-active){ background:rgba(215,154,85,.34); }
+
+  /* 降级高亮层（无 Highlight API 时启用） */
+  #anno-layer{ position:absolute; inset:0; pointer-events:none; z-index:5; }
+  #anno-layer i{ position:absolute; background:rgba(15,94,82,.16);
+    border-bottom:1px solid rgba(15,94,82,.5); border-radius:2px; display:block; }
+  #anno-layer i.on{ background:rgba(169,101,26,.28); }
+
+  /* 选区浮标 */
+  #anno-tip{ position:absolute; z-index:9999; display:none;
+    background:var(--a-bg); color:var(--a-ink); border:1px solid var(--a-rule);
+    border-radius:7px; box-shadow:var(--a-shadow); padding:.3rem;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif; }
+  #anno-tip button{ all:unset; cursor:pointer; display:flex; align-items:center; gap:.4rem;
+    padding:.4rem .75rem; border-radius:5px; font-size:.85rem; font-weight:600; color:var(--a-accent); }
+  #anno-tip button:hover{ background:var(--a-accent-soft); }
+  #anno-tip button:focus-visible{ outline:2px solid var(--a-accent); outline-offset:1px; }
+
+  /* 悬浮按钮 */
+  #anno-fab{ position:fixed; right:1.1rem; bottom:1.1rem; z-index:9998;
+    width:52px; height:52px; border-radius:50%; border:1px solid var(--a-rule);
+    background:var(--a-bg); color:var(--a-accent); box-shadow:var(--a-shadow);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-family:ui-monospace,Menlo,monospace; font-size:.95rem; font-weight:700;
+    transition:transform .15s ease; }
+  #anno-fab:hover{ transform:translateY(-2px); }
+  #anno-fab:focus-visible{ outline:2px solid var(--a-accent); outline-offset:2px; }
+  #anno-fab svg{ width:21px; height:21px; }
+  #anno-fab .cnt{ position:absolute; top:-3px; right:-3px; min-width:19px; height:19px;
+    padding:0 5px; border-radius:10px; background:var(--a-accent); color:var(--a-bg);
+    font-size:.68rem; line-height:19px; text-align:center; display:none; }
+
+  /* 面板 */
+  #anno-panel{ position:fixed; top:0; right:0; bottom:0; width:min(360px,100vw); z-index:9999;
+    background:var(--a-bg); border-left:1px solid var(--a-rule); box-shadow:var(--a-shadow);
+    display:flex; flex-direction:column; transform:translateX(100%);
+    transition:transform .22s cubic-bezier(.4,0,.2,1);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    color:var(--a-ink); }
+  #anno-panel.open{ transform:translateX(0); }
+  #anno-panel header{ padding:.9rem 1rem; border-bottom:1px solid var(--a-rule);
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex:0 0 auto; }
+  #anno-panel header h3{ margin:0; font-size:.95rem; font-weight:600;
+    font-family:"Songti SC","SimSun",Georgia,serif; }
+  #anno-panel header .sub{ font-size:.72rem; color:var(--a-ink3); font-weight:400; margin-left:.4rem; }
+  #anno-close{ all:unset; cursor:pointer; padding:.3rem .5rem; border-radius:5px;
+    color:var(--a-ink3); font-size:1.15rem; line-height:1; }
+  #anno-close:hover{ background:var(--a-sunk); color:var(--a-ink); }
+  #anno-close:focus-visible{ outline:2px solid var(--a-accent); }
+
+  #anno-list{ flex:1 1 auto; overflow-y:auto; padding:.75rem; display:flex; flex-direction:column; gap:.6rem; }
+  #anno-list .empty{ color:var(--a-ink3); font-size:.85rem; text-align:center;
+    padding:2.5rem 1rem; line-height:1.7; }
+
+  .anno-item{ border:1px solid var(--a-rule); border-radius:7px; background:var(--a-bg);
+    padding:.7rem .8rem; cursor:pointer; }
+  .anno-item:hover{ border-color:var(--a-accent); }
+  .anno-item.on{ border-color:var(--a-accent); background:var(--a-accent-soft); }
+  .anno-item blockquote{ margin:0 0 .45rem; padding-left:.6rem;
+    border-left:2px solid var(--a-accent); font-size:.78rem; color:var(--a-ink2);
+    line-height:1.55; max-height:4.4em; overflow:hidden; }
+  .anno-item .note{ font-size:.87rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+  .anno-item .row{ display:flex; align-items:center; justify-content:space-between;
+    margin-top:.5rem; font-size:.7rem; color:var(--a-ink3); }
+  .anno-item .del{ all:unset; cursor:pointer; color:var(--a-ink3); padding:.15rem .4rem; border-radius:4px; }
+  .anno-item .del:hover{ color:var(--a-rust); background:var(--a-sunk); }
+  .anno-item .del:focus-visible{ outline:2px solid var(--a-rust); }
+  .anno-item .orphan{ color:var(--a-rust); font-size:.68rem; }
+
+  #anno-editor{ border-top:1px solid var(--a-rule); padding:.75rem; display:none; flex:0 0 auto; }
+  #anno-editor.show{ display:block; }
+  #anno-editor blockquote{ margin:0 0 .5rem; padding-left:.6rem; border-left:2px solid var(--a-accent);
+    font-size:.78rem; color:var(--a-ink2); line-height:1.55; max-height:4.4em; overflow:hidden; }
+  #anno-text{ width:100%; box-sizing:border-box; min-height:74px; resize:vertical;
+    border:1px solid var(--a-rule); border-radius:6px; background:var(--a-sunk); color:var(--a-ink);
+    padding:.55rem .65rem; font:inherit; font-size:.87rem; line-height:1.6; }
+  #anno-text:focus{ outline:2px solid var(--a-accent); outline-offset:-1px; }
+  #anno-editor .acts{ display:flex; gap:.5rem; margin-top:.55rem; }
+  #anno-editor button{ all:unset; cursor:pointer; padding:.42rem .9rem; border-radius:6px;
+    font-size:.83rem; font-weight:600; text-align:center; }
+  #anno-save{ background:var(--a-accent); color:var(--a-bg); flex:1; }
+  #anno-cancel{ color:var(--a-ink2); border:1px solid var(--a-rule)!important; }
+  #anno-editor button:focus-visible{ outline:2px solid var(--a-accent); outline-offset:1px; }
+
+  #anno-foot{ border-top:1px solid var(--a-rule); padding:.7rem .75rem;
+    display:flex; gap:.45rem; flex:0 0 auto; flex-wrap:wrap; }
+  #anno-foot button,#anno-foot label{ all:unset; cursor:pointer; flex:1; min-width:82px;
+    text-align:center; padding:.45rem .5rem; border-radius:6px; font-size:.78rem; font-weight:600;
+    border:1px solid var(--a-rule); color:var(--a-ink2); box-sizing:border-box; }
+  #anno-foot button:hover,#anno-foot label:hover{ background:var(--a-sunk); color:var(--a-ink); }
+  #anno-foot #anno-copy{ background:var(--a-accent); color:var(--a-bg); border-color:var(--a-accent); }
+  #anno-foot #anno-copy.done{ background:var(--a-accent-soft); color:var(--a-accent); }
+  #anno-foot button:focus-visible,#anno-foot label:focus-within{ outline:2px solid var(--a-accent); outline-offset:1px; }
+  #anno-file{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+  #anno-newtab{ display:none; text-decoration:none; }
+  #anno-newtab.show{ display:block; background:var(--a-accent-soft); color:var(--a-accent)!important;
+    border-color:var(--a-accent)!important; }
+  #anno-store{ flex:0 0 auto; font-size:.72rem; line-height:1.6; padding:.5rem .8rem;
+    border-bottom:1px solid var(--a-rule); display:none; }
+  #anno-store.show{ display:block; }
+  #anno-store.ok{ color:var(--a-ink3); }
+  #anno-store.bad{ color:var(--a-rust); background:rgba(154,59,40,.07); }
+  #anno-store b{ font-weight:700; }
+  #anno-fallback{ display:none; width:calc(100% - 1.5rem); margin:0 .75rem .75rem; height:120px;
+    box-sizing:border-box; border:1px solid var(--a-accent); border-radius:6px;
+    background:var(--a-sunk); color:var(--a-ink); padding:.5rem; font-size:.72rem;
+    font-family:ui-monospace,Menlo,monospace; resize:vertical; }
+  #anno-fallback.show{ display:block; }
+
+  @media (prefers-reduced-motion:reduce){ #anno-panel,#anno-fab{ transition:none!important; } }
+  @media print{ #anno-fab,#anno-panel,#anno-tip{ display:none!important; } }
+</style>
+
+<div id="anno-tip" data-anno-ui><button type="button" id="anno-add">✎ 批注</button></div>
+
+<button id="anno-fab" data-anno-ui type="button" aria-label="打开批注面板" title="批注（选中文字后可添加）">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+  <span class="cnt" id="anno-cnt">0</span>
+</button>
+
+<aside id="anno-panel" data-anno-ui aria-label="批注面板" aria-hidden="true">
+  <header>
+    <h3>批注<span class="sub" id="anno-sub">0 条</span></h3>
+    <button id="anno-close" type="button" aria-label="关闭批注面板">✕</button>
+  </header>
+  <div id="anno-store"></div>
+  <div id="anno-list"></div>
+  <div id="anno-editor">
+    <blockquote id="anno-quote"></blockquote>
+    <textarea id="anno-text" placeholder="写下你的批注……（⌘/Ctrl + Enter 保存）"></textarea>
+    <div class="acts">
+      <button id="anno-save" type="button">保存</button>
+      <button id="anno-cancel" type="button">取消</button>
+    </div>
+  </div>
+  <div id="anno-foot">
+    <button id="anno-link" type="button">复制回看链接</button>
+    <button id="anno-copy" type="button">复制 JSON</button>
+    <button id="anno-export" type="button">导出 JSON</button>
+    <a id="anno-newtab" target="_blank" rel="noopener" href="#">新窗口打开 ↗</a>
+    <label for="anno-file" tabindex="0" role="button">导入文件</label>
+    <input type="file" id="anno-file" accept="application/json,.json">
+    <button id="anno-paste" type="button">粘贴导入</button>
+    <button id="anno-clear" type="button">清空</button>
+  </div>
+  <textarea id="anno-fallback" aria-label="批注 JSON，请手动复制"></textarea>
+</aside>
+
+<script>
+(function(){
+  'use strict';
+
+  var DOCID = document.title || location.pathname;
+  var KEY   = 'anno:v1:' + DOCID;
+  var CTX   = 40;                       // 前后文快照长度，用于文档变更后重定位
+  var HAS_HL = (typeof Highlight === 'function') && !!(window.CSS && CSS.highlights);
+
+  var items = [];                       // {id,quote,note,start,end,before,after,created,_range,_orphan}
+  var pending = null;                   // 待保存的选区 {quote,start,end,before,after}
+  var activeId = null;
+  var layer = null;                     // 降级高亮层
+
+  var $ = function(id){ return document.getElementById(id); };
+  var tip=$('anno-tip'), fab=$('anno-fab'), panel=$('anno-panel'), list=$('anno-list'),
+      editor=$('anno-editor'), quoteEl=$('anno-quote'), textEl=$('anno-text'),
+      cntEl=$('anno-cnt'), subEl=$('anno-sub');
+
+  /* ---------- 文本索引：把正文所有文本节点串成一条全局字符流 ---------- */
+  function index(){
+    var out=[], off=0;
+    var w=document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode:function(n){
+        if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+        var p=n.parentElement;
+        while(p){
+          if(p.hasAttribute && p.hasAttribute('data-anno-ui')) return NodeFilter.FILTER_REJECT;
+          var t=p.tagName;
+          if(t==='SCRIPT'||t==='STYLE'||t==='NOSCRIPT') return NodeFilter.FILTER_REJECT;
+          p=p.parentElement;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while(w.nextNode()){
+      var n=w.currentNode;
+      out.push({n:n, s:off, e:off+n.nodeValue.length});
+      off+=n.nodeValue.length;
+    }
+    return out;
+  }
+  function fullText(idx){
+    var s=''; for(var i=0;i<idx.length;i++) s+=idx[i].n.nodeValue; return s;
+  }
+  function rangeToOffset(range, idx){
+    var a=null,b=null;
+    for(var i=0;i<idx.length;i++){
+      if(idx[i].n===range.startContainer) a=idx[i].s+range.startOffset;
+      if(idx[i].n===range.endContainer)   b=idx[i].s+range.endOffset;
+    }
+    return (a===null||b===null||b<=a) ? null : {start:a,end:b};
+  }
+  function offsetToRange(start,end,idx){
+    var r=document.createRange(), got=0;
+    for(var i=0;i<idx.length;i++){
+      var e=idx[i];
+      if(!(got&1) && start>=e.s && start<e.e){ r.setStart(e.n,start-e.s); got|=1; }
+      if(!(got&2) && end  > e.s && end  <=e.e){ r.setEnd(e.n,  end  -e.s); got|=2; }
+      if(got===3) break;
+    }
+    return got===3 ? r : null;
+  }
+
+  /* ---------- 重定位：偏移失效时用引文 + 前后文找回 ---------- */
+  function relocate(it, idx){
+    var r = offsetToRange(it.start, it.end, idx);
+    if(r && r.toString() === it.quote) return r;
+    var text = fullText(idx);
+    var probe = (it.before||'') + it.quote + (it.after||'');
+    var p = text.indexOf(probe);
+    if(p >= 0){
+      var s0 = p + (it.before||'').length;
+      return offsetToRange(s0, s0 + it.quote.length, idx);
+    }
+    var q = text.indexOf(it.quote);
+    if(q >= 0) return offsetToRange(q, q + it.quote.length, idx);
+    return null;
+  }
+
+  /* ---------- 高亮渲染 ---------- */
+  function paint(){
+    var idx = index();
+    for(var i=0;i<items.length;i++){
+      var r = relocate(items[i], idx);
+      items[i]._range = r;
+      items[i]._orphan = !r;
+    }
+    if(HAS_HL){
+      var hm=new Highlight(), ha=new Highlight();
+      for(var j=0;j<items.length;j++){
+        if(!items[j]._range) continue;
+        (items[j].id===activeId ? ha : hm).add(items[j]._range);
+      }
+      CSS.highlights.set('anno-mark', hm);
+      CSS.highlights.set('anno-active', ha);
+    }else{
+      if(!layer){
+        layer=document.createElement('div');
+        layer.id='anno-layer'; layer.setAttribute('data-anno-ui','');
+        document.body.appendChild(layer);
+      }
+      layer.textContent='';
+      var sx=window.scrollX, sy=window.scrollY;
+      for(var k=0;k<items.length;k++){
+        if(!items[k]._range) continue;
+        var rects=items[k]._range.getClientRects();
+        for(var m=0;m<rects.length;m++){
+          var b=rects[m]; if(b.width<1||b.height<1) continue;
+          var el=document.createElement('i');
+          if(items[k].id===activeId) el.className='on';
+          el.style.left=(b.left+sx)+'px'; el.style.top=(b.top+sy)+'px';
+          el.style.width=b.width+'px';    el.style.height=b.height+'px';
+          layer.appendChild(el);
+        }
+      }
+    }
+  }
+
+  /* ---------- 存储：localStorage 主，URL hash 备 ---------- */
+  var LS_OK = (function(){                 // 真实写读测试，沙箱 iframe 里会失败
+    try{
+      var t='__anno_t__'+Math.random();
+      localStorage.setItem(t,'1');
+      var ok = localStorage.getItem(t)==='1';
+      localStorage.removeItem(t);
+      return ok;
+    }catch(e){ return false; }
+  })();
+  var HASH_OK = (function(){
+    try{ history.replaceState(null,'',location.href); return true; }catch(e){ return false; }
+  })();
+
+  function slim(){                          // 压掉冗余字段，缩短 URL
+    return items.map(function(i){
+      return [i.id,i.quote,i.note,i.start,i.end,i.before,i.after,i.created];
+    });
+  }
+  function fat(a){
+    return (a||[]).map(function(r){
+      return {id:r[0],quote:r[1],note:r[2],start:r[3],end:r[4],
+              before:r[5],after:r[6],created:r[7]};
+    });
+  }
+  function b64e(s){
+    var u=new TextEncoder().encode(s), b='';
+    for(var i=0;i<u.length;i++) b+=String.fromCharCode(u[i]);
+    return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+  function b64d(s){
+    s=s.replace(/-/g,'+').replace(/_/g,'/');
+    var bin=atob(s), u=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+    return new TextDecoder().decode(u);
+  }
+
+  function syncHash(){
+    if(!HASH_OK) return;
+    try{
+      var h = items.length ? ('#n=' + b64e(JSON.stringify(slim()))) : '';
+      history.replaceState(null, '', location.pathname + location.search + h);
+    }catch(e){}
+  }
+  function save(){
+    if(LS_OK){
+      try{ localStorage.setItem(KEY, JSON.stringify(items.map(function(i){
+        return {id:i.id,quote:i.quote,note:i.note,start:i.start,end:i.end,
+                before:i.before,after:i.after,created:i.created}; }))); }catch(e){}
+    }
+    syncHash();
+  }
+  function load(){
+    var fromLS=[], fromHash=[];
+    if(LS_OK){
+      try{ fromLS = JSON.parse(localStorage.getItem(KEY)||'[]')||[]; }catch(e){}
+    }
+    try{
+      var m=/[#&]n=([^&]+)/.exec(location.hash||'');
+      if(m) fromHash = fat(JSON.parse(b64d(m[1])));
+    }catch(e){}
+    var seen={}; items=[];
+    fromLS.concat(fromHash).forEach(function(x){
+      if(x && x.quote && x.note && !seen[x.id]){ seen[x.id]=1; items.push(x); }
+    });
+    if(fromHash.length && LS_OK) save();   // hash 恢复的顺手落盘
+  }
+
+  function storeBanner(){
+    var el=$('anno-store'); if(!el) return;
+    if(LS_OK){
+      el.className='show ok';
+      el.innerHTML='✓ 批注已存到本机浏览器，关掉页面重开仍在。';
+    }else{
+      el.className='show bad';
+      el.innerHTML='⚠ <b>这个页面禁用了本机存储</b>，批注只保存在当前地址栏里。'+
+                   '离开前请点下方<b>「复制回看链接」</b>，用那条链接重进即可恢复；'+
+                   '或点<b>「导出 JSON」</b>存成文件。';
+    }
+  }
+
+  /* ---------- 列表渲染 ---------- */
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function render(){
+    cntEl.textContent = items.length;
+    cntEl.style.display = items.length ? 'block' : 'none';
+    subEl.textContent = items.length + ' 条';
+    list.textContent='';
+    if(!items.length){
+      var d=document.createElement('div');
+      d.className='empty';
+      d.textContent='还没有批注。\n在正文里选中一段文字，就能写批注。';
+      list.appendChild(d);
+      return;
+    }
+    var sorted = items.slice().sort(function(a,b){ return a.start-b.start; });
+    sorted.forEach(function(it){
+      var el=document.createElement('article');
+      el.className='anno-item'+(it.id===activeId?' on':'');
+      el.tabIndex=0;
+      el.innerHTML =
+        '<blockquote>'+esc(it.quote)+'</blockquote>'+
+        '<div class="note">'+esc(it.note)+'</div>'+
+        '<div class="row"><span>'+new Date(it.created).toLocaleString('zh-CN')+
+        (it._orphan?' · <span class="orphan">原文已变动</span>':'')+
+        '</span><button class="del" type="button" aria-label="删除这条批注">删除</button></div>';
+      el.addEventListener('click', function(ev){
+        if(ev.target.classList.contains('del')){
+          ev.stopPropagation();
+          items = items.filter(function(x){ return x.id!==it.id; });
+          if(activeId===it.id) activeId=null;
+          save(); paint(); render();
+          return;
+        }
+        activeId = (activeId===it.id) ? null : it.id;
+        paint(); render();
+        if(it._range){
+          var rc=it._range.getBoundingClientRect();
+          window.scrollTo({ top: window.scrollY + rc.top - window.innerHeight/3,
+                            behavior: 'smooth' });
+        }
+      });
+      el.addEventListener('keydown', function(ev){
+        if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); el.click(); }
+      });
+      list.appendChild(el);
+    });
+  }
+
+  /* ---------- 选区 → 浮标 ---------- */
+  function hideTip(){ tip.style.display='none'; }
+
+  document.addEventListener('selectionchange', function(){
+    var sel=document.getSelection();
+    if(!sel || sel.isCollapsed || !sel.rangeCount){ hideTip(); return; }
+    var r=sel.getRangeAt(0);
+    if(!r.toString().trim()){ hideTip(); return; }
+    var host=r.commonAncestorContainer;
+    host = host.nodeType===1 ? host : host.parentElement;
+    if(host && host.closest && host.closest('[data-anno-ui]')){ hideTip(); return; }
+    var b=r.getBoundingClientRect();
+    if(!b.width && !b.height){ hideTip(); return; }
+    tip.style.display='block';
+    var w=tip.offsetWidth||96, h=tip.offsetHeight||36;
+    var left=Math.min(Math.max(8, b.left+window.scrollX+b.width/2-w/2),
+                      window.scrollX+document.documentElement.clientWidth-w-8);
+    var top=b.top+window.scrollY-h-8;
+    if(top < window.scrollY+4) top=b.bottom+window.scrollY+8;
+    tip.style.left=left+'px'; tip.style.top=top+'px';
+  });
+
+  $('anno-add').addEventListener('mousedown', function(ev){ ev.preventDefault(); });
+  $('anno-add').addEventListener('click', function(){
+    var sel=document.getSelection();
+    if(!sel||!sel.rangeCount) return;
+    var r=sel.getRangeAt(0), idx=index(), off=rangeToOffset(r, idx);
+    if(!off) return;
+    var text=fullText(idx);
+    pending = {
+      quote : r.toString(),
+      start : off.start,
+      end   : off.end,
+      before: text.slice(Math.max(0,off.start-CTX), off.start),
+      after : text.slice(off.end, off.end+CTX)
+    };
+    hideTip(); sel.removeAllRanges();
+    quoteEl.textContent = pending.quote;
+    editor.classList.add('show');
+    textEl.value='';
+    open(true);
+    textEl.focus();
+  });
+
+  /* ---------- 保存 / 取消 ---------- */
+  function commit(){
+    var v=textEl.value.trim();
+    if(!pending || !v){ return; }
+    items.push({
+      id: 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),
+      quote:pending.quote, note:v, start:pending.start, end:pending.end,
+      before:pending.before, after:pending.after, created:new Date().toISOString()
+    });
+    pending=null; editor.classList.remove('show'); textEl.value='';
+    save(); paint(); render();
+  }
+  $('anno-save').addEventListener('click', commit);
+  $('anno-cancel').addEventListener('click', function(){
+    pending=null; editor.classList.remove('show'); textEl.value='';
+  });
+  textEl.addEventListener('keydown', function(ev){
+    if((ev.metaKey||ev.ctrlKey) && ev.key==='Enter'){ ev.preventDefault(); commit(); }
+    if(ev.key==='Escape'){ pending=null; editor.classList.remove('show'); textEl.value=''; }
+  });
+
+  /* ---------- 面板开关 ---------- */
+  function open(v){
+    panel.classList.toggle('open', v);
+    panel.setAttribute('aria-hidden', v?'false':'true');
+  }
+  fab.addEventListener('click', function(){ open(!panel.classList.contains('open')); });
+  $('anno-close').addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(ev){
+    if(ev.key==='Escape' && panel.classList.contains('open') && document.activeElement!==textEl) open(false);
+  });
+
+  /* ---------- 复制 / 导出 / 导入 / 清空 ---------- */
+  function payload(){
+    return {
+      document   : DOCID,
+      url        : location.href,
+      exported_at: new Date().toISOString(),
+      count      : items.length,
+      annotations: items.slice().sort(function(a,b){return a.start-b.start;}).map(function(i){
+        return { id:i.id, quote:i.quote, note:i.note,
+                 anchor:{ start:i.start, end:i.end,
+                          context_before:i.before, context_after:i.after },
+                 created_at:i.created, resolved:!i._orphan };
+      })
+    };
+  }
+  function jsonText(){ return JSON.stringify(payload(), null, 2); }
+
+  var copyBtn=$('anno-copy'), fallbackEl=$('anno-fallback');
+  function copied(ok){
+    copyBtn.textContent = ok ? '✓ 已复制' : '↓ 手动复制';
+    copyBtn.classList.add('done');
+    setTimeout(function(){ copyBtn.textContent='复制 JSON'; copyBtn.classList.remove('done'); }, 2200);
+  }
+  function manualCopy(txt){
+    fallbackEl.value = txt;
+    fallbackEl.classList.add('show');
+    fallbackEl.focus(); fallbackEl.select();
+    var ok=false;
+    try{ ok = document.execCommand('copy'); }catch(e){ ok=false; }
+    copied(ok);
+    if(ok) setTimeout(function(){ fallbackEl.classList.remove('show'); }, 400);
+  }
+  copyBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注可复制。'); return; }
+    var txt=jsonText();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ copied(true); },
+                                              function(){ manualCopy(txt); });
+    }else{ manualCopy(txt); }
+  });
+
+  var linkBtn=$('anno-link');
+  linkBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注。'); return; }
+    syncHash();
+    var url;
+    try{
+      url = HASH_OK ? location.href
+                    : (location.origin+location.pathname+location.search+'#n='+b64e(JSON.stringify(slim())));
+    }catch(e){ url = location.href; }
+    var done=function(ok){
+      linkBtn.textContent = ok?'✓ 链接已复制':'↓ 手动复制';
+      setTimeout(function(){ linkBtn.textContent='复制回看链接'; },2400);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){done(true);},function(){
+        fallbackEl.value=url; fallbackEl.classList.add('show');
+        fallbackEl.focus(); fallbackEl.select(); done(false); });
+    }else{
+      fallbackEl.value=url; fallbackEl.classList.add('show');
+      fallbackEl.focus(); fallbackEl.select();
+      var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+      done(ok); if(ok) setTimeout(function(){ fallbackEl.classList.remove('show'); },400);
+    }
+  });
+
+  var expBtn=$('anno-export');
+  function fileName(){ return DOCID.replace(/[\\/:*?"<>|]/g,'_').slice(0,60) + '-批注.json'; }
+  function expFlash(t){ expBtn.textContent=t; setTimeout(function(){ expBtn.textContent='导出 JSON'; },2600); }
+
+  expBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注可导出。'); return; }
+    var txt=jsonText();
+
+    // ⓪ Artifact 沙箱里唯一被授权的存盘通道（需在发布时声明 downloads 能力）
+    if(window.claude && typeof window.claude.use === 'function'){
+      Promise.resolve(window.claude.use('downloads')).then(function(dl){
+        if(!dl){ pickerOrLegacy(txt); return; }   // 未授权 / 未声明 / 加载失败
+        return dl.save({ filename: fileName(), data: txt })
+          .then(function(){ expFlash('✓ 已保存'); })
+          .catch(function(e){
+            var c = e && e.code;
+            if(c === 'declined' || c === 'rate_limited'){ expFlash('已取消'); return; }
+            pickerOrLegacy(txt);   // unavailable / bad_request 等一律退回原降级链
+          });
+      }).catch(function(){ pickerOrLegacy(txt); });
+      return;
+    }
+    pickerOrLegacy(txt);
+  });
+
+  function pickerOrLegacy(txt){
+    // ① 真正的「另存为」对话框，沙箱 iframe 里也能用
+    if(window.showSaveFilePicker){
+      window.showSaveFilePicker({
+        suggestedName: fileName(),
+        types:[{description:'JSON', accept:{'application/json':['.json']}}]
+      }).then(function(h){ return h.createWritable(); })
+        .then(function(w){ return w.write(txt).then(function(){ return w.close(); }); })
+        .then(function(){ expFlash('✓ 已保存'); })
+        .catch(function(e){ if(e && e.name==='AbortError') return; legacy(txt); });
+      return;
+    }
+    legacy(txt);
+  }
+
+  function legacy(txt){
+    // ② 传统下载；沙箱无 allow-downloads 时会静默失败，故补一条提示
+    var ok=false;
+    try{
+      var blob=new Blob([txt],{type:'application/json'});
+      var url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download=fileName(); a.rel='noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+      ok=true;
+    }catch(e){}
+    if(ok && IN_FRAME){
+      // 沙箱 iframe 无法确认下载是否被拦，直接摆出两条一定走得通的路
+      expFlash('若无反应见下方');
+      fallbackEl.value=txt; fallbackEl.classList.add('show');
+      fallbackEl.focus(); fallbackEl.select();
+      var b=$('anno-store');
+      if(b){ b.className='show bad';
+        b.innerHTML='⬇ <b>没弹出下载？</b>本页嵌在沙箱里，浏览器禁止它下载文件。两条路都能走通：'+
+          '① 上方文本框已全选，<b>⌘/Ctrl+C</b> 复制后自己存成 .json；'+
+          '② 点右下角 <b>「新窗口打开 ↗」</b>，在新标签页里导出就正常了（批注会跟着一起过去）。'; }
+    }else if(!ok){ manualCopy(txt); }
+  }
+
+  /* 新窗口打开：脱离 iframe 后下载可用，且 hash 里带着批注一起过去 */
+  var IN_FRAME = (function(){ try{ return window.self!==window.top; }catch(e){ return true; } })();
+  var newtab=$('anno-newtab');
+  if(IN_FRAME && newtab){
+    newtab.classList.add('show');
+    newtab.addEventListener('click', function(){ syncHash(); newtab.href=location.href; });
+    newtab.addEventListener('mouseenter', function(){ syncHash(); newtab.href=location.href; });
+    newtab.href=location.href;
+  }
+
+  /* 粘贴导入：跨环境（artifact ↔ 本地文件）迁移批注用 */
+  $('anno-paste').addEventListener('click', function(){
+    fallbackEl.value='';
+    fallbackEl.placeholder='把批注 JSON 粘贴到这里，然后按 ⌘/Ctrl + Enter 导入';
+    fallbackEl.setAttribute('data-mode','import');
+    fallbackEl.classList.add('show');
+    fallbackEl.focus();
+  });
+  fallbackEl.addEventListener('keydown', function(ev){
+    if((ev.metaKey||ev.ctrlKey) && ev.key==='Enter'
+       && fallbackEl.getAttribute('data-mode')==='import'){
+      ev.preventDefault();
+      var n=importJSON(fallbackEl.value);
+      if(n>=0){
+        fallbackEl.classList.remove('show');
+        fallbackEl.removeAttribute('data-mode');
+        fallbackEl.value='';
+      }
+    }
+    if(ev.key==='Escape'){
+      fallbackEl.classList.remove('show');
+      fallbackEl.removeAttribute('data-mode');
+    }
+  });
+
+  function importJSON(raw){
+    try{
+      var d=JSON.parse(raw);
+      var incoming=(d.annotations||d||[]).map(function(x){
+        var an=x.anchor||{};
+        return { id:x.id||('a'+Math.random().toString(36).slice(2,9)),
+                 quote:x.quote||'', note:x.note||x.comment||'',
+                 start:an.start!=null?an.start:x.start,
+                 end:an.end!=null?an.end:x.end,
+                 before:an.context_before!=null?an.context_before:(x.before||''),
+                 after:an.context_after!=null?an.context_after:(x.after||''),
+                 created:x.created_at||x.created||new Date().toISOString() };
+      }).filter(function(x){ return x.quote && x.note; });
+      var seen={}, n=0;
+      items.forEach(function(i){ seen[i.id]=1; });
+      incoming.forEach(function(x){ if(!seen[x.id]){ items.push(x); seen[x.id]=1; n++; } });
+      save(); paint(); render(); open(true);
+      alert(n ? ('已导入 '+n+' 条批注。') : '没有新批注可导入（可能都已存在）。');
+      return n;
+    }catch(e){ alert('这个 JSON 读不出来，请确认是本工具导出/复制的内容。'); return -1; }
+  }
+
+  $('anno-file').addEventListener('change', function(ev){
+    var f=ev.target.files && ev.target.files[0];
+    if(!f) return;
+    var fr=new FileReader();
+    fr.onload=function(){
+      try{
+        var d=JSON.parse(fr.result);
+        var incoming=(d.annotations||d||[]).map(function(x){
+          var an=x.anchor||{};
+          return { id:x.id||('a'+Math.random().toString(36).slice(2,9)),
+                   quote:x.quote||'', note:x.note||'',
+                   start:an.start!=null?an.start:x.start,
+                   end:an.end!=null?an.end:x.end,
+                   before:an.context_before!=null?an.context_before:(x.before||''),
+                   after:an.context_after!=null?an.context_after:(x.after||''),
+                   created:x.created_at||x.created||new Date().toISOString() };
+        }).filter(function(x){ return x.quote && x.note; });
+        var seen={}; items.forEach(function(i){ seen[i.id]=1; });
+        incoming.forEach(function(x){ if(!seen[x.id]){ items.push(x); seen[x.id]=1; } });
+        save(); paint(); render(); open(true);
+      }catch(e){ alert('这个 JSON 读不出来，请确认是本工具导出的文件。'); }
+      ev.target.value='';
+    };
+    fr.readAsText(f);
+  });
+  $('anno-file').previousElementSibling.addEventListener('keydown', function(ev){
+    if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); $('anno-file').click(); }
+  });
+
+  $('anno-clear').addEventListener('click', function(){
+    if(!items.length) return;
+    if(!confirm('确定清空全部 '+items.length+' 条批注？此操作不可撤销，建议先导出。')) return;
+    items=[]; activeId=null; save(); paint(); render();
+  });
+
+  /* ---------- 点击高亮定位到批注 ---------- */
+  document.addEventListener('click', function(ev){
+    if(ev.target.closest && ev.target.closest('[data-anno-ui]')) return;
+    var hit=null;
+    for(var i=0;i<items.length;i++){
+      var r=items[i]._range; if(!r) continue;
+      var rects=r.getClientRects();
+      for(var m=0;m<rects.length;m++){
+        var b=rects[m];
+        if(ev.clientX>=b.left&&ev.clientX<=b.right&&ev.clientY>=b.top&&ev.clientY<=b.bottom){ hit=items[i]; break; }
+      }
+      if(hit) break;
+    }
+    if(hit){ activeId=hit.id; paint(); render(); open(true); }
+  });
+
+  /* ---------- 降级层需要跟随重排 ---------- */
+  if(!HAS_HL){
+    var t=null, re=function(){ clearTimeout(t); t=setTimeout(paint,120); };
+    window.addEventListener('resize', re);
+    window.addEventListener('scroll', re, {passive:true});
+  }
+
+  /* ---------- 启动 ---------- */
+  load(); paint(); render(); storeBanner();
+  window.addEventListener('load', function(){ paint(); });
+  // 关页面/切走前兜底再存一次
+  window.addEventListener('pagehide', save);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='hidden') save(); });
+})();
+</script>
