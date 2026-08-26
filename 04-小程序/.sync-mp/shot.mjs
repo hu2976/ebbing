@@ -50,9 +50,16 @@ const tokens = rpx2px(fs.readFileSync(R + '/pages/index/tokens.wxss', 'utf8')
   .replace(/\/\*[\s\S]*?\*\//g, ''));
 const wxss = rpx2px(fs.readFileSync(R + '/pages/index/index.wxss', 'utf8')
   .replace(/@import[^;]+;/g, ''));
-/* page{} 是小程序的根，第一条当 :root 收变量，其余当 body */
-let css = tokens + wxss;
-css = css.replace('page{', ':root{').replace(/page\{/g, 'body{');
+/* page{} 是小程序的根，第一条当 :root 收变量，其余当 body。
+   ⚠️ 正则必须带前边界：不带的话 `.page{` 里的 page{ 也会被换成 `.body{`，
+   于是 index.wxss 里所有 .page 规则在截图里静默失效 —— 量出来的和真机不是
+   同一件事，而这个工具正是"一屏装不装下"唯一的验证手段。 */
+/* ⚠️ tokens.wxss 那条 box-sizing 是元素选择器（view/text/rich-text/…），
+   而这里把块渲成 div —— 匹配不上，于是截图里全是 content-box，
+   真机是 border-box。凡是带 padding 又量高度的块都会算大：
+   entry 的 .page 有 padding-top:56rpx，测出来就凭空多 29px。 */
+let css = '*{box-sizing:border-box}' + tokens + wxss;
+css = css.replace('page{', ':root{').replace(/(^|[^.\w-])page\{/gm, '$1body{');
 
 let seenLongS = 0;   // 同屏多条长 s 只出一个入口，与 draw() 的 lead 规则一致
 const esc = (t) => String(t ?? '').replace(/<br\s*\/?>/g, '<br>');
@@ -71,6 +78,20 @@ const RENDER = {
     ? `<div class="s-food fgo"><span>${esc(b[1])}</span><span class="chev">›</span></div>`
     : `<div class="s-food">${esc(b[1])}</div>`),
 
+  /* 首页那张滋味卡。真机上 index.js 的 mergeTaste() 会把 ti+food(+p+s)
+     合成一个 taste 块，这里以前没有对应实现，于是截图里首页永远是散着的
+     ti 和 food —— 这张卡长什么样一直没法验证。b = ['taste', ti, food, go] */
+  taste:(b) => {
+    const D2 = require(R + '/data/daily.js');
+    const t = D2.pick(D2.taste) || { food: b[2] };
+    const [deep, lit] = D2.cardColor(t.food);
+    return `<div class="tcard"><div class="tbody tx-${D2.cardTex(t.food)}`
+      + `${b[3] ? ' go' : ''}" style="--deep:${deep};--lit:${lit}">`
+      + '<div class="pgrain"></div>'
+      + (b[1] ? `<div class="s-ti">${b[1]}</div>` : '')
+      + `<div class="tline"><div class="s-food">${esc(t.food)}</div>`
+      + (b[3] ? '<span class="chev">›</span>' : '') + '</div></div></div>';
+  },
   box:  (b) => `<div class="s-box">${esc(b[1])}</div>`,
   num:  (b) => `<div class="s-num">${esc(b[1])}</div>`,
   /* 五个角度。截图里量的是空栏的高度——那才是她第一次进来看到的样子。 */
@@ -281,6 +302,18 @@ function build(sid) {
   /* 与 index.js 的 draw() 一致：mind 注入呼吸圆、medit 注入松紧方，
      插在第一个 player 之前 */
   const VIS = { mind: 'breath', medit: 'relax' };
+  /* 与 index.js 的 mergeTaste() 同一件事：ti + food 合成一张卡。
+     只做 home —— 别的屏的 food 块不进卡（taste-card 走的是 card 块）。 */
+  if (sid === 'home') {
+    const fi = shown.findIndex((b) => b[0] === 'food');
+    if (fi >= 0) {
+      const hasTi = fi > 0 && shown[fi - 1][0] === 'ti';
+      const from = hasTi ? fi - 1 : fi;
+      shown = shown.slice(0, from)
+        .concat([['taste', hasTi ? shown[fi - 1][1] : '', shown[fi][1], shown[fi][2] || '']])
+        .concat(shown.slice(fi + 1));
+    }
+  }
   if (sid === 'eat') {
     const ti = shown.findIndex((b) => b[0] === 'ti');
     if (ti >= 0) shown = shown.slice(0, ti).concat([['foodband', D.PICK]], shown.slice(ti + 1));
@@ -296,9 +329,11 @@ function build(sid) {
     cp.splice(at < 0 ? cp.length : at, 0, [VIS[sid]]);
     return cp;
   })();
+  /* 每块后跟一个 .vgap，和 index.wxml 一样 —— 少了它截图里的间距就不是真机的 */
   const html = withVis
     .filter((b) => !['dim', 'clockbar', 'tide'].includes(b[0]))
-    .map((b) => (RENDER[b[0]] ? RENDER[b[0]](b) : `<!-- 未映射块型 ${b[0]} -->`))
+    .map((b) => (RENDER[b[0]] ? RENDER[b[0]](b) : `<!-- 未映射块型 ${b[0]} -->`)
+                + '<div class="vgap"></div>')
     .join('\n');
   return { html, folded: from > 0 ? raw.length - from : 0, n: shown.length };
 }
@@ -321,7 +356,12 @@ if (ALL) {
     for (const c of cs) { D.CLOCK = c; parts.push(`<div class="wrap" data-key="${sid}${cs.length > 1 ? '·' + c : ''}" style="width:${W}px">${screen(sid)}</div>`); }
   }
   D.CLOCK = 'night';
+  /* 同上：这里窗口高 2000px，100vh 也是 2000 —— entry 那条
+     min-height:calc(100vh - 240rpx) 会被撑到 1870px，量出来是假的"超屏"。
+     按真实视口高折成绝对 px，量的才是真机的高度。 */
   const all = `<meta charset="utf-8"><style>html,body{margin:0} ${css}
+  .page{min-height:${Math.round(H - 260 * K)}px}
+  .s-entry .page{min-height:${Math.round(H - 240 * K)}px}
   .wrap{display:inline-block;vertical-align:top}</style>${parts.join('')}
   <script>addEventListener('load',()=>{document.title=[...document.querySelectorAll('.wrap')]
     .map(w=>w.dataset.key+':'+Math.round(w.querySelector('.page').getBoundingClientRect().height)).join('|')})</script>`;
@@ -368,6 +408,12 @@ const shown = { length: built.n };
 const html = `<meta charset="utf-8"><meta name=viewport content="width=${W}"><style>
 html,body{margin:0} ${css}
 #vp{width:${W}px}
+/* ⚠️ 截图窗口是 H×1.6（要截到线以下那截），于是 100vh 也跟着变成 1.6 倍，
+   短屏和 entry 的 min-height:calc(100vh - …) 会把按钮撑到视口线以下 ——
+   真机上 100vh 就是一屏。这里把那两条按真实视口高折成绝对 px，
+   截图看到的才和真机是同一件事。量高度的探针窗口本来就是 H，不受影响。 */
+.page{min-height:${Math.round(H - 260 * K)}px}
+.s-entry .page{min-height:${Math.round(H - 240 * K)}px}
 /* 视口底那条线：线以下就是要滑才看得到的部分 */
 .vpline{position:absolute;left:0;right:0;top:${H}px;height:2px;background:#CB7E62;z-index:9}
 .vpline::after{content:'↑ 一屏到这里';position:absolute;right:6px;top:4px;
