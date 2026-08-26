@@ -254,7 +254,7 @@
 <div class="scroll"><table>
 <thead><tr><th style="width:20%">层</th><th>做法</th></tr></thead>
 <tbody>
-<tr><td>形态</td><td>微信小程序，走体验版（不过审，扫码即用）。<strong>62 屏 = 一个页面</strong>，单页换内容</td></tr>
+<tr><td>形态</td><td>微信小程序，走体验版（不过审）。<strong>62 屏 = 一个页面</strong>，单页换内容。<span style="color:var(--ink3);font-size:13.5px">体验版需先加白名单，而<strong>上限只有 15 人</strong>——见第 07 节「上线」</span></td></tr>
 <tr><td>存储</td><td>记录、情绪、滋味、对话全部 <code>wx.setStorageSync</code>。<strong>数据不出设备</strong>——既是隐私设计，也省掉整个后端</td></tr>
 <tr><td>内容层</td><td>屏级文案的唯一源是可交互原型，<code>screens.js</code> 由 <code>gen.mjs</code> 生成。<em>手改生成物会被覆盖</em></td></tr>
 <tr><td>唯一的云函数</td><td><code>cloudfunctions/talk</code>：四个人各自回应一段话。<strong>无状态</strong>——历史由前端每次带上来，用完就没了</td></tr>
@@ -504,6 +504,8 @@
 <div class="claim">
   <em>所以这类产品在中文世界里做不出来。不是没人想做。</em>
 </div>
+
+<p>这个限制有个具体的形态：<strong>体验版的白名单上限是 15 人</strong>。也就是说在拿到前置审批之前，这个产品最多只能有 15 个用户——<em>而这 15 个还得一个一个手动加微信号。</em></p>
 
 <p>这句话比"中文世界没有"更硬：<strong>是有结构性障碍</strong>。上线路径因此是明确的——<strong>企业主体 + 医疗机构合作</strong>，而这恰好接上商业模式。</p>
 
