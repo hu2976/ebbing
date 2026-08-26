@@ -116,14 +116,87 @@
   <span><b>仓库</b><a href="https://github.com/hu2976/ebbing">github.com/hu2976/ebbing</a> · <code>shenicest-fission</code></span>
 </div>
 
-<p class="lede">面向进食障碍全谱系（暴食 / 厌食 / 贪食）患者及照护者的匿名自助微信小程序。无账号、无登录、数据不出设备。<br>
-62 屏可跑，接了云函数与模型，构建期 15 项自检——其中四项断言的不是功能，是这个产品的立场。</p>
+<p class="lede">进食障碍是<strong>死亡率最高的精神疾病之一</strong>，发病高峰在 <strong>15.5 岁</strong>，而符合诊断的人里<strong>只有 23% 求助过</strong>。<br>
+中国唯一一项全国面访调查给出的患病率是 0.1%，最大规模的青少年筛查给出的是 21%——<strong>两个数字差 200 倍</strong>。<br><br>
+「退潮」是给这群人的匿名自助工具。无账号、无登录、数据不出设备。<strong>62 屏可跑，接了云函数与模型，构建期 15 项自检——其中四项断言的不是功能，是这个产品的立场。</strong></p>
 
 <h2><span class="n">01</span>项目背景</h2>
 
-<h3>不是"和食物的关系出了问题"</h3>
+<div class="claim" style="font-size:24px">
+  <em>给进食障碍患者的匿名自助工具。</em><br>
+  它不问你吃了什么，它帮你重新说出「香」。
+</div>
 
-<p>主流叙事把进食障碍讲成失控——binge eating 字面就是"失控进食"。但真正的机制是反的：</p>
+<h3>这件事有多大</h3>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:22%">维度</th><th>数字</th><th style="width:32%">出处</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>死亡</strong></td>
+  <td>神经性厌食症的标准化死亡比 <strong>SMR = 5.86</strong>——死亡风险约为同龄一般人群的 <strong>5.9 倍</strong>。<br>
+  自杀 <strong>SMR = 31.0</strong>；<strong>死者中每 5 人有 1 人死于自杀</strong>。</td>
+  <td>Arcelus 等 2011, <i>Arch Gen Psychiatry</i>（36 项研究 meta）<br>Chesney 等 2014, <i>World Psychiatry</i></td>
+</tr>
+<tr>
+  <td><strong>低龄</strong></td>
+  <td>发病<strong>高峰年龄 15.5 岁</strong>，中位 18 岁。<br><strong>48.1% 在 18 岁前起病</strong>，82.4% 在 25 岁前。<br>而发病年龄仍在随出生队列<strong>继续下降</strong>。</td>
+  <td>Solmi 等 2022, <i>Mol Psychiatry</i>（192 项研究，708,561 人）<br>Favaro 等 2009, <i>J Clin Psychiatry</i></td>
+</tr>
+<tr>
+  <td><strong>在涨</strong></td>
+  <td>全球时点患病率<strong>从 3.5%（2000–2006）升到 7.8%（2013–2018）</strong>。<br>疫情后加拿大青少年新发厌食<strong>月均住院数 +167%</strong>。</td>
+  <td>Galmiche 等 2019, <i>Am J Clin Nutr</i><br>Agostino 等 2021, <i>JAMA Netw Open</i>（6 家儿童医院）</td>
+</tr>
+<tr>
+  <td><strong>没人管</strong></td>
+  <td>社区中符合诊断的人里，<strong>仅 23.2% 寻求过针对进食障碍的治疗</strong>。<br><strong>十年后基本没变</strong>（2025 年更新的 meta：32%）。<br>未治疗病程：厌食 2.5 年 · 贪食 4.4 年 · <strong>暴食障碍 5.6 年</strong>。</td>
+  <td>Hart 等 2011, <i>Clin Psychol Rev</i><br>Ali 等 2025, <i>Int J Eat Disord</i><br>Austin 等 2021, <i>Eur Eat Disord Rev</i></td>
+</tr>
+</tbody>
+</table></div>
+
+<div class="box warn">
+  <span class="lbl">一个必须说清的措辞</span>
+  <p style="margin:0"><strong>不写「死亡率最高的精神疾病」</strong>——这句流传极广的话没有原始文献支持，而按 Chesney 2014 的排序，厌食症低于阿片类与苯丙胺使用障碍。<em>准确的写法是「死亡率最高的精神疾病之一」。</em>数字本身已经够重，不需要一个会被证伪的最高级。<br>
+  同理不用「每年 10,200 人死于厌食症」——那是美国<strong>全部</strong>进食障碍的建模推算值（Deloitte 2020），被二手转述挪给了厌食症。</p>
+</div>
+
+<h3>而中国的问题是：连数字都没有</h3>
+
+<div class="claim">
+  中国唯一一项全国面访诊断调查：进食障碍终生患病率 <em>0.1%</em>。<br>
+  中国最大规模的青少年筛查（41,406 人）：<em>21.18% 阳性</em>。<br>
+  <strong>两个数字差 200 倍。</strong>
+</div>
+
+<p>这不是哪一方错了。面访诊断的是成人回顾，筛查量表测的是青少年当下的风险——但这个裂口<strong>本身就是临床识别率极低的证据</strong>。</p>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:30%">中国的现状</th><th>出处</th></tr></thead>
+<tbody>
+<tr><td>全国精神卫生调查：进食障碍加权终生患病率 <strong>0.1%</strong>，六大类障碍中最低</td><td>Huang 等 2019, <i>Lancet Psychiatry</i>（31 省 32,552 名成人）</td></tr>
+<tr><td>全国青少年筛查阳性率 <strong>21.18%</strong>（女生 27.28%）<br><span style="color:var(--ink3);font-size:13.5px">SCOFF 五题量表，阳性只代表疑似风险，不是确诊</span></td><td>Bao 等 2025, <i>BMC Medicine</i>（41,406 名 10–19 岁）</td></tr>
+<tr><td>中国 <strong>贪食症患病率约为厌食症的 2 倍</strong>且持续上升（GBD 建模）</td><td>Li 等 2021, <i>Front Psychiatry</i></td></tr>
+<tr><td><strong>全国第一个进食障碍诊治中心，2017 年 9 月才在上海市精神卫生中心挂牌</strong></td><td>上海市精神卫生中心</td></tr>
+<tr><td><strong>中国没有任何一项关于「多少患者从未接受治疗」的统计</strong>，也没有专科门诊数量的全国统计</td><td>——检索无果本身即是结论</td></tr>
+</tbody>
+</table></div>
+
+<h3>而人最多的那一侧，声音最小</h3>
+
+<p>在 DSM-IV 标准的美国全国共病调查中，女性终生患病率是<strong>暴食障碍 3.5%</strong>、贪食症 1.5%、厌食症 0.9%——<strong>暴食障碍高于另外两者之和</strong>（Hudson 等 2007, <i>Biol Psychiatry</i>）。<span style="color:var(--ink3);font-size:13.5px">（这一条只在 DSM-IV 数据下成立：暴食障碍到 DSM-5 才独立成诊断，而 DSM-5 同时放宽了厌食症标准，两版不可直接比。）</span></p>
+
+<p>但 <strong>GBD 2019 官方只统计厌食与贪食两种</strong>。把暴食障碍和其他特定进食障碍纳入之后，<strong>额外多出 4190 万此前未被计入的病例</strong>（Santomauro 等 2021, <i>Lancet Psychiatry</i>）。</p>
+
+<div class="claim">
+  公众注意力和医疗资源都压在「瘦」上。<br>
+  <em>人最多的这一侧，几乎没有声音。</em>
+</div>
+
+<h3>但真正的机制，比这些数字更少被说对</h3>
+
+<p>主流叙事把进食障碍讲成失控——binge eating 字面就是「失控进食」。而真正的机制是反的：</p>
 
 <div class="claim">
   <em>进食障碍不是失控，是掌控用错了地方。</em><br>
@@ -138,12 +211,12 @@
 
 <p>一个人对食物的语言只剩下数字。她说不出「香」，只能说「多少卡」。<strong>所有产品都在给她更准的数字。</strong></p>
 
-<h3>三条来自调研的事实</h3>
+<h3>三条来自竞品与文献调研的判断</h3>
 
 <div class="scroll"><table>
-<thead><tr><th style="width:26%">事实</th><th>出处与含义</th></tr></thead>
+<thead><tr><th style="width:26%">判断</th><th>依据</th></tr></thead>
 <tbody>
-<tr><td><strong>要解的是留存不是有效性</strong></td><td>Linardon 2024 的 RCT（n=576）已证 DBT 技能 App 有效，但 6 周脱落 48%、仅 1/3 完成最后模块。Zainal 2025 的 meta（117 试验 / 279,791 人）：<strong>脱落更低的试验有提醒、有人的接触、且无游戏化</strong>。</td></tr>
+<tr><td><strong>要解的是留存，不是有效性</strong></td><td>Linardon 2024 的 RCT（n=576）已证 DBT 技能 App 对暴食有效，但同一项研究里干预组 6 周脱落 48%、仅 1/3 完成最后模块。Zainal 2025 的 meta（117 试验 / 279,791 人）：<strong>脱落更低的试验有提醒、有人的接触、且无游戏化</strong>。</td></tr>
 <tr><td><strong>躯体那一层是空的</strong></td><td>30+ 产品调研：Juniver 覆盖清除型贪食却零字提电解质与清除后护理；单独检索这一类，结果全是文献与治疗中心科普页，<strong>无任何消费级产品</strong>。</td></tr>
 <tr><td><strong>生成式对话在这个人群里是危险的</strong></td><td>Tessa（NEDA）对已告知患 ED 的用户仍推荐热量限制，一周下架。Pucci 2026 临床标注 268 对中<strong>仅 44.7% 安全</strong>。CCDH：ChatGPT 对假装 13 岁者给 0 卡计划并教其隐瞒家人。Bilen 2026：五个主流模型给青少年餐单平均低估 695 kcal。</td></tr>
 </tbody>
