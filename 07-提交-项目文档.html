@@ -258,11 +258,41 @@
 <tr><td>存储</td><td>记录、情绪、滋味、对话全部 <code>wx.setStorageSync</code>。<strong>数据不出设备</strong>——既是隐私设计，也省掉整个后端</td></tr>
 <tr><td>内容层</td><td>屏级文案的唯一源是可交互原型，<code>screens.js</code> 由 <code>gen.mjs</code> 生成。<em>手改生成物会被覆盖</em></td></tr>
 <tr><td>唯一的云函数</td><td><code>cloudfunctions/talk</code>：四个人各自回应一段话。<strong>无状态</strong>——历史由前端每次带上来，用完就没了</td></tr>
-<tr><td>模型</td><td>OpenRouter。<strong>密钥在云函数的环境变量里</strong>，前端拿不到，反编译也拿不到</td></tr>
+<tr><td>模型</td><td>百度文心 4.5（<code>ernie-4.5</code>），走 OpenRouter。<strong>密钥在云函数的环境变量里</strong>，前端拿不到，反编译也拿不到。<strong>模型可换</strong>——一个环境变量的事，护栏与人设不依赖具体模型</td></tr>
 <tr><td>物理</td><td>情绪瓶子是 <code>canvas 2d</code> + 位置约束松弛（PBD），每帧解位置，接加速度计</td></tr>
 <tr><td>构建期工具</td><td><code>gen.mjs</code> 生成 · <code>chk.mjs</code> 15 项自检 · <code>shot.mjs</code> 用真实 WXSS 渲进 headless Chrome 量一屏装不装得下</td></tr>
 </tbody>
 </table></div>
+
+<h3>模型选型：为什么不是最快的那个</h3>
+
+<p>四个人的回应要在几秒内回来，所以测了六个模型，每个跑四个人各一次：</p>
+
+<div class="scroll"><table>
+<thead><tr><th style="width:28%">模型</th><th class="n" style="width:12%">耗时</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td class="yes"><strong>ernie-4.5</strong>（选它）</td><td class="n"><strong>3.3s</strong></td><td class="yes"><strong>中文最自然</strong>——「松一下后槽牙」这种细节完全落在人设里</td></tr>
+<tr><td>mistral-nemo</td><td class="n">2.1s</td><td>最快，但爱输出双换行和 markdown 星号</td></tr>
+<tr><td>llama-3.1-8b</td><td class="n">1.5s</td><td>中文生硬（「这感觉一直持续着」）</td></tr>
+<tr><td class="no">qwen3.7-flash</td><td class="n">—</td><td class="no"><strong>返回空</strong></td></tr>
+<tr><td class="no">step-3.5-flash / deepseek-v4-flash</td><td class="n">—</td><td class="no"><strong>同样返回空</strong></td></tr>
+<tr><td>hunyuan / minimax</td><td class="n">6–7s</td><td>能用但慢</td></tr>
+</tbody>
+</table></div>
+
+<div class="box warn">
+<span class="lbl">三个模型返回空的原因，值得单独说</span>
+<p style="margin:0 0 10px">它们都是 <strong>reasoning 模型</strong>。而 <code>max_tokens</code> <em>不是上限保护，是模型的写作预算</em>——给 400，思考就把额度花完了，一个字都没输出；给 3000 能出内容，但要 16 秒。</p>
+<p style="margin:0"><strong>调那个数字是解不开的，得换模型。</strong>这一处在两个错误之间来回撞了两轮才看清。</p>
+</div>
+
+<div class="box acc">
+<span class="lbl">为什么没选最快的</span>
+<p style="margin:0"><code>mistral-nemo</code> 快 1.2 秒，但它爱加 markdown 星号 → 被 <code>guard.js</code> 拦掉 → <strong>退回模板</strong>。也就是说"快"换来的是"用户经常看到的是模板"。<br>
+<em>护栏严格的系统里，模型输出的干净程度比速度重要——脏输出等于没输出。</em></p>
+</div>
+
+<p><strong>模型是可换的</strong>：改环境变量 <code>TALK_MODEL</code> 即可，人设（<code>persona.js</code>）与护栏（<code>guard.js</code>）都不依赖具体模型。这是三层架构的一个副产品——<em>把"说什么"和"能不能说"分开之后，说话的那一方就变成可替换的了。</em></p>
 
 <h3>规模</h3>
 <pre>患者端     62 屏 · 489 块 · 42 种块型
