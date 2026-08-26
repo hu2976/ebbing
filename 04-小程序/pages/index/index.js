@@ -235,7 +235,18 @@ Page({
     const care = (options && options.role) === 'care';
     D = care ? CARE : PATIENT;
     this.care = care;
-    this.stack = []; this.cur = care ? 'care' : 'entry'; this.newball = -1; this.recolor = -1;
+    this.stack = [];
+    /* 记住上次在 entry 选的那一边。
+       原则是「不预设她是谁」，而这里记的是**她自己说过的话** —— 记住它
+       不叫预设身份，叫不让她每天重说一遍。凌晨三点打开的人，不该先过
+       一道门才够得着「我现在不太好」。
+       退路：选「为了一个我在意的人」→ worry 有返回键能回 entry 重选；
+       选「为自己」→ 回不去，但那本来就是设计（患者端首页没有任何通往
+       照护者端的入口，那一端走独立小程序码）。
+       notyet（「我还没打算改变」）不记 —— 它是个临时的态度，不是分流。 */
+    const side = wx.getStorageSync('entry:side');
+    this.cur = care ? 'care' : ((side === 'home' || side === 'worry') ? side : 'entry');
+    this.newball = -1; this.recolor = -1;
     /* 演示种子：只在完全没有记录时写一次，真实使用不会覆盖 */
     if (!care) LOGD.seedIfEmpty(D.HUE);
 
@@ -825,6 +836,11 @@ Page({
 
   go(e) {
     const id = e.currentTarget.dataset.id;
+    /* 从 entry 走出去的那一下记下来，下次直接落到这一边（见 onLoad）。
+       在 entry 重选会覆盖，所以点错了回到 entry 再选一次就改回来了。 */
+    if (this.cur === 'entry' && (id === 'home' || id === 'worry')) {
+      wx.setStorageSync('entry:side', id);
+    }
     /* 不是从书架点进来的，就把上次记的那一天清掉——否则从首页进也会显示那天 */
     if (id === 'taste-card') this.wallDay = null;
     /* 写／看别人写的，都要知道是哪样食物。从当前那张卡上取。 */
@@ -842,7 +858,15 @@ Page({
      （home＝患者端的家，entry＝照护者端的家）。
      ⚠️ 这里的产出是用户读得到的文案，患者端一个临床词都不能有。 */
   backLabel(backTo, backIsRoot) {
-    // TODO(human)
+    /* 只区分根屏和非根屏。用户在深层点返回，真正要知道的只有一件事：
+       这一下是回到最上层、还是再往上一层 —— 因为回到最上层之后就没有
+       返回键了，那是唯一一次状态变化。
+       没有给 36 屏各起名字：屏上的标题是句子不是名字（「你来了。」
+       「饭就是饭。」），搬到按钮上会很怪，而且那是十几条要维护的文案。
+       home 说「今天」不说「首页」：那一屏全篇是今天的滋味／今天怎么样／
+       今天三场，心理模型本来就是今天；「首页」是系统词，不是这产品的话。 */
+    if (!backIsRoot) return '返回';
+    return backTo === 'home' ? '今天' : '开头';
   },
 
   back() {

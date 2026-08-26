@@ -706,12 +706,17 @@
 
 /* 纸标签。上一版是金色渐变底座，那读作奖杯；一张米白的纸标签读作
    自家封的果酱罐——温度是从这种材质来的，不是从更多光效来的。 */
+/* 纸标签压暗一档。珠子现在自己发光了，而这块米色牌原来是 L≈0.60 —— 
+   全屏最亮的东西是罐子外面的一张纸，罐内的光反而成了配角。
+   一只装着发光物的罐子，视觉中心必须在罐内。
+   压到 L≈0.28：还是纸，只是这张纸在暗处、被罐子的光照着，不自己发亮。
+   字跟着加深，对比度 5.06:1 —— 25rpx 是 12.5px 小字，要过 4.5:1。 */
 .base{ width:118px; margin:-4px auto 0; padding:5px 0 6px; position:relative; z-index:4;
   border-radius:2px;
-  background:linear-gradient(176deg, #D9CFBE 0%, #CBC0AC 62%, #BEB29C 100%);
-  box-shadow:0 3px 7px -3px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35);
+  background:linear-gradient(176deg, #A89E8C 0%, #9A9080 62%, #8D8271 100%);
+  box-shadow:0 3px 7px -3px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.20);
   display:flex; align-items:center; justify-content:center; }
-.base text{ font-family:var(--hand); font-size:25rpx; font-weight:500; color:#4A3B28;
+.base text{ font-family:var(--hand); font-size:25rpx; font-weight:500; color:#2A2018;
             letter-spacing:.14em; }
 .readout{ min-height:80rpx; margin:26rpx 0 0; text-align:center;
           font-family:var(--disp); font-size:32rpx; line-height:1.7; color:var(--paper2); }
