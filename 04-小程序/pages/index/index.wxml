@@ -1,5 +1,5 @@
 <!-- 用 view 而不是 button：原型的按钮样式全是自定义的，小程序 button 的默认样式很难压干净 -->
-<view class="view in{{seq}} s-{{sid}}" style="padding-top:{{topPad}}px">
+<view class="view {{dir}}{{seq}} s-{{sid}}" style="padding-top:{{topPad}}px">
 
   <!-- 潮水是环境不是插图：铺屏底、不占文档流、不接手势。三态见 index.js 的 TIDE -->
   <canvas wx:if="{{tideMode}}" type="2d" id="tide" class="tide-bg {{tideMode}}"></canvas>
@@ -12,7 +12,7 @@
 
   <view class="page">
   <view class="nav {{root ? 'root' : ''}}">
-    <view wx:if="{{!root}}" class="navbtn" hover-class="tap" bindtap="back">← 返回</view>
+    <view wx:if="{{!root}}" class="navbtn" hover-class="tap" bindtap="back">← {{backLabel || '返回'}}</view>
   </view>
 
   <block wx:for="{{blocks}}" wx:for-item="b" wx:for-index="i" wx:key="i">
@@ -25,7 +25,9 @@
     <view wx:elif="{{b.k==='s'}}" class="swrap">
       <view wx:if="{{!b.open && b.lead}}" class="sbtn" hover-class="tap"
             data-i="{{i}}" bindtap="toggleS">为什么<text class="chev">›</text></view>
-      <rich-text wx:elif="{{b.open}}" class="s-s open" nodes="{{b.t}}" data-i="{{i}}" bindtap="toggleS"></rich-text>
+      <!-- 展开后点它收起。全屏可点元素里只有这一处没有按下反馈 -->
+      <rich-text wx:elif="{{b.open}}" class="s-s open" nodes="{{b.t}}"
+                 hover-class="tap" data-i="{{i}}" bindtap="toggleS"></rich-text>
     </view>
     <rich-text wx:elif="{{b.k==='box'}}" class="s-box"  nodes="{{b.t}}"></rich-text>
     <rich-text wx:elif="{{b.k==='num'}}" class="s-num"  nodes="{{b.t}}"></rich-text>
@@ -82,7 +84,10 @@
           </view>
         </view>
         <view class="sboard"></view>
-      </block>
+    
+    <!-- 块之间的呼吸，样式见 index.wxss 的 .vgap -->
+    <view class="vgap"></view>
+  </block>
     </view>
 
     <!-- 星空：一晚一颗。亮一点暗一点，都在天上 -->
@@ -263,8 +268,11 @@
         <canvas type="2d" id="mat" class="matcv"></canvas>
         <view class="steam"><view class="sm s1"></view><view class="sm s2"></view><view class="sm s3"></view></view>
       </view>
-      <view class="tbody {{b.go ? 'go' : ''}}" hover-class="{{b.go ? 'tap' : ''}}"
+      <view class="tbody tx-{{b.tex}} {{b.go ? 'go' : ''}}" hover-class="{{b.go ? 'tap' : ''}}"
+            style="--deep:{{b.deep}};--lit:{{b.lit}}"
             data-id="{{b.go}}" bindtap="{{b.go ? 'go' : ''}}">
+        <!-- 那样食物的质感。族名和牌面共用 tx-* 那六套，见 index.wxss -->
+        <view wx:if="{{b.tex}}" class="pgrain"></view>
         <view wx:if="{{b.ti}}" class="s-ti">{{b.ti}}</view>
         <view class="tline">
           <rich-text class="s-food" nodes="{{b.food}}"></rich-text>

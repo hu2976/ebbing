@@ -26,8 +26,10 @@
 /* 字号阶梯：31 标题 / 21 段首 / 17.7 正文 / 14.6 次级 / 13.5 标签
    苹方 300 字重在深色底上会发虚，标题一律 600——层次靠字重不靠字族。
    上一版标题是 72rpx 宋体 300 字重，那是"跟恐怖片一样"的主因。 */
+/* 下边距归 0，理由同 .s-ti：flex 里不折叠，而下一块（.s-p 20rpx）本来
+   就是折叠后说了算的那个值。entry 的 .s-h 例外——它下面跟的是空档，没得折叠。 */
 .s-h{ font-family:var(--disp); font-size:50rpx; font-weight:600; line-height:1.3;
-      letter-spacing:0; margin:16rpx 0 4rpx; display:block; }
+      letter-spacing:0; margin:16rpx 0 0; display:block; }
 .s-h2{ font-family:var(--disp); font-size:40rpx; font-weight:600; line-height:1.5;
        margin:26rpx 0 0; display:block; }
 /* 38→32rpx：654rpx 宽里每行从 17 字变 20 字，「很/烫」这类拆词明显减少，
@@ -37,7 +39,12 @@
       margin:20rpx 0 0; display:block; text-align:justify; }
 .s-s{ font-size:28rpx; line-height:1.85; color:var(--paper2); margin:20rpx 0 0; display:block;
       text-align:justify; }
-.s-ti{ font-size:26rpx; letter-spacing:.22em; color:var(--paper3); margin:34rpx 0 8rpx; }
+/* 下边距归 0：.page 是 flex 容器，里面的 margin 不折叠，
+   原来的 8rpx 会和下一块的 margin-top 相加而不是取大值 —— home 本来只余 7px，
+   两个 ti 加两条 hr 一共多出 14px 就直接超屏。
+   下一块的 margin-top（cells 20rpx、food 6rpx…）本来就是折叠后说了算的那个值，
+   所以去掉下边距＝精确还原折叠时代的间距，不是把它改紧。 */
+.s-ti{ font-size:26rpx; letter-spacing:.22em; color:var(--paper3); margin:34rpx 0 0; }
 /* 品名——全屏最暖的东西，用得最省 */
 /* 品名的字体本来是 --disp（无衬线），也就是和正文、按钮、标题同一个字族，
    只是更大更金 —— 她说"太丑了"。问题不是字丑，是品名没有自己的字：
@@ -52,7 +59,7 @@
         font-family:var(--hand); font-size:36rpx; line-height:1.8; display:block;
         border:1px solid var(--hair2); }
 .s-num{ font-family:var(--disp); font-size:32rpx; color:var(--jade); margin:16rpx 0 0; display:block; }
-.s-hr{ border:none; border-top:1px solid var(--hair2); margin:34rpx 0 6rpx; }
+.s-hr{ border:none; border-top:1px solid var(--hair2); margin:34rpx 0 0; }   /* 同上 */
 
 /* ── 按钮四级：主入口 70 / 分岔 64 / 次级 46，触区下限 44 ────────── */
 .s-b{
@@ -146,6 +153,39 @@
 .tide-bg.ebb{ height:58vh; }
 @keyframes tidein{ to{ opacity:1 } }
 .page{ position:relative; z-index:1; }
+
+/* ── 模块之间的呼吸：剩余高度平分到每个间隙 ──────────────────────
+   她的原话是"模块间很挤"。mine 那屏标题、三个选项、「吃不下」贴成一块砖，
+   读起来是一坨，不是三个可以分开考虑的选择 —— 发作当下认知本来就窄，
+   选项分不开就难选。
+
+   ⚠️ 走过两版弯路，记下来免得再踩：
+   v1 照 entry 的排法插一个撑开的空档，标题留顶上、操作沉到拇指区。
+      entry 那么排是对的（一句提问加两个答案），但 sip 的标题和正文
+      是同一句话的两半，中间塞个空档就是把话割断 —— 她说"太空了"。
+   v2 改成上下各一个空档、整块居中，sip 好了，urge 更糟：那屏底下有潮水在涨，
+      按钮沉到底就是推进水里 —— 她说"要被水淹没了"。
+   两版的共同错误是把空白当一整块搬来搬去。她要的不是空白换地方，是间隙变松。
+
+   flex 列里多个 auto margin 会平分剩余空间，所以这里不需要判断哪屏算短：
+   home 余 7px，每个间隙分到 1px，看不出来；mine 余 345px 就自己松开。
+   min-height 不用 height —— 内容超出时容器自己长高，没有余量可分，
+   auto margin 归零，长屏一像素不动。 */
+.page{ display:flex; flex-direction:column; min-height:calc(100vh - 260rpx); }
+/* 每个块后面跟一个可压缩的间隙。flex:1 1 0 让它去分剩余高度，
+   max-height 给它封顶 —— 上一版用 .page > *{margin-bottom:auto} 平分，
+   没有上限，mine 的 345px 余量摊成每个间隙 100px，三个选项散成
+   三件不相干的事，「吃完了」还被挤出了视口。松是要松，不是要散。
+
+   home 那种满屏的屏没有余量可分，basis 0 直接压回 0，一像素不动。
+   ⚠️ 它不进 blocks 数组，是 wxml 里跟在每个块后面的固定兄弟节点 ——
+   进数组会让 setData(`blocks[i].on`) 那一批按下标的局部更新全部错位。 */
+/* min-height:0 不能省 —— flex item 的 min-height 默认是 auto，
+   列方向上会挡住收缩，home 那种满屏的屏就压不回 0，白白多出 14px 变成超屏。 */
+.vgap{ flex:1 1 0; min-height:0; max-height:56rpx; }
+/* entry 已经有自己的一套节奏（54rpx 标题、40rpx 按钮间距、64rpx 次级间距，
+   外加那个撑开的 .s-gap），再叠 vgap 就从余 31px 变成余 2px。 */
+.s-entry .vgap{ max-height:0; }
 
 /* 三张卡：一个念头 + 它的解释。
    原来是三个 h2 加三段 p 连着排，读起来像条款（她说"又像是规则怪谈一样"）。
@@ -494,7 +534,10 @@
             box-shadow:0 1px 0 rgba(255,255,255,.14) inset,
                        0 0 0 1px rgba(201,160,99,.42),
                        0 16rpx 22rpx -10rpx rgba(0,0,0,.78); }
-.sd{ font-size:21rpx; color:rgba(244,237,227,.6); letter-spacing:.06em; }
+/* 21→24rpx：10.5px 低于你定的 13.5px 标签下限，而这行是牌脊上的日期，
+   它是"这是哪一天"的唯一线索，不是装饰。书脊宽 207rpx，24rpx 的「8 15」放得下。
+   （.sl-n 那个 1-6 的序号留在 21rpx —— 纸条上的行号，淡是有意的。） */
+.sd{ font-size:24rpx; color:rgba(244,237,227,.62); letter-spacing:.06em; }
 .sf{ font-family:var(--hand); font-size:27rpx; color:var(--paper); line-height:1.3;
      margin-top:2rpx; }
 /* 隔板 */
@@ -581,7 +624,9 @@
 .sbtn{ display:inline-flex; align-items:center; gap:6rpx; margin:18rpx 0 0;
        font-size:26rpx; letter-spacing:.1em; color:var(--paper3);
        padding:10rpx 20rpx 10rpx 0; transition:opacity .16s ease, transform .16s ease; }
-.s-s.open{ animation:ina .3s cubic-bezier(.22,.61,.36,1) both; }
+/* 「为什么」展开是原地长出来，不是换屏，所以留着上浮淡入不跟着换向 */
+@keyframes openin{ from{ opacity:0; transform:translateY(10rpx) } to{ opacity:1; transform:none } }
+.s-s.open{ animation:openin .3s cubic-bezier(.22,.61,.36,1) both; }
 
 /* 折叠入口。收起态是首屏的最后一行，字比正文小、比标签大——它是入口不是标题 */
 .foldwrap{ margin-top:16rpx; }
@@ -604,14 +649,18 @@
   overflow:hidden;
   background:
     radial-gradient(44% 30% at 30% 16%, rgba(244,237,227,.09), transparent 66%),
-    radial-gradient(36% 20% at 50% 97%, rgba(201,160,99,.11), transparent 76%),
+    /* 罐底那片光从 .11 提到 .22 并放大：珠子现在自己发光，
+       光积在罐底才说得通 —— 参考图里最亮的地方就是这里，不是罐口。 */
+    radial-gradient(58% 34% at 50% 94%, rgba(201,160,99,.22), transparent 78%),
     radial-gradient(120% 100% at 50% 4%, #2C251D 0%, #17130F 56%, #0C0A08 100%);
   box-shadow:
     inset 0 0 0 1px rgba(244,237,227,.11),
     inset 0 0 26px rgba(0,0,0,.52),
     inset 0 8px 16px -6px rgba(244,237,227,.06),
     0 26px 46px -22px rgba(0,0,0,.9),
-    0 0 40px -12px rgba(201,160,99,.10); }
+    /* 外溢的光。一只装着发光物的罐子会照亮它周围一圈，
+       没有这个它就还是"暗背景上的一只罐子"。 */
+    0 0 64px -10px rgba(201,160,99,.20); }
 
 /* 罐口。上一版是一块深色横条，读作木塞。玻璃翻边的读法是：
    同罐身一个色系、上下各一道亮线（翻边的两个转折面）、两端略暗（弧度）。 */
@@ -631,6 +680,18 @@
   border-radius:40% 40% 50% 50% / 32% 32% 50% 50%;
   pointer-events:none; z-index:3;
   background:
+    /* 磨砂。参考图那只罐子是雾面的，里面的东西看得见轮廓但被柔化，
+       所以光晕比形状更显眼。
+       ⚠️ 上一版在这儿加了一层 3px 的点阵当颗粒 —— 等距点阵读作纱窗，
+          牌面质感那六族的注释里已经写过一次这个坑（"网格读作纱窗，
+          比连续的横线更糟"），我又踩了一遍。磨砂不靠颗粒，靠雾的不匀：
+          三片位置不同、大小不同的淡雾叠起来，浓淡自己漂移。
+       不用 backdrop-filter:blur：小程序真机上它对 canvas 兄弟节点不稳，
+       而且一模糊珠子就认不出是哪天了（点珠子看那天是个功能，不只是装饰）。 */
+    radial-gradient(62% 46% at 28% 22%, rgba(244,237,227,.055), transparent 72%),
+    radial-gradient(52% 38% at 74% 58%, rgba(244,237,227,.04), transparent 74%),
+    radial-gradient(70% 30% at 46% 92%, rgba(244,237,227,.035), transparent 76%),
+    linear-gradient(180deg, rgba(244,237,227,.05) 0%, rgba(244,237,227,.015) 46%, rgba(244,237,227,.045) 100%),
     linear-gradient(90deg, transparent 5%, rgba(244,237,227,.11) 11%, rgba(244,237,227,.02) 17%, transparent 22%),
     linear-gradient(90deg, transparent 80%, rgba(244,237,227,.06) 88%, transparent 94%),
     radial-gradient(38% 20% at 32% 9%, rgba(244,237,227,.13), transparent 72%);
@@ -710,16 +771,27 @@
 /* view 没有 :hover，点击反馈用 hover-class。
    transition 必须写在基类上：hover-class 是按下时追加、松手就移除，
    写在 .tap 里松手那一下类已经没了，回弹会是硬切。 */
-.s-q, .s-b, .navbtn, .cells, .word, .player, .pickbtn, .footbtn{
+.s-q, .s-b, .navbtn, .cells, .word, .player, .pickbtn, .footbtn, .s-s.open{
   transition: opacity .16s ease, transform .16s ease; }
 .tap{ opacity:.62; transform:scale(.978); }
 
-/* 换屏：整屏轻微上浮淡入。两套同内容的 keyframes 由 seq 奇偶轮换——
-   同名 animation 在 class 不变时不会重播，轮换是让它每屏都重放的最省办法。 */
-@keyframes ina{ from{ opacity:0; transform:translateY(10rpx) } to{ opacity:1; transform:none } }
-@keyframes inb{ from{ opacity:0; transform:translateY(10rpx) } to{ opacity:1; transform:none } }
-.in0{ animation:ina .34s cubic-bezier(.22,.61,.36,1) both; }
-.in1{ animation:inb .34s cubic-bezier(.22,.61,.36,1) both; }
+/* 换屏：进去从右边来，退出来从左边来。
+   上一版前进和后退播的是同一段上浮淡入（ina 和 inb 逐字节相同，两套只为让
+   同名 animation 在 class 不变时能重播）——于是 36 屏挤在一个 page 里，
+   唯一能说明"我是进去了还是退出来了"的线索是不存在的。
+   横向是手机上唯一不用学的层级语法：右边是更深处，左边是来的地方。
+   位移只有 24rpx——这是夜里的手机，要的是余光里知道方向，不是滑动特效。
+   四套 keyframes = 方向 2 × 奇偶 2，奇偶仍然是让它每屏重放的最省办法。 */
+@keyframes sf0{ from{ opacity:0; transform:translateX(24rpx) } to{ opacity:1; transform:none } }
+@keyframes sf1{ from{ opacity:0; transform:translateX(24rpx) } to{ opacity:1; transform:none } }
+@keyframes sb0{ from{ opacity:0; transform:translateX(-24rpx) } to{ opacity:1; transform:none } }
+@keyframes sb1{ from{ opacity:0; transform:translateX(-24rpx) } to{ opacity:1; transform:none } }
+.f0{ animation:sf0 .34s cubic-bezier(.22,.61,.36,1) both; }
+.f1{ animation:sf1 .34s cubic-bezier(.22,.61,.36,1) both; }
+.b0{ animation:sb0 .34s cubic-bezier(.22,.61,.36,1) both; }
+.b1{ animation:sb1 .34s cubic-bezier(.22,.61,.36,1) both; }
+/* 原地重画（.s0/.s1）故意什么都不写：屏号没变就不该有位移。
+   留着这两个类名是为了 wxml 那一处插值不必分支。 */
 .chev{ color:var(--paper3); font-size:30rpx; flex:none; }
 
 /* ── 松紧（冥想屏）：用力一下再松开。一轮七秒。
@@ -803,8 +875,24 @@
 .tcard{ border:1px solid var(--hair); border-radius:14rpx; overflow:hidden; margin:24rpx 0 0; }
 .mat{ position:relative; height:236rpx; overflow:hidden; }
 .matcv{ display:block; width:100%; height:100%; }
-.tbody{ background:var(--n2); padding:30rpx 38rpx 34rpx;
+/* 首页那张卡带上当日这样食物的颜色和质感 —— 它是牌面的入口，
+   两处该是同一样东西。但它是入口不是牌：牌面全彩、纹理 opacity .6-.8、
+   有发牌动画和一道扫过去的油光；这里只留颜色和质感的暗示。
+   做法是 n2 当蒙版盖在食物色上，只放 14% 透出来 —— 直接用 --lit
+   会和「黄铜＝品名与主入口描边」抢视觉，而首页的规矩是品名最暖、用得最省。 */
+.tbody{ position:relative; overflow:hidden;
+        background:
+          linear-gradient(0deg, rgba(31,26,21,.86), rgba(31,26,21,.86)),
+          radial-gradient(76% 130% at 14% 0%, var(--lit), transparent 64%),
+          var(--deep);
+        padding:30rpx 38rpx 34rpx;
         display:flex; flex-direction:column; gap:18rpx; }
+/* 纹理压到 .2 —— 牌面那六族的 opacity 是给 480×672 的牌面定的，
+   照搬到这张扁卡上会糊成一片脏。写在 .tx-* 之后才盖得住（特异性同为 0,2,0）。 */
+.tbody .pgrain{ opacity:.2; }
+/* 文字压在纹理之上 */
+.tbody > .s-ti, .tbody > .tline, .tbody > .tp, .tbody > .topen{
+  position:relative; z-index:1; }
 .tbody .s-ti{ margin:0; font-size:26rpx; }
 .tbody .s-food{ margin:0; }
 .tbody .tp{ margin:0; line-height:1.88; }

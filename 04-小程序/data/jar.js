@@ -65,8 +65,11 @@ function layers(h, i, unity) {
   const dim = (i || 0) % 2 ? -6 : 0;
   const u = unity === undefined ? 1 : Math.max(0, Math.min(1, unity));
   const k = 0.46 + 0.54 * u;
+  /* 饱和度上调（52→66）：她拿了一版暗底＋高饱和情绪块的参考图来。
+     没有一路拉到参考图那种 90%——那是平涂色块的饱和度，
+     压在玻璃的透明度和暗底上会脏。亮的部分交给下面那层外发光去给。 */
   return { h, L1: 72 + dim, L2: 52 + dim, L3: 34 + dim,
-    S1: 52 * k, S2: 44 * k, S3: 36 * k };
+    S1: 66 * k, S2: 56 * k, S3: 44 * k };
 }
 
 /* layout() 和 ballStyle() 已删。
@@ -136,7 +139,10 @@ function step(B, r, R, gx, gy, dt) {
    传进来而不是直接调 wx —— 这个文件在 node 里也要能 require（shot.mjs 用它）。 */
 function sprite(mk, d, dpr, h, i, unity) {
   const { L1, L2, L3, S1, S2, S3 } = layers(h, i, unity);
-  const pad = d * 0.10;                      // 只留一点点边，不留给发光
+  /* 边距从 0.10 放到 0.40：外发光要画在珠子外面，边留窄了会被贴图裁掉一圈硬边。
+     贴图变大约 2.4 倍，十几颗珠子的规模上看不出开销；
+     位置计算用的是 spr.W，放大自动跟着走，物理那边的 d 一点没变。 */
+  const pad = d * 0.40;
   const W = Math.ceil((d + pad * 2) * dpr);
   const cv = mk(W, W);
   const g = cv.getContext('2d');
@@ -151,6 +157,16 @@ function sprite(mk, d, dpr, h, i, unity) {
   };
   const fill = (grad) => { g.fillStyle = grad; g.fillRect(0, 0, c * 2, c * 2); };
 
+  /* 0 外发光。画在 clip 外面 —— 这一层是珠子**发**的光，不是照在它身上的。
+     参考图里那罐东西是自己亮的，光透过磨砂罐壁晕开，罐底整个被照亮。
+     饱和度比主体再高一档、亮度拉到 72：光的颜色总比物体本身更亮更纯。
+     两段淡出（.34 → .10 → 0）而不是一段，是为了让近处有个实的光核，
+     远处才是弥散的晕；一段线性淡出读起来是一圈边框。 */
+  fill(rg(0, 0.02, 2.6, [
+    [0, `hsla(${h},${Math.min(88, S1 + 18).toFixed(0)}%,74%,.46)`],
+    [0.32, `hsla(${h},${Math.min(88, S1 + 12).toFixed(0)}%,68%,.15)`],
+    [1, 'transparent']]));
+
   g.save();
   g.beginPath(); g.arc(c, c, r, 0, 6.2832); g.clip();
 
@@ -158,7 +174,7 @@ function sprite(mk, d, dpr, h, i, unity) {
      光从中间穿过去，所以看得见后面罐子的暗；边缘是斜着看进去的厚玻璃，
      所以更实、更暗。上一版反了（中心 .96 边缘 .80），于是每颗都是实心糖豆。 */
   fill(rg(-0.10, -0.14, 1.16, [
-    [0, `hsla(${h},${S1.toFixed(0)}%,${L1}%,.62)`],
+    [0, `hsla(${h},${S1.toFixed(0)}%,${Math.min(88, L1 + 10)}%,.62)`],
     [0.46, `hsla(${h},${S2.toFixed(0)}%,${L2}%,.78)`],
     [0.86, `hsla(${h},${S3.toFixed(0)}%,${L3}%,.94)`],
     [1, `hsla(${h},${S3.toFixed(0)}%,${(L3 - 10)}%,.98)`]]));

@@ -53,7 +53,11 @@ function applyDaily(blocks, cur, wallDay) {
     if (fi < 0) return;
     /* 夜里与那场前后是「烤红薯　·　明早再看」，后缀要留着，换的只是食物名 */
     const suffix = String(blocks[fi].t).includes('·') ? '　·　明早再看' : '';
-    blocks[fi] = { ...blocks[fi], t: rich(t.food + suffix), desc: t.desc };
+    /* 颜色和质感族跟着当日这样食物走，和牌面同一个来源（daily.js 的
+       cardHue／cardTexFam）。首页这张卡是那张牌的入口，两处该是同一样东西。 */
+    const [deep, lit] = DAILY.cardColor(t.food);
+    blocks[fi] = { ...blocks[fi], t: rich(t.food + suffix), desc: t.desc,
+                   deep, lit, tex: DAILY.cardTex(t.food) };
     const next = blocks[fi + 1];
     if (next && next.k === 'p') blocks[fi + 1] = { ...next, t: rich(t.desc) };
     return;
@@ -205,7 +209,10 @@ function mergeTaste(blocks) {
   /* go 要带上——原来这里丢了它，于是首页那张滋味卡怎么点都没反应：
      food 块的跳转在合并成 taste 块的时候被吞了。 */
   const card = { k: 'taste', ti: '', food: blocks[i].t, go: blocks[i].go || '',
-    p: '', s: '', mat: false };
+    p: '', s: '', mat: false,
+    /* 由 applyDaily 挂上，见那里的注释；缺省值和牌面的 cardColor 兜底一致 */
+    deep: blocks[i].deep || '#463A2A', lit: blocks[i].lit || '#A98A5E',
+    tex: blocks[i].tex || '' };
   let from = i, to = i + 1;
   if (i > 0 && blocks[i - 1].k === 'ti') { card.ti = blocks[i - 1].t; from = i - 1; }
   if (blocks[to] && blocks[to].k === 'p') { card.p = blocks[to].t; card.mat = true; to++; }
@@ -218,7 +225,7 @@ function mergeTaste(blocks) {
    三场的时间仍然写在 group 屏上，提醒用到的那份在 setRemind 里。 */
 
 Page({
-  data: { blocks: [], root: false, pick: null, slipOpen: false, star: null, balls: [], topPad: 0, onlineN: 0, seq: 0, tideMode: '', fold: [], foldLabel: '', moreOpen: false, sid: '' },
+  data: { blocks: [], root: false, pick: null, slipOpen: false, star: null, balls: [], topPad: 0, onlineN: 0, seq: 0, dir: 'f', backLabel: '返回', tideMode: '', fold: [], foldLabel: '', moreOpen: false, sid: '' },
 
   /* options.role === 'care' 时整个 app 变成照护者端。
      入口是一张独立的小程序码（路径带 ?role=care），患者端首页没有任何通往
@@ -290,6 +297,15 @@ Page({
     /* entry 只有一句问话加两个选项，等距铺开就会上面挤、下面空一大片。
        在标题后插一个撑开的空档：标题留在顶上，选项被推到拇指区。
        用块而不用 :first-of-type —— WXSS 对伪类支持有限，那条靠运气。 */
+    /* 返回键说清楚退到哪。
+       换屏动画已经说了"我在往哪走"（进去从右边来、退出来从左边来），
+       但没说"退回去是哪儿" —— 36 屏共用一个 page，点返回之前
+       不知道会落到哪一屏，也不知道会不会直接退出小程序。
+       这里先把目标算出来：和 back() 同一条链，只是不 pop。 */
+    const backTo = this.stack[this.stack.length - 1] || s.back
+                   || (this.care ? 'care' : 'home');
+    const backIsRoot = !!(D.SCREENS[backTo] && D.SCREENS[backTo].root);
+    const backLabel = this.backLabel(backTo, backIsRoot);
     if (this.cur === 'entry') {
       const hi = blocks.findIndex((b) => b.k === 'h');
       if (hi >= 0) blocks.splice(hi + 1, 0, { k: 'gap' });
@@ -315,10 +331,18 @@ Page({
       blocks.splice(at < 0 ? blocks.length : at, 0, { k: vis });
     }
     this.stopTide();
+    /* 方向有三态，不是两态：前进 f / 后退 b / 原地 s。
+       原地是屏号没变的重画——onShow 从后台回来、聊天屏发一条消息补一条回复，
+       这些都会整屏 draw()。当成前进就是骗人：屏没换却往左滑一下，
+       发一条消息晃一下更晕。屏号一样就一律不播位移，不用去改那 15 个调用点。 */
+    const dir = (this._drawn === this.cur) ? 's' : (this.dir || 'f');
+    this._drawn = this.cur;
     this.setData({ blocks, root: !!s.root, pick: null, slipOpen: false, star: null,
-                   seq: this.data.seq ? 0 : 1, tideMode, fold, foldLabel, moreOpen: false, sid: this.cur }, () => {
+                   seq: this.data.seq ? 0 : 1, dir, backLabel,
+                   tideMode, fold, foldLabel, moreOpen: false, sid: this.cur }, () => {
       if (tideMode) this.startTide(tideMode);
     });
+    this.dir = 'f';   /* 只有 back() 会拨成 'b'；画完即还原，其余入口一律算前进 */
     if (blocks.some((b) => b.k === 'machine')) this.startJar(); else this.stopJar();
     if (blocks.some((b) => b.k === 'taste' && b.mat)) this.drawMat();
     wx.pageScrollTo({ scrollTop: 0, duration: 0 });
@@ -813,8 +837,17 @@ Page({
     this.pushHistory(id);
     this.cur = id; this.draw();
   },
+  /* 返回键上写什么。
+     backTo 是点下去会落到的那一屏的 id，backIsRoot 说明它是不是根屏
+     （home＝患者端的家，entry＝照护者端的家）。
+     ⚠️ 这里的产出是用户读得到的文案，患者端一个临床词都不能有。 */
+  backLabel(backTo, backIsRoot) {
+    // TODO(human)
+  },
+
   back() {
     const s = D.SCREENS[this.cur];
+    this.dir = 'b';                 /* 这一屏从左边滑进来，读作"退回来的" */
     this.cur = this.stack.pop() || s.back || (this.care ? 'care' : 'home');
     this.draw();
   },
