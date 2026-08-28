@@ -1,0 +1,197 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<title>D · 发光的形状</title>
+<style>
+/* ── D · 发光的形状 ──────────────────────────────────────
+   直接对着她给的两张参考图做，不打折。
+
+   看清的差别：参考图的魅力不在配色，在**图形**。
+   每一个情绪都是一个有机的、会发光的形状 —— 不是圆点不是方框。
+   前三版全是版式练习（层次/材质/留白），一个「东西」都没有。
+
+   照抄的：有机形状、自发光、高饱和、大圆角、暖光晕、松的间距
+   不抄的：形状上的笑脸哭脸 —— 那会把「认出是哪个词」变成「这个词值多少」，
+          是她的硬规则。情绪的性格交给**形状本身**：
+          圆的、尖的、软的、飘的，形状说情绪，不打分。 */
+:root{
+  /* 底压暗一档，彩色才跳得出来（参考图是近黑底）。暖褐保留 */
+  --bg:#120E0C; --bg2:#1A1512;
+  --paper:#F6F0E6; --paper2:#C4B8A6; --paper3:#8E8377;
+  --hand:"STXingkai","Xingkai SC","STKaiti","Kaiti SC",KaiTi,serif;
+  --disp:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+  /* 高饱和情绪色。参考图那个程度 —— 不是我之前那种压过的 */
+  --c-warm:#F2A43C; --c-jade:#6FCFA8; --c-berry:#E2607A;
+  --c-plum:#9B7BD4; --c-sky:#6BB6E8; --c-leaf:#A8CF5A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080605;font-family:var(--disp);color:var(--paper);
+     display:flex;gap:56px;padding:56px;align-items:flex-start}
+.scr{width:390px;height:844px;position:relative;overflow:hidden;background:var(--bg);
+     background-image:radial-gradient(140% 50% at 50% -12%,#2A211A 0%,rgba(42,33,26,0) 62%);}
+.lbl{position:absolute;top:-30px;left:0;font-size:12px;letter-spacing:.18em;color:#6B6055;text-transform:uppercase}
+.pg{position:relative;z-index:2;padding:56px 26px 22px;height:100%;display:flex;flex-direction:column}
+.nav{font-size:13.5px;letter-spacing:.1em;color:var(--paper3);margin-bottom:24px}
+.h{font-size:29px;font-weight:600;line-height:1.34}
+.p{font-size:16px;line-height:1.8;color:var(--paper2);margin-top:16px}
+.ti{font-size:13px;letter-spacing:.14em;color:var(--paper3);margin-bottom:16px}
+.chev{color:var(--paper3);font-size:16px;font-weight:300}
+
+/* ── 发光的有机形状 · 这一版的核心 ────────────────────────
+   四件事凑成「会发光的东西」：
+   1 不规则的 border-radius —— 圆是几何，不规则才是有机
+   2 内部径向渐变，亮心在偏左上 —— 光是从里面出来的
+   3 外面两层 box-shadow 光晕，近的浓远的散
+   4 轻微的旋转，每个角度不同 —— 排整齐就又死了 */
+.blob{position:relative;display:flex;align-items:center;justify-content:center}
+.blob::before{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at 34% 30%, #fff5, transparent 52%),
+             radial-gradient(circle at 46% 44%, var(--c), color-mix(in oklab, var(--c) 55%, #201408) 88%);
+  box-shadow:0 0 18px -2px color-mix(in oklab, var(--c) 62%, transparent),
+             0 0 42px -6px color-mix(in oklab, var(--c) 34%, transparent),
+             inset 0 -3px 6px rgba(0,0,0,.30);}
+
+/* 六格 → 六个形状。每个形状不一样，因为每一天不一样 */
+.days{display:flex;align-items:center;gap:13px;height:60px;margin-top:4px}
+.d{width:40px;height:40px}
+/* ⚠️ 形状类不能带 .d 前缀 —— 带了 .pkm/.mark 就选不中，形状会掉回方块。
+   圆角值也从 58/42 那种保守值推到 72/28：差 8 个点看起来还是圆，
+   差 44 个点才读作「有机」。每个还带一点旋转，排整齐就又死了。 */
+.s1{border-radius:72% 28% 56% 44% / 46% 68% 32% 54%;transform:rotate(-9deg)}
+.s2{border-radius:34% 66% 40% 60% / 62% 38% 62% 38%;transform:rotate(13deg)}
+.s3{border-radius:58% 42% 70% 30% / 34% 64% 36% 66%;transform:rotate(-17deg)}
+.s4{border-radius:44% 56% 32% 68% / 68% 36% 64% 32%;transform:rotate(7deg)}
+.d.s4{width:47px;height:47px}
+.d.e{border:1.5px dashed rgba(246,240,230,.16);border-radius:50% 50% 46% 54% / 52% 48% 52% 48%}
+.d.e::before{display:none}
+
+/* 滋味卡：一个大的发光形状，不是一张卡片。
+   参考图那只玻璃球里的东西是主角，容器几乎看不见 */
+.taste{margin-top:6px;padding:30px 26px 32px;border-radius:26px;position:relative;overflow:hidden;
+  background:radial-gradient(88% 120% at 16% 0%, rgba(226,96,122,.22), transparent 66%), #1C1512;}
+/* 缩进容器内：上一版 right/top 是负值，被 overflow:hidden 切成半圆，
+   看起来像个被裁掉的球而不是一个完整的东西 */
+.tglow{position:absolute;right:22px;top:26px;width:118px;height:118px;
+  border-radius:66% 34% 52% 48% / 40% 62% 38% 60%;transform:rotate(-12deg);
+  background:radial-gradient(circle at 36% 32%, #fff6, transparent 50%),
+             radial-gradient(circle at 46% 46%, var(--c-berry), #6B1F31 86%);
+  box-shadow:0 0 46px -4px rgba(226,96,122,.55), 0 0 96px -14px rgba(226,96,122,.32);}
+.food{font-family:var(--hand);font-size:44px;color:#FFD9A0;letter-spacing:.06em;
+      position:relative;z-index:2;line-height:1.2}
+.fsub{font-size:13.5px;color:var(--paper3);letter-spacing:.14em;position:relative;z-index:2;
+      margin-bottom:8px}
+
+/* 入口行：大圆角，松，无边框 */
+.row{display:flex;justify-content:space-between;align-items:center;
+     padding:17px 20px;font-size:16.5px;color:var(--paper2);
+     background:rgba(246,240,230,.035);border-radius:18px;margin-top:10px}
+
+/* 一起坐着：暖光的一块 */
+.field{margin-top:22px;padding:20px 22px;border-radius:22px;position:relative;overflow:hidden;
+  background:radial-gradient(120% 140% at 88% 10%, rgba(111,207,168,.16), transparent 64%),
+             rgba(246,240,230,.035);}
+.field .t{font-family:var(--hand);font-size:19px;letter-spacing:.05em}
+.field .n{font-size:14px;color:var(--c-jade);margin-top:10px;letter-spacing:.06em}
+
+/* 主操作：整块在发暖光。参考图 2 的语言 —— 光从里面透出来 */
+.act{margin-top:auto;padding:24px;border-radius:24px;text-align:center;
+     font-size:19px;letter-spacing:.02em;position:relative;overflow:hidden;
+  background:radial-gradient(120% 160% at 50% -20%, rgba(242,164,60,.30), transparent 66%),
+             rgba(242,164,60,.07);
+  box-shadow:0 0 34px -10px rgba(242,164,60,.34), inset 0 1px 0 rgba(255,220,170,.20);}
+.sub{padding:16px 20px;font-size:15px;color:var(--paper3);
+     display:flex;justify-content:space-between;align-items:center}
+.foot{display:flex;justify-content:space-between;margin-top:6px;padding-top:16px;
+      border-top:1px solid rgba(246,240,230,.06);font-size:14px;color:#E08A64}
+
+/* mine：三个选项 = 三个不同形状的发光体，从小到大 —— 
+   形状说分量，不用文字说 */
+.opts{display:flex;flex-direction:column;gap:14px;margin-top:auto}
+.opt{display:flex;align-items:center;gap:18px;padding:18px 22px;border-radius:22px;
+     background:rgba(246,240,230,.035);font-size:17.5px}
+.mark{width:30px;height:30px;flex:none}
+.m1{border-radius:70% 30% 58% 42% / 44% 68% 32% 56%;transform:rotate(-9deg)}
+.m2{border-radius:34% 66% 44% 56% / 60% 38% 62% 40%;transform:rotate(12deg);width:38px;height:38px}
+.m3{border-radius:62% 38% 30% 70% / 36% 66% 34% 64%;transform:rotate(-7deg);width:46px;height:46px}
+.quiet{padding:16px 22px;font-size:15px;color:var(--paper3);
+       display:flex;justify-content:space-between}
+
+/* empty：五支口味 = 五个温度不同的发光形状 */
+.picks{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.pk{flex:1 1 calc(50% - 6px);border-radius:24px;padding:22px 18px;font-size:16.5px;
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    background:rgba(246,240,230,.03)}
+.pkm{width:46px;height:46px;flex:none}
+.pk.wide{flex:1 1 100%;flex-direction:row;justify-content:center;gap:14px;padding:18px;
+         font-size:15.5px;color:var(--paper3);background:none;
+         border:1px solid rgba(246,240,230,.08)}
+/* 潮水：一片会呼吸的暖光，不是线 */
+.tide{position:absolute;left:-20%;right:-20%;bottom:-14%;height:46%;z-index:0;
+  border-radius:50% 50% 0 0 / 62% 62% 0 0;
+  background:radial-gradient(70% 100% at 50% 100%, rgba(111,207,168,.13), transparent 68%);}
+</style></head><body>
+
+<!-- ══ home ══ -->
+<div class="scr"><div class="lbl">home</div><div class="pg">
+  <div class="taste">
+    <div class="tglow"></div>
+    <div class="fsub">今天的滋味</div>
+    <div class="food">草莓</div>
+  </div>
+
+  <div style="margin-top:30px">
+    <div class="ti">今天怎么样</div>
+    <div class="days">
+      <div class="blob d s1" style="--c:var(--c-warm)"></div>
+      <div class="blob d s2" style="--c:var(--c-jade)"></div>
+      <div class="blob d s3" style="--c:var(--c-plum)"></div>
+      <div class="blob d s4" style="--c:var(--c-berry)"></div>
+      <div class="d e"></div><div class="d e"></div>
+    </div>
+    <div class="row">情绪瓶子<span class="chev">›</span></div>
+    <div class="row">昨晚睡得怎么样<span class="chev">›</span></div>
+    <div class="row">找个人说说话<span class="chev">›</span></div>
+  </div>
+
+  <div class="field">
+    <div class="t">20:30 · 十五分钟 · 一起坐着</div>
+    <div class="n">此刻 23 人在</div>
+  </div>
+
+  <div class="act">我现在不太好</div>
+  <div class="sub">试试含一口水，慢慢感受<span class="chev">›</span></div>
+  <div class="foot"><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+</div></div>
+
+<!-- ══ mine ══ -->
+<div class="scr"><div class="lbl">mine</div>
+  <div class="tide" style="height:34%"></div>
+  <div class="pg">
+  <div class="nav">← 今天</div>
+  <div class="h">你来了。</div>
+  <div class="opts">
+    <div class="opt"><div class="blob mark m1" style="--c:var(--c-sky)"></div>很想吃</div>
+    <div class="opt"><div class="blob mark m2" style="--c:var(--c-warm)"></div>正在吃</div>
+    <div class="opt"><div class="blob mark m3" style="--c:var(--c-berry)"></div>吃完了</div>
+    <div class="quiet">吃不下 · 说不上来<span class="chev">›</span></div>
+  </div>
+</div></div>
+
+<!-- ══ empty ══ -->
+<div class="scr"><div class="lbl">empty</div>
+  <div class="tide"></div>
+  <div class="pg">
+  <div class="nav">← 返回</div>
+  <div class="h">饿了。</div>
+  <div class="p">太久没吃东西，饿的感觉会像潮水一样涨起来。</div>
+  <div style="margin-top:auto">
+    <div class="ti">想吃点什么样的</div>
+    <div class="picks">
+      <div class="pk"><div class="blob pkm s1" style="--c:var(--c-warm)"></div>热乎乎的</div>
+      <div class="pk"><div class="blob pkm s2" style="--c:var(--c-sky)"></div>冰冰凉的</div>
+      <div class="pk"><div class="blob pkm s3" style="--c:var(--c-leaf)"></div>软的、好咽的</div>
+      <div class="pk"><div class="blob pkm s4" style="--c:var(--c-plum)"></div>有嚼头的</div>
+      <div class="pk wide">说不上来</div>
+    </div>
+    <div class="sub" style="padding:18px 4px 0">下一餐怎么吃<span class="chev">›</span></div>
+  </div>
+</div></div>
+</body></html>

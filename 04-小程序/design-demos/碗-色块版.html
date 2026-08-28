@@ -1,0 +1,151 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>碗 · 色块版</title>
+<style>
+:root{--paper:#F4EDE3;--paper2:#C8BCAA;--paper3:#8B8073;--brass:#C9A063;
+      --body:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+      --hand:"STXingkai","STKaiti",KaiTi,serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0806;font-family:var(--body);color:var(--paper);padding:44px;
+     -webkit-font-smoothing:antialiased}
+h1{font-size:21px;font-weight:600;margin:0 0 5px}
+.n{font-size:13px;color:var(--paper3);margin:0 0 30px}
+.grid{display:flex;gap:28px;flex-wrap:wrap}
+.cell{width:340px}
+.stage{height:290px;border-radius:18px;background:#0C0906;border:1px solid #241e18;
+       position:relative;overflow:hidden}
+.stage::before{content:'';position:absolute;left:50%;top:36px;transform:translateX(-50%);
+  width:300px;height:180px;border-radius:50%;filter:blur(46px);
+  background:radial-gradient(circle,#F0BE6a52 0%,#D08A4a28 46%,transparent 76%)}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.t{font-size:14px;color:var(--brass);padding:13px 2px 3px;font-weight:500}
+.d{font-size:12.5px;color:var(--paper2);line-height:1.6}
+.d em{color:var(--paper3);font-style:normal;font-size:11.5px}
+/* 旧版才有的贴纸描边，用来对照"脏"从哪来 */
+.old{filter:drop-shadow(1.6px 0 0 #EFE3C8) drop-shadow(-1.6px 0 0 #EFE3C8)
+            drop-shadow(0 1.6px 0 #EFE3C8) drop-shadow(0 -1.6px 0 #EFE3C8)
+            drop-shadow(0 5px 7px #00000088)}
+</style>
+
+<h1>碗改成色块</h1>
+<p class=n>这套语言全是块，之前却用细线画碗 —— 细线 ＋ 暗底 ＋ 描边 ＋ 颗粒 = 毛边 = 脏</p>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <filter id="dust" x="-10%" y="-10%" width="120%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="11" result="n"/>
+    <feColorMatrix in="n" type="saturate" values="0" result="ng"/>
+    <feComponentTransfer in="ng" result="nc">
+      <feFuncA type="discrete" tableValues="0 0 0 0 .35 .7 1"/>
+    </feComponentTransfer>
+    <feComposite in="SourceGraphic" in2="nc" operator="in"/>
+  </filter>
+
+  <!-- 碗身：一整块。上缘是碗口椭圆的后半，下缘是碗底的弧 —— 闭合的块，不是两道线 -->
+  <path id="bowlBody" d="M72 118
+      C74 182, 124 218, 172 216 C224 214, 266 176, 268 112
+      A98 26 0 0 0 72 118 Z"/>
+  <!-- 碗口内壁：深一档，让碗有厚度和深浅 -->
+  <ellipse id="bowlIn" cx="170" cy="116" rx="90" ry="22"/>
+  <!-- 碗沿一道靛蓝带：老式瓷碗那道釉线，色块不是线 -->
+  <path id="rimBand" d="M80 128 C104 142, 238 140, 262 124
+      C258 133, 244 141, 226 146 C196 154, 142 154, 112 146 C94 141, 82 135, 80 128 Z"/>
+  <!-- 蛋羹：三摊 -->
+  <path id="e1" d="M96 116 C92 100, 116 90, 154 88 C198 85, 240 93, 244 108
+                   C248 124, 224 134, 184 137 C138 140, 100 132, 96 116 Z"/>
+  <path id="e2" d="M116 112 C113 101, 134 94, 164 93 C194 92, 214 97, 217 107
+                   C220 117, 200 124, 170 125 C138 126, 119 121, 116 112 Z"/>
+  <path id="e3" d="M192 120 C206 114, 230 114, 238 121 C244 129, 228 136, 206 136
+                   C190 136, 184 127, 192 120 Z"/>
+  <!-- 勺子：也是块 -->
+  <g id="spoonBlock">
+    <path d="M236 96 L292 60 L297 68 L241 104 Z" fill="#CFC2A6"/>
+    <ellipse cx="228" cy="102" rx="16" ry="11" fill="#DED2B8" transform="rotate(-32 228 102)"/>
+    <ellipse cx="226" cy="101" rx="9.5" ry="6" fill="#B7A88C" transform="rotate(-32 226 101)"/>
+  </g>
+  <g id="bits">
+    <rect x="140" y="102" width="9" height="5" rx="1" fill="#8CAE7A" transform="rotate(-12 144 104)"/>
+    <rect x="182" y="114" width="7" height="4.5" rx="1" fill="#7C9E6C" transform="rotate(20 185 116)"/>
+    <rect x="212" y="99" width="8" height="4.5" rx="1" fill="#8CAE7A" transform="rotate(-8 216 101)"/>
+    <circle cx="162" cy="121" r="2.4" fill="#7C9E6C"/>
+    <ellipse cx="126" cy="124" rx="7" ry="3.4" fill="#8A5F3A" opacity=".85"/>
+  </g>
+  <g id="geo">
+    <path d="M38 200 h30 v20 h26 v20 h-56 v-20 h-26 z" fill="#C87A4A" opacity=".4"/>
+    <path d="M296 158 A20 20 0 1 1 296 198" fill="none" stroke="#C9563C" stroke-width="2.4"
+          stroke-linecap="round" opacity=".5"/>
+    <g fill="#A2957F" opacity=".46">
+      <circle cx="46" cy="84" r="2"/><circle cx="46" cy="93" r="2"/><circle cx="46" cy="102" r="2"/>
+    </g>
+  </g>
+  <!-- 旧版：线画的碗 -->
+  <g id="bowlLines">
+    <path d="M72 122 C74 182, 124 216, 172 214 C224 212, 266 174, 268 116"
+          fill="none" stroke="#E0CFAE" stroke-width="3" stroke-linecap="round" opacity=".78"/>
+    <path d="M85 107 C118 96, 244 94, 266 105"
+          fill="none" stroke="#BCAE92" stroke-width="1.6" stroke-linecap="round" opacity=".4"/>
+    <path d="M80 136 C104 146, 240 144, 262 134"
+          fill="none" stroke="#3E6488" stroke-width="2.6" stroke-linecap="round" opacity=".72"/>
+  </g>
+</defs>
+</svg>
+
+<div class=grid>
+
+<!-- ① 旧：线 + 描边 -->
+<div class=cell>
+  <div class=stage><svg viewBox="0 0 340 290">
+    <use href="#geo"/>
+    <g class=old>
+      <use href="#e1" fill="#D9BC7E"/><use href="#e2" fill="#F0DFA8"/><use href="#e3" fill="#C4A05C"/>
+      <g filter="url(#dust)" opacity=".5">
+        <use href="#e1" fill="#FFF8E2"/><use href="#e2" fill="#FFFDF2"/>
+      </g>
+      <use href="#bits"/><use href="#bowlLines"/>
+    </g>
+  </svg></div>
+  <div class=t>① 旧 · 线画碗 ＋ 贴纸描边</div>
+  <div class=d>脏在这儿：<em>细线本身只有 1.6–3px，四向描边又往外糊 1.6px，再叠颗粒 —— 线的边缘全是毛的。暗底放大了这个毛边。</em></div>
+</div>
+
+<!-- ② 色块碗，无描边 -->
+<div class=cell>
+  <div class=stage><svg viewBox="0 0 340 290">
+    <use href="#geo"/>
+    <g filter="url(#dust)" opacity=".92"><use href="#bowlBody" fill="#D6CAB2"/></g>
+    <use href="#bowlBody" fill="#D6CAB2" opacity=".82"/>
+    <use href="#bowlIn" fill="#A99C82"/>
+    <use href="#rimBand" fill="#3E6488" opacity=".62"/>
+    <use href="#e1" fill="#E4C886"/><use href="#e2" fill="#F6E7B2"/><use href="#e3" fill="#CBA85E"/>
+    <g filter="url(#dust)" opacity=".45">
+      <use href="#e1" fill="#FFF8E2"/><use href="#e2" fill="#FFFDF2"/>
+    </g>
+    <use href="#bits"/>
+    <use href="#spoonBlock"/>
+  </svg></div>
+  <div class=t>② 色块碗 · 无描边</div>
+  <div class=d>碗是一整块，碗内壁深一档做厚度，碗沿一道靛蓝色带（不是线）。<em>全部是块，边界由块自己决定，没有毛边。勺子也改成块。</em></div>
+</div>
+
+<!-- ③ 色块碗 + 极轻描边 -->
+<div class=cell>
+  <div class=stage><svg viewBox="0 0 340 290">
+    <use href="#geo"/>
+    <g style="filter:drop-shadow(0 6px 9px #00000090)">
+      <use href="#bowlBody" fill="#D6CAB2"/>
+      <use href="#bowlIn" fill="#A99C82"/>
+      <use href="#rimBand" fill="#3E6488" opacity=".62"/>
+      <use href="#e1" fill="#E4C886"/><use href="#e2" fill="#F6E7B2"/><use href="#e3" fill="#CBA85E"/>
+      <g filter="url(#dust)" opacity=".45">
+        <use href="#e1" fill="#FFF8E2"/><use href="#e2" fill="#FFFDF2"/>
+      </g>
+      <g filter="url(#dust)" opacity=".3"><use href="#bowlBody" fill="#FFFBEE"/></g>
+      <use href="#bits"/>
+      <use href="#spoonBlock"/>
+    </g>
+  </svg></div>
+  <div class=t>③ 色块碗 ＋ 落影，无描边</div>
+  <div class=d>只保留落影给厚度，描边全去掉。<em>碗身也洒一层亮颗粒，和蛋羹同一套质感语言。</em></div>
+</div>
+
+</div>
+</html>

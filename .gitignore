@@ -17,3 +17,19 @@ node_modules/
 .env
 *.key
 **/secrets.json
+
+# 改前留的一手，不是项目的一部分
+*.bak
+.bak-*/
+
+# 设计预览的截图产物，11M。hb.mjs / preview.mjs 跑一次就重生成，
+# 和上面 .sync-mp/out 是同一类东西。
+04-小程序/design-demos/hb-out/
+04-小程序/design-demos/preview-out/
+# card-gen.mjs 生成的 30 个 SVG，源是 card-gen.mjs 里的 SPEC
+04-小程序/design-demos/cards/
+
+# 设计探索的渲染截图。源就在旁边的同名 .html，跑一次就重出，没必要占 10M 仓库
+04-小程序/design-demos/*.png
+# 历次调试留下的临时探针（对比页、量尺寸的小页面），不是设计稿
+04-小程序/design-demos/_*

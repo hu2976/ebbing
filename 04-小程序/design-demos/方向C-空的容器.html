@@ -1,0 +1,186 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>退潮 · 方向C · 空的容器</title>
+<style>
+:root{
+  --n1:#151109; --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#8B8073;
+  --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+  --body:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+  --hand:"STXingkai","STKaiti",KaiTi,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0907;font-family:var(--body);color:var(--paper);
+     display:flex;gap:52px;padding:56px;align-items:flex-start;flex-wrap:wrap;
+     -webkit-font-smoothing:antialiased}
+.lab{position:fixed;top:0;left:0;right:0;padding:13px 56px;background:#0b0907ee;
+     border-bottom:1px solid #221c15;font-size:13px;color:var(--paper3);z-index:9;
+     letter-spacing:.04em;backdrop-filter:blur(8px)}
+.lab b{color:var(--brass);font-weight:500}
+.wrap{margin-top:46px}
+.cap{font-size:12.5px;color:var(--paper3);padding:11px 2px 0;letter-spacing:.05em}
+.ph{width:390px;height:844px;border-radius:44px;position:relative;overflow:hidden;
+    border:1px solid #262019;box-shadow:0 30px 70px #0007;
+    /* 暗室：光只有一处，从罐子来 */
+    background:radial-gradient(150% 74% at 50% 40%,#231a12 0%,#171208 46%,#0f0c07 100%)}
+
+/* ══ 原研哉「空」：容器本身不表达任何东西，它的价值在于能容纳一切 ══
+   这和产品第一原则同构——不预设她是谁，颜色只用来认出不用来评价。
+   手法：一个器物、一盏光、70% 留白。所有 UI 退成极淡的字，无框无卡片无箭头。 */
+
+.in{position:relative;height:100%;padding:56px 34px 30px;display:flex;flex-direction:column}
+.day{text-align:center;font-size:10.5px;letter-spacing:.42em;color:var(--paper3);
+     opacity:.72;text-indent:.42em}
+
+/* 器物：磨砂玻璃罐，光从内部透出来 */
+.vessel{position:relative;height:376px;margin:26px 0 0}
+.glow{position:absolute;left:50%;top:96px;transform:translateX(-50%);
+      width:300px;height:300px;border-radius:50%;
+      background:radial-gradient(circle,#E8B36C55 0%,#C9885033 34%,transparent 68%);
+      filter:blur(22px)}
+.jar{position:absolute;left:50%;top:52px;transform:translateX(-50%);
+     width:196px;height:240px;border-radius:20px 20px 84px 84px;
+     background:linear-gradient(175deg,rgba(255,244,228,.10),rgba(255,238,214,.045) 42%,rgba(255,236,208,.075));
+     border:1px solid rgba(255,240,220,.13);
+     box-shadow:inset 0 3px 22px rgba(255,240,220,.14),
+                inset 0 -18px 40px rgba(200,140,80,.16),
+                0 22px 60px #00000099;
+     backdrop-filter:blur(3px);overflow:hidden}
+/* 罐口 */
+.lid{position:absolute;left:50%;top:34px;transform:translateX(-50%);
+     width:112px;height:20px;border-radius:7px;
+     background:linear-gradient(180deg,rgba(255,244,228,.16),rgba(255,238,214,.07));
+     border:1px solid rgba(255,240,220,.14)}
+/* 里面：不是彩色珠子，是暖光的团 —— 每一团是一天，亮度是那天的一致度 */
+.lum{position:absolute;border-radius:50%;
+     background:radial-gradient(circle at 38% 34%,#FFE9B8,#E8B36C 44%,#B87D3E 78%);
+     box-shadow:0 0 20px #E8B36C88,0 0 40px #C9885044}
+.frost{position:absolute;inset:0;
+       background:linear-gradient(180deg,rgba(255,248,235,.07),transparent 30%,rgba(255,240,220,.05))}
+
+/* 今天的滋味：不做卡片，只是光下面的一个名字 */
+.taste{text-align:center;margin:2px 0 0}
+.taste .lbl{font-size:10.5px;letter-spacing:.34em;color:var(--paper2);opacity:.95;text-indent:.34em}
+.taste .w{font-family:var(--hand);font-size:40px;color:#F0D9AE;line-height:1.2;margin:9px 0 0;
+          text-shadow:0 0 26px #C9A06355}
+
+.spacer{flex:1}
+
+/* 入口：只有字。分组靠距离，不靠线也不靠箭头 —— 亲密性做到底 */
+.ways{text-align:center;padding:0 0 4px}
+.ways a{display:block;font-size:16px;color:var(--paper2);padding:11px 0;
+        letter-spacing:.05em;text-decoration:none}
+.ways a:nth-child(1){padding-top:0}
+.now{text-align:center;font-size:12.5px;color:var(--jade);opacity:.82;
+     letter-spacing:.06em;padding:16px 0 0}
+
+/* 主入口：一行字 + 一条光。不是按钮，是一个开口 */
+.main{text-align:center;margin:26px 0 0}
+.main .t{font-size:23px;color:#FFF2E0;letter-spacing:.1em}
+.main .ln{width:132px;height:1px;margin:15px auto 0;
+          background:linear-gradient(90deg,transparent,#C9A063,transparent)}
+.main .s{font-size:13.5px;color:var(--paper3);margin:14px 0 0;letter-spacing:.03em}
+
+.foot{display:flex;justify-content:center;gap:30px;padding:24px 0 0}
+.foot span{font-size:13px;color:var(--clay);opacity:.74;letter-spacing:.03em}
+
+/* ══ 第二屏 ══ */
+.bk{font-size:12.5px;color:var(--paper3);letter-spacing:.1em;opacity:.7}
+.h2{text-align:center;font-size:25px;font-weight:400;letter-spacing:.16em;
+    margin:30px 0 0;text-indent:.16em}
+.mon{text-align:center;font-size:10.5px;letter-spacing:.4em;color:var(--brass);
+     opacity:.8;margin:10px 0 0;text-indent:.4em}
+.bigv{position:relative;height:412px;margin:12px 0 0}
+.bglow{position:absolute;left:50%;top:104px;transform:translateX(-50%);
+       width:340px;height:330px;border-radius:50%;
+       background:radial-gradient(circle,#E8B36C4d 0%,#C9885030 36%,transparent 70%);filter:blur(26px)}
+.bjar{position:absolute;left:50%;top:56px;transform:translateX(-50%);
+      width:228px;height:306px;border-radius:22px 22px 96px 96px;
+      background:linear-gradient(175deg,rgba(255,244,228,.10),rgba(255,238,214,.04) 42%,rgba(255,236,208,.08));
+      border:1px solid rgba(255,240,220,.13);
+      box-shadow:inset 0 3px 24px rgba(255,240,220,.14),
+                 inset 0 -20px 44px rgba(200,140,80,.17),0 24px 64px #0009;
+      backdrop-filter:blur(3px);overflow:hidden}
+.blid{position:absolute;left:50%;top:36px;transform:translateX(-50%);width:126px;height:22px;
+      border-radius:8px;background:linear-gradient(180deg,rgba(255,244,228,.16),rgba(255,238,214,.06));
+      border:1px solid rgba(255,240,220,.14)}
+.note{text-align:center;padding:16px 10px 0}
+.note p{font-size:16px;line-height:1.85;color:var(--paper);opacity:.94}
+.note p+p{color:var(--paper2);font-size:14px;opacity:.8}
+.quote{font-family:var(--hand);font-size:18px;color:var(--brass);text-align:center;
+       margin:20px 0 0;line-height:1.7;opacity:.9}
+</style>
+
+<div class=lab>方向 <b>C</b> · 空的容器　<span style="color:#5a5147">｜最佳设计师：原研哉／无印良品「空」的哲学 —— 容器不表达任何东西，价值在于能容纳一切</span></div>
+
+<div class=wrap>
+<div class=ph>
+  <div class=in>
+    <div class=day>八月廿七</div>
+    <div class=vessel>
+      <div class=glow></div>
+      <div class=lid></div>
+      <div class=jar>
+        <div class=frost></div>
+        <div class=lum style="left:34px;bottom:24px;width:46px;height:46px"></div>
+        <div class=lum style="left:86px;bottom:18px;width:40px;height:40px;opacity:.82"></div>
+        <div class=lum style="left:130px;bottom:26px;width:44px;height:44px;opacity:.92"></div>
+        <div class=lum style="left:58px;bottom:66px;width:38px;height:38px;opacity:.7"></div>
+        <div class=lum style="left:104px;bottom:60px;width:34px;height:34px;opacity:.88"></div>
+        <div class=lum style="left:76px;bottom:102px;width:30px;height:30px;opacity:.6"></div>
+        <div class=lum style="left:118px;bottom:98px;width:26px;height:26px;opacity:.75"></div>
+      </div>
+    </div>
+    <div class=taste>
+      <div class=lbl>今天的滋味</div>
+      <div class=w>蒸蛋</div>
+    </div>
+    <div class=spacer></div>
+    <div class=ways>
+      <a>今天怎么样</a>
+      <a>情绪瓶子</a>
+      <a>昨晚睡得怎么样</a>
+      <a>找个人说说话</a>
+    </div>
+    <div class=now>此刻 23 人在 · 20:30 一起坐着</div>
+    <div class=main>
+      <div class=t>我现在不太好</div>
+      <div class=ln></div>
+      <div class=s>试试含一口水，慢慢感受</div>
+    </div>
+    <div class=foot><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+  </div>
+</div>
+<div class=cap>首页 · 一个器物、一盏光、七成留白。入口只有字，没有框和箭头</div>
+</div>
+
+<div class=wrap>
+<div class=ph>
+  <div class=in>
+    <div class=bk>← 返回</div>
+    <div class=h2>情绪瓶子</div>
+    <div class=mon>八月</div>
+    <div class=bigv>
+      <div class=bglow></div>
+      <div class=blid></div>
+      <div class=bjar>
+        <div class=frost></div>
+        <div class=lum style="left:38px;bottom:26px;width:52px;height:52px"></div>
+        <div class=lum style="left:98px;bottom:20px;width:46px;height:46px;opacity:.85"></div>
+        <div class=lum style="left:150px;bottom:28px;width:48px;height:48px;opacity:.95"></div>
+        <div class=lum style="left:64px;bottom:74px;width:42px;height:42px;opacity:.72"></div>
+        <div class=lum style="left:116px;bottom:68px;width:38px;height:38px;opacity:.9"></div>
+        <div class=lum style="left:160px;bottom:80px;width:34px;height:34px;opacity:.66"></div>
+        <div class=lum style="left:86px;bottom:114px;width:34px;height:34px;opacity:.8"></div>
+        <div class=lum style="left:130px;bottom:110px;width:28px;height:28px;opacity:.6"></div>
+        <div class=lum style="left:106px;bottom:150px;width:24px;height:24px;opacity:.5"></div>
+      </div>
+    </div>
+    <div class=note>
+      <p>颜色都不一样，都可以在这儿。</p>
+      <p>合起来才是你。</p>
+    </div>
+    <div class=quote>「满足」「踏实」多半写在一顿饭之后。</div>
+  </div>
+</div>
+<div class=cap>情绪瓶子 · 一天一团光，亮度是那天的一致度，不是分数</div>
+</div>
+</html>

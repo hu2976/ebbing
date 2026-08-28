@@ -1,0 +1,15 @@
+<svg viewBox="0 0 340 262">
+      <use href="#geo"/>
+      <g class=solid>
+        <use href="#bowlBody" fill="#D6CAB2"/>
+        <use href="#bowlIn" fill="#A99C82"/>
+        <use href="#rimBand" fill="#3E6488" opacity=".62"/>
+        <use href="#e1" fill="#E4C886"/><use href="#e2" fill="#F6E7B2"/><use href="#e3" fill="#CBA85E"/>
+        <g filter="url(#dust)" opacity=".45">
+          <use href="#e1" fill="#FFF8E2"/><use href="#e2" fill="#FFFDF2"/>
+        </g>
+        <g filter="url(#dust)" opacity=".3"><use href="#bowlBody" fill="#FFFBEE"/></g>
+        <use href="#bits"/>
+        <use href="#spoonBlock"/>
+      </g>
+    </svg>

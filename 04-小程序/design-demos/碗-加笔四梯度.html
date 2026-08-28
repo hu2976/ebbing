@@ -1,0 +1,143 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>碗 · 加笔四梯度</title>
+<style>
+:root{--paper:#F4EDE3;--paper2:#C8BCAA;--paper3:#8B8073;--brass:#C9A063;
+      --body:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+      --hand:"STXingkai","STKaiti",KaiTi,serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0806;font-family:var(--body);color:var(--paper);padding:44px;
+     -webkit-font-smoothing:antialiased}
+h1{font-size:21px;font-weight:600;margin:0 0 5px}
+.n{font-size:13px;color:var(--paper3);margin:0 0 32px}
+.grid{display:flex;gap:26px;flex-wrap:wrap}
+.cell{width:352px}
+.stage{height:280px;border-radius:18px;background:#0C0906;border:1px solid #241e18;
+       position:relative;overflow:hidden}
+.stage::before{content:'';position:absolute;left:50%;top:34px;transform:translateX(-50%);
+  width:300px;height:180px;border-radius:50%;filter:blur(46px);
+  background:radial-gradient(circle,#F0BE6a5e 0%,#D08A4a2e 46%,transparent 76%)}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.food{filter:drop-shadow(1.6px 0 0 #EFE3C8) drop-shadow(-1.6px 0 0 #EFE3C8)
+             drop-shadow(0 1.6px 0 #EFE3C8) drop-shadow(0 -1.6px 0 #EFE3C8)
+             drop-shadow(0 5px 7px #00000088)}
+.t{font-size:14px;color:var(--brass);padding:13px 2px 3px;font-weight:500}
+.d{font-size:12.5px;color:var(--paper2);line-height:1.6}
+.d em{color:var(--paper3);font-style:normal;font-size:11.5px}
+.cnt{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--paper3);
+     float:right;padding-top:15px}
+</style>
+
+<h1>碗上加几笔 · 四个梯度</h1>
+<p class=n>蛋羹和几何配重完全不动，只加碗的笔画。看加到哪一步"温暖"够了、哪一步开始过。</p>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <filter id="dust" x="-8%" y="-8%" width="116%" height="116%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="11" result="n"/>
+    <feColorMatrix in="n" type="saturate" values="0" result="ng"/>
+    <feComponentTransfer in="ng" result="nc">
+      <feFuncA type="discrete" tableValues="0 0 0 0 .35 .7 1"/>
+    </feComponentTransfer>
+    <feComposite in="SourceGraphic" in2="nc" operator="in"/>
+  </filter>
+  <path id="e1" d="M92 132 C86 110, 112 94, 152 90 C200 85, 248 95, 254 117
+                   C260 139, 234 156, 188 161 C136 166, 98 154, 92 132 Z"/>
+  <path id="e2" d="M112 126 C108 112, 130 103, 162 101 C196 99, 220 106, 224 119
+                   C228 132, 204 141, 170 143 C134 145, 116 138, 112 126 Z"/>
+  <path id="e3" d="M196 136 C212 129, 238 129, 247 138 C254 147, 236 156, 212 156
+                   C194 156, 187 145, 196 136 Z"/>
+  <!-- 蛋羹 + 葱花（四版共用，不动） -->
+  <g id="egg">
+    <use href="#e1" fill="#D9BC7E"/><use href="#e2" fill="#F0DFA8"/><use href="#e3" fill="#C4A05C"/>
+    <g filter="url(#dust)" opacity=".5">
+      <use href="#e1" fill="#FFF8E2"/><use href="#e2" fill="#FFFDF2"/><use href="#e3" fill="#FFEFC8"/>
+    </g>
+    <g filter="url(#dust)" opacity=".2" transform="translate(3,2)">
+      <use href="#e1" fill="#8A6A32"/><use href="#e2" fill="#A88A46"/>
+    </g>
+    <rect x="136" y="114" width="9" height="5" rx="1" fill="#8CAE7A" transform="rotate(-12 140 116)"/>
+    <rect x="180" y="128" width="7" height="4.5" rx="1" fill="#7C9E6C" transform="rotate(20 183 130)"/>
+    <rect x="214" y="110" width="8" height="4.5" rx="1" fill="#8CAE7A" transform="rotate(-8 218 112)"/>
+    <circle cx="160" cy="136" r="2.4" fill="#7C9E6C"/>
+    <ellipse cx="122" cy="140" rx="7" ry="3.4" fill="#8A5F3A" opacity=".8"/>
+  </g>
+  <!-- 碗的基础两笔（现状） -->
+  <g id="bowl0">
+    <path d="M74 126 C76 186, 124 220, 174 218 C226 216, 264 180, 266 120"
+          fill="none" stroke="#E0CFAE" stroke-width="3" stroke-linecap="round" opacity=".78"/>
+    <path d="M87 111 C120 100, 236 98, 259 109"
+          fill="none" stroke="#BCAE92" stroke-width="1.6" stroke-linecap="round" opacity=".4"/>
+  </g>
+  <!-- ＋碗沿双圈 ＋圈足：器物感 -->
+  <g id="bowl1">
+    <path d="M80 140 C104 150, 240 148, 261 138"
+          fill="none" stroke="#3E6488" stroke-width="2.6" stroke-linecap="round" opacity=".72"/>
+    <path d="M83 149 C106 158, 238 156, 258 147"
+          fill="none" stroke="#3E6488" stroke-width="1.2" stroke-linecap="round" opacity=".46"/>
+    <path d="M144 224 C156 228, 190 228, 202 224"
+          fill="none" stroke="#C6B597" stroke-width="2.2" stroke-linecap="round" opacity=".5"/>
+  </g>
+  <!-- ＋勺子：人用过的痕迹 -->
+  <g id="spoon">
+    <path d="M232 100 L292 62" stroke="#D8CDB8" stroke-width="4.6" stroke-linecap="round" opacity=".9"/>
+    <ellipse cx="226" cy="105" rx="15" ry="10.5" fill="#D8CDB8" opacity=".92"
+             transform="rotate(-32 226 105)"/>
+    <ellipse cx="224" cy="103" rx="9" ry="6" fill="#BEAF95" opacity=".8"
+             transform="rotate(-32 224 103)"/>
+  </g>
+  <!-- ＋碗身花纹：家常瓷碗 -->
+  <g id="pattern">
+    <g fill="none" stroke="#3E6488" stroke-width="1.5" stroke-linecap="round" opacity=".42">
+      <path d="M108 172 C114 180, 112 188, 106 194"/>
+      <path d="M132 182 C139 190, 137 199, 130 205"/>
+      <path d="M160 187 C167 195, 165 204, 158 210"/>
+      <path d="M188 186 C195 194, 193 203, 186 209"/>
+      <path d="M214 179 C221 187, 219 196, 212 202"/>
+    </g>
+    <g fill="#3E6488" opacity=".3">
+      <circle cx="120" cy="178" r="1.8"/><circle cx="146" cy="186" r="1.8"/>
+      <circle cx="174" cy="190" r="1.8"/><circle cx="201" cy="185" r="1.8"/>
+    </g>
+  </g>
+  <!-- 几何配重 -->
+  <g id="geo">
+    <path d="M40 194 h30 v20 h26 v20 h-56 v-20 h-26 z" fill="#C87A4A" opacity=".4"/>
+    <path d="M294 154 A20 20 0 1 1 294 194" fill="none" stroke="#C9563C" stroke-width="2.4"
+          stroke-linecap="round" opacity=".5"/>
+    <g fill="#A2957F" opacity=".46">
+      <circle cx="48" cy="80" r="2"/><circle cx="48" cy="89" r="2"/><circle cx="48" cy="98" r="2"/>
+    </g>
+  </g>
+</defs>
+</svg>
+
+<div class=grid id=g></div>
+
+<script>
+const V=[
+ ['① 现状 · 2 笔','',
+  '碗只有下沿一道弧＋碗口一道细弧。<em>形是对的，但读起来是"一个碗的示意"，不是"家里那只碗"。</em>','2'],
+ ['② ＋碗沿双圈 ＋圈足','bowl1',
+  '碗沿一粗一细两道靛蓝圈，碗底一道短弧当圈足。<em>器物感——参考图 NO.018 叉烧饭那只碗就是这两道圈，一眼老式瓷碗。圈足让它落在桌上而不是浮着。</em>','5'],
+ ['③ ＋一把勺子','bowl1 spoon',
+  '勺子斜搭在碗沿上。<em>人用过的痕迹——鱼那张参考图有一把金勺，整张图的人味大半来自它。这是四步里"温暖"涨得最多的一笔。</em>','8'],
+ ['④ ＋碗身花纹','bowl1 spoon pattern',
+  '碗身五笔缠枝＋四个点，暗示青花。<em>家常。但也开始"满"了——花纹和蛋羹的颗粒会抢，注意别让碗比里面的东西更抢眼。</em>','17'],
+];
+document.getElementById('g').innerHTML = V.map(([t,extra,d,c])=>`
+<div class=cell>
+  <div class=stage>
+    <svg viewBox="0 0 340 280">
+      <use href="#geo"/>
+      <g class=food>
+        <use href="#egg"/>
+        <use href="#bowl0"/>
+        ${extra.split(' ').filter(Boolean).map(id=>`<use href="#${id}"/>`).join('')}
+      </g>
+    </svg>
+  </div>
+  <div class=t>${t}<span class=cnt>${c} 笔</span></div>
+  <div class=d>${d}</div>
+</div>`).join('');
+</script>
+</html>

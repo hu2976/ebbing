@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>新丙 · 暗里的光</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   方向丙 · 暗里的光
+
+   温馨从哪来：从「暖光落在冷水上」来——这是你在 E-退潮 里写下的原话。
+   母题也照用你写的那句：潮水退去之后，滩涂上留下一个个小水洼，
+   每一个都映着岸上的灯。那就是一次记录：发作过去了，留下的那点东西，还亮着。
+
+   这一版有一个明确的代价，先说清楚：**它放弃插画。**
+   你自己验证过深底让色块拼贴的颗粒彻底失效，所以那 30 张插画在这版用不上。
+   换来的是光——食物名本身是光源，六次记录是六个映着灯的水洼。
+   如果你觉得插画不能丢，这版就该被否掉，这是它和甲乙的分水岭。
+
+   骨架和甲乙都不同：不是栏、不是页，是暗场里的几个发光点。
+   元素极少、留白极大、垂直居中，一屏只有一个视觉锚。
+
+   不用霓虹边框、不用单色发光块——那是「深蓝底 + 青紫 glow」那类偷懒解。
+   这里的光只有两个颜色，且都是氛围光：黄铜是岸上的灯，青玉是水。
+   ══════════════════════════════════════════════════════════════ */
+
+:root{
+  --n:#12100E;
+  --fg:#EBE1D2;
+  --fg2:#93887A;
+  --fg3:#645B4F;
+  --lamp:#C9A063;         /* 岸上的灯 —— 唯一的光源 */
+  --water:#8CC1AA;        /* 水 */
+  --clay:#CB7E62;         /* 只给急救线 */
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC",sans-serif;
+  --hand:"STXingkai","Xingkai SC","STKaiti","Kaiti SC",KaiTi,serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{ background:#0A0908; color:var(--fg); font-family:var(--sans);
+      padding:56px 40px 90px; -webkit-font-smoothing:antialiased; }
+.hd{ max-width:860px; margin:0 auto 46px; }
+.hd h1{ font-size:26px; font-weight:600; }
+.hd .sub{ color:var(--fg2); font-size:14.5px; line-height:1.8; margin-top:12px; }
+.hd .sub b{ color:var(--lamp); font-weight:500; }
+.hd .cost{ color:var(--clay); }
+.rail{ display:flex; gap:30px; justify-content:center; flex-wrap:wrap; }
+.unit{ width:390px; }
+.unit > figcaption{ font-family:var(--mono); font-size:11.5px; color:var(--fg3);
+                    margin-top:12px; letter-spacing:.04em; }
+
+/* ── 一屏 ─────────────────────────────────────────────────── */
+.scr{
+  width:390px; height:844px; border-radius:38px; overflow:hidden;
+  position:relative; background:var(--n);
+  display:flex; flex-direction:column; padding:74px 32px 32px;
+}
+/* 岸上的灯在右上，水在左下。底自己有起伏，不是纯色。 */
+.scr::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(78% 44% at 88% -4%, rgba(201,160,99,.16),  transparent 64%),
+    radial-gradient(90% 46% at 2% 104%, rgba(140,193,170,.085), transparent 66%);
+}
+.scr > *{ position:relative; z-index:1 }
+
+.top{ display:flex; justify-content:space-between; align-items:baseline; flex:none;
+      font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--fg3); }
+
+/* ── 今天这一颗：一个正在亮着的水洼，食物名在它旁边 ──────────
+   首页的视觉锚不是一张卡，是一个器物。 */
+.today{ display:flex; align-items:center; gap:22px; flex:none; }
+.pool{
+  width:126px; height:46px; flex:none; position:relative;
+  /* 水洼要扁 —— 上一版做成 104×72 又带内高光，读成了一颗鹅卵石／煮蛋。
+     水摊在地上是薄的，没有体积；边界要软，靠模糊不靠描边。 */
+  border-radius:54% 46% 48% 52% / 76% 82% 18% 24%;
+  background:
+    linear-gradient(168deg, rgba(140,193,170,.16) 0%, rgba(28,36,36,.44) 74%);
+  box-shadow:0 0 26px -10px rgba(201,160,99,.22);
+  filter:blur(.3px);
+}
+/* 灯在水里的倒影：一道被水面拉长的光。水洼的「亮」全靠这一道，
+   不靠给整个形状打内高光——那会立刻变成实心的球。 */
+.pool::after{
+  content:""; position:absolute; left:14%; top:44%; width:62%; height:4px;
+  border-radius:50%; background:linear-gradient(90deg, transparent,
+    rgba(255,238,206,.72) 34%, rgba(255,238,206,.34) 62%, transparent);
+  filter:blur(1.8px);
+}
+.today .nm{ font-family:var(--hand); font-size:46px; line-height:1.05; letter-spacing:.07em;
+            text-shadow:0 0 26px rgba(201,160,99,.34); }
+.today .lb{ font-size:11.5px; letter-spacing:.24em; color:var(--fg3); margin-bottom:7px; }
+
+/* ── 六次记录 = 六个水洼，形状各不相同 ─────────────────────── */
+.pools{ display:flex; gap:13px; align-items:center; }
+.pl{ width:42px; height:20px; flex:none; border:1px solid rgba(235,225,210,.10);
+     border-radius:54% 46% 48% 52% / 76% 82% 18% 24%; }
+.pl:nth-child(2){ border-radius:46% 54% 52% 48% / 62% 54% 46% 38% }
+.pl:nth-child(3){ border-radius:56% 44% 50% 50% / 54% 66% 34% 46% }
+.pl:nth-child(5){ border-radius:48% 52% 54% 46% / 60% 56% 44% 40% }
+.pl.on{ border-color:transparent; position:relative;
+  background:linear-gradient(168deg, color-mix(in srgb, var(--c) 46%, transparent) 0%,
+             rgba(24,30,30,.5) 78%);
+  box-shadow:0 0 14px -6px var(--c); }
+.pl.on::after{ content:""; position:absolute; left:16%; top:40%; width:58%; height:3px;
+  border-radius:50%; filter:blur(1.4px);
+  background:linear-gradient(90deg, transparent, rgba(255,240,214,.6), transparent); }
+.pl.next{ border-color:rgba(201,160,99,.42) }
+
+/* ── 字 ───────────────────────────────────────────────────── */
+.h{ font-size:33px; font-weight:600; line-height:1.34; }
+.h.sm{ font-size:23px; font-weight:600 }
+.p{ font-size:15px; line-height:1.9; color:var(--fg2) }
+.note{ font-size:12.5px; line-height:1.8; color:var(--fg3) }
+.eyebrow{ font-size:11.5px; letter-spacing:.24em; color:var(--fg3) }
+.quote{ font-family:var(--hand); font-size:20px; line-height:1.7; letter-spacing:.04em }
+.live{ font-family:var(--mono); font-size:12px; color:var(--lamp); letter-spacing:.06em }
+
+/* ── 入口：几乎只有字。光比甲更弱——这一版靠留白说话，不靠线 ── */
+.go{ display:inline-block; align-self:flex-start; font-size:16.5px; position:relative;
+     padding-bottom:8px; }
+.go::after{ content:""; position:absolute; left:0; bottom:0; height:1px; width:34px;
+  background:linear-gradient(90deg, rgba(201,160,99,.7), rgba(201,160,99,0)); }
+.go.dim{ font-size:14.5px; color:var(--fg2) }
+.go.dim::after{ background:linear-gradient(90deg, rgba(235,225,210,.24),
+                rgba(235,225,210,0)); }
+/* 主入口：一团光，字在光里。不是按钮，没有边 */
+.go.main{ font-size:28px; font-weight:600; padding:16px 26px 18px; margin-left:-26px;
+          border-radius:50% / 46%; }
+.go.main::after{ display:none }
+.go.main::before{
+  content:""; position:absolute; inset:0; z-index:-1; border-radius:50% / 46%;
+  background:radial-gradient(64% 70% at 42% 46%, rgba(201,160,99,.24) 0%,
+             rgba(201,160,99,.07) 52%, transparent 78%);
+}
+/* 三个并列的选择：一颗小水洼当标记，形状各不同 */
+.opt{ display:flex; align-items:center; gap:16px; font-size:24px; font-weight:500 }
+.opt em{ width:22px; height:15px; flex:none; font-style:normal;
+  border-radius:54% 46% 48% 52% / 76% 82% 18% 24%;
+  background:linear-gradient(168deg, color-mix(in srgb, var(--c) 52%, transparent),
+             rgba(24,30,30,.44));
+  box-shadow:0 0 11px -4px var(--c); }
+.opt:nth-child(2) em{ border-radius:46% 54% 52% 48% / 62% 54% 46% 38% }
+.opt:nth-child(3) em{ border-radius:56% 44% 50% 50% / 54% 66% 34% 46% }
+
+/* ── 涨潮：水位线从下面漫上来，水面有一道微光 ───────────────── */
+.rise{ position:absolute; left:0; right:0; bottom:0; height:250px; z-index:0;
+       pointer-events:none }
+.rise::before{                     /* 水面下：极淡 */
+  content:""; position:absolute; left:-20%; right:-20%; top:30px; bottom:-96px;
+  border-radius:50% 50% 0 0 / 74px 74px 0 0;
+  background:linear-gradient(180deg, rgba(140,193,170,.05) 0%,
+             rgba(47,72,88,.03) 52%, transparent 100%);
+}
+/* 水面那条线：中间亮两头隐 —— 灯照到的那一段。水位靠它，不靠色块 */
+.rise::after{
+  content:""; position:absolute; left:-20%; right:-20%; top:30px; height:76px;
+  border-radius:50% 50% 0 0 / 74px 74px 0 0;
+  border-top:1px solid rgba(255,240,214,.24);
+  mask-image:linear-gradient(90deg, transparent 6%, #000 28%, #000 72%, transparent 94%);
+}
+
+.spacer{ flex:1 1 auto; min-height:0 }
+.sos{ display:flex; justify-content:space-between; font-size:13px; color:var(--clay);
+      padding-top:15px; flex:none; border-top:1px solid rgba(203,126,98,.18) }
+.grp{ display:flex; flex-direction:column }
+/* mtALL */
+.mt8{margin-top:8px} .mt10{margin-top:10px} .mt12{margin-top:12px} .mt14{margin-top:14px} .mt16{margin-top:16px} .mt18{margin-top:18px} .mt20{margin-top:20px} .mt22{margin-top:22px} .mt24{margin-top:24px} .mt26{margin-top:26px} .mt28{margin-top:28px} .mt30{margin-top:30px} .mt32{margin-top:32px} .mt34{margin-top:34px} .mt36{margin-top:36px} .mt38{margin-top:38px} .mt40{margin-top:40px} .mt42{margin-top:42px} .mt44{margin-top:44px} .mt46{margin-top:46px} .mt48{margin-top:48px} .mt50{margin-top:50px} .mt52{margin-top:52px} .mt54{margin-top:54px} .mt56{margin-top:56px} .mt58{margin-top:58px} .mt60{margin-top:60px} .mt62{margin-top:62px} .mt64{margin-top:64px} .mt66{margin-top:66px} .mt68{margin-top:68px} .mt70{margin-top:70px} .mt72{margin-top:72px} .mt74{margin-top:74px} .mt76{margin-top:76px} .mt78{margin-top:78px} .mt80{margin-top:80px}
+/* gap 工具类：一次给全。上一版改间距时用了不存在的类名（g30/g26/g32），
+   CSS 里没有就静默失效、间距变成 0——三屏的行距一起塌掉，而且看不出是哪里错。 */
+.g4{gap:4px} .g6{gap:6px} .g8{gap:8px} .g10{gap:10px} .g12{gap:12px} .g14{gap:14px} .g16{gap:16px} .g18{gap:18px} .g20{gap:20px} .g22{gap:22px} .g24{gap:24px} .g26{gap:26px} .g28{gap:28px} .g30{gap:30px} .g32{gap:32px} .g34{gap:34px} .g36{gap:36px} .g38{gap:38px} .g40{gap:40px} .g42{gap:42px} .g44{gap:44px} .g46{gap:46px} .g48{gap:48px} .g50{gap:50px} .g52{gap:52px} .g54{gap:54px} .g56{gap:56px} .g58{gap:58px} .g60{gap:60px}
+
+.mt16{ margin-top:16px } .mt24{ margin-top:24px } .mt32{ margin-top:32px }
+.mt44{ margin-top:44px } .mt56{ margin-top:56px }
+</style></head><body>
+
+<div class="hd">
+  <h1>方向丙 · 暗里的光</h1>
+  <p class="sub">
+    温馨来自<b>暖光落在冷水上</b>——你在 E-退潮 里写的原话。母题也照用你那句：潮水退去后滩涂上留下小水洼，
+    每一个都映着岸上的灯；那就是一次记录，发作过去了，留下的那点东西还亮着。<br>
+    <span class="cost">这一版有明确的代价，先说清楚：它放弃插画。</span>
+    你验证过深底让色块拼贴的颗粒彻底失效，所以那 30 张图在这版用不上。换来的是光。
+    <b>插画能不能丢，就是这一版和甲乙的分水岭。</b>
+  </p>
+</div>
+
+<div class="rail">
+
+  <!-- ══ 首页 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="top"><span></span><span>八月廿七 · 夜</span></div>
+
+    <div class="today mt32">
+      <span class="pool"></span>
+      <span>
+        <div class="lb">今天的滋味</div>
+        <div class="nm">烤红薯</div>
+      </span>
+    </div>
+
+    <div class="grp g14 mt44">
+      <div class="eyebrow">今天怎么样</div>
+      <div class="pools">
+        <span class="pl on" style="--c:#C58A4E"></span>
+        <span class="pl on" style="--c:#D8B45E"></span>
+        <span class="pl on" style="--c:#7FA86A"></span>
+        <span class="pl next"></span>
+        <span class="pl"></span>
+        <span class="pl"></span>
+      </div>
+    </div>
+
+    <div class="grp g20 mt44">
+      <span class="go">情绪瓶子</span>
+      <span class="go">昨晚睡得怎么样</span>
+      <span class="go">找个人说说话</span>
+    </div>
+
+    <div class="grp g6 mt44">
+      <div class="quote">20:30 · 十五分钟 · 一起坐着</div>
+      <div class="live">此刻 23 人在 &nbsp;·&nbsp; <span style="color:var(--fg3)">那场是什么</span></div>
+    </div>
+
+    <div class="grp g14 mt32">
+      <span class="go main">我现在不太好</span>
+      <span class="go dim">试试含一口水，慢慢感受</span>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="sos"><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+  </div>
+  <figcaption>home · 视觉锚是一个亮着的水洼</figcaption>
+  </figure>
+
+  <!-- ══ 三个岔口 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="top"><span>← 今天</span><span></span></div>
+    <div class="spacer"></div>
+    <div class="h">你来了。</div>
+    <div class="grp g32 mt60">
+      <span class="opt"><em style="--c:#C58A4E"></em>很想吃</span>
+      <span class="opt"><em style="--c:#D8B45E"></em>正在吃</span>
+      <span class="opt"><em style="--c:#8CC1AA"></em>吃完了</span>
+    </div>
+    <div class="mt40"><span class="go dim">吃不下 · 说不上来</span></div>
+    <div class="spacer"></div>
+  </div>
+  <figcaption>mine · 一屏一个动作</figcaption>
+  </figure>
+
+  <!-- ══ 饿了 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="rise"></div>
+    <div class="top"><span>← 返回</span><span></span></div>
+    <div class="spacer"></div>
+    <div class="grp g14">
+      <div class="h">饿了。</div>
+      <div class="p">太久没吃东西，饿的感觉会像潮水一样涨起来。</div>
+    </div>
+    <div class="h sm mt44">想吃点什么样的？</div>
+    <div class="grp g28 mt24">
+      <span class="go" style="font-size:19px">热乎乎的</span>
+      <span class="go" style="font-size:19px">冰冰凉的</span>
+      <span class="go" style="font-size:19px">软的、好咽的</span>
+      <span class="go" style="font-size:19px">有嚼头的</span>
+      <span class="go dim" style="font-size:19px">说不上来</span>
+    </div>
+    <div class="spacer"></div>
+    <span class="go dim">下一餐怎么吃</span>
+  </div>
+  <figcaption>empty · 水位从下面漫上来</figcaption>
+  </figure>
+
+  <!-- ══ 滋味卡 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="top"><span>← 今天</span><span>NO. 001</span></div>
+    <div class="spacer"></div>
+    <div style="display:flex;justify-content:center">
+      <span class="pool" style="width:246px;height:86px"></span>
+    </div>
+    <div class="grp g14 mt44" style="text-align:center">
+      <div class="nm" style="font-family:var(--hand);font-size:56px;letter-spacing:.08em;
+           text-shadow:0 0 34px rgba(201,160,99,.34)">烤红薯</div>
+    </div>
+    <div class="p mt24" style="text-align:center">
+      皮焦得裂开一道口子，里面是橙的。<br>很烫，要在两只手之间倒来倒去。<br>越靠里越甜。
+    </div>
+    <div class="spacer"></div>
+    <div class="note" style="text-align:center">想到什么都行，也可以什么都不想。</div>
+    <div class="mt24" style="display:flex;justify-content:center">
+      <span class="go">看看这些天的滋味</span>
+    </div>
+  </div>
+  <figcaption>taste-card · 没有插画，食物名自己是光</figcaption>
+  </figure>
+
+</div>
+</body></html>

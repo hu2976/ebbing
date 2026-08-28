@@ -20,6 +20,18 @@
       {
         "type": "folder",
         "value": ".sync-mp"
+      },
+      {
+        "type": "folder",
+        "value": "design-demos"
+      },
+      {
+        "type": "folder",
+        "value": "素材"
+      },
+      {
+        "type": "suffix",
+        "value": ".bak"
       }
     ],
     "include": []

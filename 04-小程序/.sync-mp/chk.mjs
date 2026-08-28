@@ -164,6 +164,28 @@ DAILY_T.taste.forEach((t, i) => BAN.forEach(([re, why]) => {
   if (re.test(t.desc) || re.test(t.food)) tasteBad.push(`taste[${i}] ${t.food} ${why}`);
 }));
 
+/* 三十张滋味卡之间不该有互相抄的句子。滋味墙是把它们并排摆出来的，
+   撞句在墙上一眼就露。查法：两条描述的最长公共子串 ≥ 5 个实字（不算标点）。
+   阈值 5 是量出来的：它抓得住真抄（「咬一个小口」5 字、「表面一层薄皮」6 字、
+   「黄的，甜，也有点面」8 字，都是人工审出来的那三处），
+   又放得过「很烫，要」「一道口子」这种通用说法——那是同一个人的语气，不是重复。 */
+const zi = (x) => x.replace(/[，。、！？—…～·「」]/g, '');
+const lcs = (a, b) => {
+  let best = '';
+  for (let i = 0; i < a.length; i++)
+    for (let j = i + best.length + 1; j <= a.length; j++) {
+      if (b.includes(a.slice(i, j))) best = a.slice(i, j); else break;
+    }
+  return best;
+};
+const tasteDup = [];
+for (let i = 0; i < DAILY_T.taste.length; i++)
+  for (let j = i + 1; j < DAILY_T.taste.length; j++) {
+    const seg = lcs(DAILY_T.taste[i].desc, DAILY_T.taste[j].desc);
+    if (zi(seg).length >= 5)
+      tasteDup.push(`${DAILY_T.taste[i].food} × ${DAILY_T.taste[j].food}「${seg}」`);
+  }
+
 /* 同一屏在不同状态下（eat 的五支口味、home 的三个时段）不该出现一模一样的句子。
    加这条是因为 eat 五支里有两支的第三句一字不差、收尾那句五支全同——
    连着看两屏就露了，而静态检查看不见"跨状态的重复"。 */
@@ -195,6 +217,8 @@ line(!tooLong.length, tooLong.length ? '每日内容超长（会破版）:\n   '
 line(!dupLines.length, dupLines.length ? '跨状态重复的句子:\n   ' + [...new Set(dupLines)].join('\n   ') : '同屏各状态之间没有重复的句子');
 line(!tasteBad.length, tasteBad.length ? '滋味卡违反写作规则: ' + tasteBad.join('；')
   : '滋味卡符合写作规则（无比喻／无评价词／无禁用清单里的词）');
+line(!tasteDup.length, tasteDup.length ? '滋味卡互相撞句（滋味墙上会并排看到）:\n   ' + tasteDup.join('\n   ')
+  : '三十张滋味卡之间没有互相抄的句子');
 
 /* ── 不把她当病人 ─────────────────────────────────────────────
    她的原话：「什么破文案，你再说用户是病人吗」。
@@ -363,5 +387,5 @@ console.log(`照护者端　屏 ${Object.keys(C.SCREENS).length}　块型 ${cKin
 line(!cDead.length, cDead.length ? '照护者端死链: ' + [...new Set(cDead)].join(' ') : '照护者端无死链');
 line(!cNoRender.length, cNoRender.length ? '照护者端未渲染的块型: ' + cNoRender.join(' ') : '照护者端块型全覆盖');
 line(!cBad.length, cBad.length ? '照护者端硬规则: ' + cBad.join('；') : '照护者端硬规则通过（无「你是」· 必须动走 warn · 与患者数据隔离）');
-process.exit(bad.length + dead.length + nocss.length + tooLong.length + missFn.length + shotMiss.length + tagBad.length + tasteBad.length + dupLines.length
+process.exit(bad.length + dead.length + nocss.length + tooLong.length + missFn.length + shotMiss.length + tagBad.length + tasteBad.length + tasteDup.length + dupLines.length
   + cDead.length + cNoRender.length + cBad.length + myBad.length + menBad.length ? 1 : 0);

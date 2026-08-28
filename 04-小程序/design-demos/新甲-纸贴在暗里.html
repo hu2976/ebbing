@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>新甲 · 纸贴在暗里</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   方向甲 · 纸贴在暗里
+
+   温馨从哪来：从「一张纸贴在暗夜里」这个对比来。
+   依据是你自己在滋味卡那版写下的判断——这套色块拼贴插画离不开米白纸底，
+   纯白让颗粒读成噪点、深底让它彻底失效。所以纸不是装饰，是插画的载体；
+   而暗是夜里打开手机的真实处境。两者都保留，靠对比取暖。
+
+   刻意不用的三样（它们是「深色设置界面」的默认长相，也是 AI 感的来源）：
+     ✗ 全宽列表行 + › 箭头
+     ✗ 圆角矩形按钮堆叠
+     ✗ 每个入口配一个图标或色点
+   入口一律是「一行字 + 一条光」——这是 direction-approved.md 里的原话。
+
+   纸的角是 3px 微圆，不是 14px 圆角卡片——真纸切出来就是直角，
+   微圆只是磨损。旋转 -0.7°，因为手贴上去不会正。
+   ══════════════════════════════════════════════════════════════ */
+
+:root{
+  --ink:#171310;          /* 夜 */
+  --paper:#F4EDE3;        /* 纸 */
+  --paper-warm:#EFE6D8;   /* 纸的暗侧 */
+  --on-dark:#E9DFD1;      /* 暗底上的主文字 */
+  --on-dark-2:#9A8F80;    /* 暗底上的次文字 */
+  --on-dark-3:#6E6558;    /* 暗底上的注 */
+  --on-paper:#2E2620;     /* 纸上的字 */
+  --on-paper-2:#7C7266;
+  --brass:#C9A063;        /* 唯一的光源色 */
+  --clay:#CB7E62;         /* 只给急救线 */
+  --ind:#2F4858;          /* 插画里的靛，用作冷侧点缀 */
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC",sans-serif;
+  --hand:"STXingkai","Xingkai SC","STKaiti","Kaiti SC",KaiTi,serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#0C0A08; color:var(--on-dark); font-family:var(--sans);
+  padding:56px 40px 90px; -webkit-font-smoothing:antialiased;
+}
+.hd{ max-width:860px; margin:0 auto 46px; }
+.hd h1{ font-size:26px; font-weight:600; letter-spacing:-.01em; }
+.hd .sub{ color:var(--on-dark-2); font-size:14.5px; line-height:1.8; margin-top:12px; }
+.hd .sub b{ color:var(--brass); font-weight:500; }
+.rail{ display:flex; gap:30px; justify-content:center; flex-wrap:wrap; }
+.unit{ width:390px; }
+.unit > figcaption{
+  font-family:var(--mono); font-size:11.5px; color:var(--on-dark-3);
+  margin-top:12px; letter-spacing:.04em;
+}
+
+/* ── 一屏 ─────────────────────────────────────────────────── */
+.scr{
+  width:390px; height:844px; border-radius:38px; overflow:hidden;
+  position:relative; background:var(--ink);
+  display:flex; flex-direction:column;
+  padding:74px 30px 34px;
+}
+/* 纯色底是廉价感最大的来源（你在 F-明快 里写的）。
+   两团极淡的氛围光，一暖一冷，让底自己有起伏。 */
+.scr::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(120% 62% at 78% -8%,  rgba(201,160,99,.115), transparent 62%),
+    radial-gradient(96%  50% at 6%  106%, rgba(47,72,88,.16),   transparent 66%);
+}
+.scr > *{ position:relative; z-index:1; }
+
+/* ── 顶部：日期在右上，等宽小字。返回在左，位置在 86 屏里恒定 ── */
+.top{ display:flex; justify-content:space-between; align-items:baseline;
+      font-family:var(--mono); font-size:11px; letter-spacing:.1em;
+      color:var(--on-dark-3); margin-bottom:26px; flex:none; }
+.top .back{ letter-spacing:.02em; }
+
+/* ── 纸 ───────────────────────────────────────────────────── */
+.sheet{
+  background:linear-gradient(168deg, var(--paper) 0%, var(--paper-warm) 100%);
+  border-radius:3px;                       /* 纸是直角，微圆是磨损 */
+  transform:rotate(-.7deg);                /* 手贴上去不会正 */
+  box-shadow:0 1px 0 rgba(255,255,255,.16) inset,
+             0 18px 34px -16px rgba(0,0,0,.72),
+             0 3px 8px -3px rgba(0,0,0,.5);
+  padding:20px 20px 16px; flex:none;
+}
+.sheet.big{ padding:26px 24px 20px; transform:rotate(.5deg); }
+/* 首页那张卡是入口不是展示：点它才进完整滋味卡。
+   所以首页只给一张窄纸条，整幅插画留给 taste-card 当主角——省出约 200px。 */
+.sheet.strip{ padding:15px 18px 15px; }
+.sheet.strip .stripline{ display:flex; align-items:center; justify-content:space-between;
+                          gap:14px; margin-top:2px; }
+.sheet.strip .name{ font-size:32px; }
+.swatch{ display:flex; gap:4px; flex:none; }
+.swatch i{ width:9px; height:22px; background:var(--s); border-radius:1px; display:block; }
+.sheet .cap{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.13em;
+  color:var(--on-paper-2); margin-bottom:2px;
+}
+.sheet .art{ display:block; width:100%; }
+.sheet .art svg{ display:block; width:100%; height:auto; }
+.sheet .name{
+  font-family:var(--hand); font-size:38px; color:var(--on-paper);
+  line-height:1.1; letter-spacing:.06em;
+}
+.sheet.big .name{ font-size:46px; }
+.sheet .desc{
+  font-size:13.5px; line-height:1.85; color:var(--on-paper-2);
+  margin-top:9px; text-align:left;
+}
+.sheet .foot-line{
+  font-family:var(--mono); font-size:9px; letter-spacing:.14em;
+  color:#A79C8C; margin-top:12px;
+}
+
+/* ── 暗底上的字 ───────────────────────────────────────────── */
+.eyebrow{ font-size:12px; letter-spacing:.24em; color:var(--on-dark-3); }
+.h{ font-size:34px; font-weight:600; line-height:1.32; letter-spacing:-.005em; }
+.h.sm{ font-size:26px; }
+.p{ font-size:15px; line-height:1.85; color:var(--on-dark-2); }
+.note{ font-size:12.5px; line-height:1.8; color:var(--on-dark-3); }
+.quote{ font-family:var(--hand); font-size:20px; line-height:1.7;
+        color:var(--on-dark); letter-spacing:.04em; }
+.live{ font-family:var(--mono); font-size:12.5px; color:var(--brass);
+       letter-spacing:.05em; }
+
+/* ── 入口 = 一行字 + 一条光。没有箭头，没有框，没有图标 ────── */
+.go{ display:block; padding-bottom:9px; position:relative; font-size:16.5px;
+     color:var(--on-dark); letter-spacing:.01em; }
+.go::after{
+  content:""; position:absolute; left:0; bottom:0; height:1px; width:100%;
+  background:linear-gradient(90deg, rgba(201,160,99,.55) 0%,
+             rgba(201,160,99,.16) 42%, rgba(201,160,99,0) 100%);
+}
+.go.dim{ font-size:14.5px; color:var(--on-dark-2); }
+.go.dim::after{ background:linear-gradient(90deg, rgba(244,237,227,.16),
+                rgba(244,237,227,0) 76%); }
+/* 主入口：同一个语法，只是把字放大。不是按钮 */
+.go.main{ font-size:29px; font-weight:600; padding-bottom:13px; letter-spacing:.01em; }
+.go.main::after{ height:1.5px;
+  background:linear-gradient(90deg, var(--brass) 0%, rgba(201,160,99,.3) 58%,
+             rgba(201,160,99,0) 100%); }
+/* 三个并列的选择：同一个语法，行距拉大 */
+.pick{ font-size:25px; font-weight:500; padding-bottom:12px; }
+
+/* ── 六颗珠子：定稿写的「B 的珠子」。填过的实心带一点高光 ──── */
+.beads{ display:flex; gap:15px; align-items:center; }
+.bead{ width:22px; height:22px; border-radius:50%; flex:none;
+       border:1px solid rgba(244,237,227,.13); }
+.bead.on{ border-color:transparent;
+  background:radial-gradient(circle at 33% 28%, rgba(255,255,255,.42) 0%,
+             rgba(255,255,255,0) 46%), var(--c); }
+.bead.next{ border-color:rgba(201,160,99,.5); }
+
+/* ── 潮水：empty 那屏的文案写着「像潮水一样涨起来」 ──────────
+   水的信号是「水面那条线」，不是「水下那个面」。
+   画成一个大椭圆色块会读作形状；真实的水位感来自一条微弧的亮线——
+   灯照到的那一段最亮，两头隐进暗里。线下只要极淡的一层。 */
+.tide{ position:absolute; left:0; right:0; bottom:0; height:212px;
+       pointer-events:none; z-index:0; }
+.tide::before{                     /* 水面下：极淡，只让底色沉一点 */
+  content:""; position:absolute; left:-22%; right:-22%; top:26px; bottom:-90px;
+  border-radius:50% 50% 0 0 / 68px 68px 0 0;
+  background:linear-gradient(180deg, rgba(47,72,88,.08) 0%, rgba(47,72,88,.03) 62%,
+             transparent 100%);
+}
+.tide::after{                      /* 水面那条线 —— 这才是水位 */
+  content:""; position:absolute; left:-22%; right:-22%; top:26px; height:70px;
+  border-radius:50% 50% 0 0 / 68px 68px 0 0;
+  border-top:1px solid rgba(140,193,170,.38);
+  mask-image:linear-gradient(90deg, transparent 4%, #000 26%, #000 74%, transparent 96%);
+}
+
+/* ── 急救线永远贴底 ───────────────────────────────────────── */
+.spacer{ flex:1 1 auto; min-height:0; }
+.sos{ display:flex; justify-content:space-between; font-size:13px;
+      color:var(--clay); padding-top:16px; flex:none;
+      border-top:1px solid rgba(203,126,98,.2); }
+
+/* 组：靠距离分组，不靠框线 */
+/* gap 工具类：一次给全。上一版改间距时用了不存在的类名（g30/g26/g32），
+   CSS 里没有就静默失效、间距变成 0——三屏的行距一起塌掉，而且看不出是哪里错。 */
+.g4{gap:4px} .g6{gap:6px} .g8{gap:8px} .g10{gap:10px} .g12{gap:12px} .g14{gap:14px} .g16{gap:16px} .g18{gap:18px} .g20{gap:20px} .g22{gap:22px} .g24{gap:24px} .g26{gap:26px} .g28{gap:28px} .g30{gap:30px} .g32{gap:32px} .g34{gap:34px} .g36{gap:36px} .g38{gap:38px} .g40{gap:40px} .g42{gap:42px} .g44{gap:44px} .g46{gap:46px} .g48{gap:48px} .g50{gap:50px} .g52{gap:52px} .g54{gap:54px} .g56{gap:56px} .g58{gap:58px} .g60{gap:60px}
+.grp{ display:flex; flex-direction:column; }
+/* mtALL */
+.mt8{margin-top:8px} .mt10{margin-top:10px} .mt12{margin-top:12px} .mt14{margin-top:14px} .mt16{margin-top:16px} .mt18{margin-top:18px} .mt20{margin-top:20px} .mt22{margin-top:22px} .mt24{margin-top:24px} .mt26{margin-top:26px} .mt28{margin-top:28px} .mt30{margin-top:30px} .mt32{margin-top:32px} .mt34{margin-top:34px} .mt36{margin-top:36px} .mt38{margin-top:38px} .mt40{margin-top:40px} .mt42{margin-top:42px} .mt44{margin-top:44px} .mt46{margin-top:46px} .mt48{margin-top:48px} .mt50{margin-top:50px} .mt52{margin-top:52px} .mt54{margin-top:54px} .mt56{margin-top:56px} .mt58{margin-top:58px} .mt60{margin-top:60px} .mt62{margin-top:62px} .mt64{margin-top:64px} .mt66{margin-top:66px} .mt68{margin-top:68px} .mt70{margin-top:70px} .mt72{margin-top:72px} .mt74{margin-top:74px} .mt76{margin-top:76px} .mt78{margin-top:78px} .mt80{margin-top:80px}
+.mt14{ margin-top:14px } .mt22{ margin-top:22px } .mt30{ margin-top:30px }
+.mt24{ margin-top:24px } .mt40{ margin-top:40px }
+</style></head><body>
+
+<div class="hd">
+  <h1>方向甲 · 纸贴在暗里</h1>
+  <p class="sub">
+    温馨来自<b>一张纸贴在暗夜里</b>这个对比。依据是你在滋味卡那版写下的判断：这套色块拼贴插画离不开米白纸底——
+    纯白让颗粒读成噪点，深底让它彻底失效。所以纸是插画的载体，暗是夜里打开手机的真实处境，两者都留下，靠对比取暖。<br>
+    入口一律是<b>一行字 + 一条光</b>（direction-approved 里的原话）：没有 › 箭头、没有圆角按钮、没有配图标。
+  </p>
+</div>
+
+<div class="rail">
+
+  <!-- ══ 首页 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="top"><span></span><span>八月廿七 · 夜</span></div>
+
+    <div class="sheet strip">
+      <div class="cap"><span>今天的滋味</span><span>NO. 001</span></div>
+      <div class="stripline">
+        <div class="name">烤红薯</div>
+        <span class="swatch"><i style="--s:#C58A4E"></i><i style="--s:#E39A3E"></i><i style="--s:#553723"></i></span>
+      </div>
+    </div>
+
+    <div class="grp g10 mt24">
+      <div class="eyebrow">今天怎么样</div>
+      <div class="beads">
+        <span class="bead on" style="--c:#C58A4E"></span>
+        <span class="bead on" style="--c:#D8B45E"></span>
+        <span class="bead on" style="--c:#7FA86A"></span>
+        <span class="bead next"></span>
+        <span class="bead"></span>
+        <span class="bead"></span>
+      </div>
+    </div>
+
+    <div class="grp g18 mt24">
+      <span class="go">情绪瓶子</span>
+      <span class="go">昨晚睡得怎么样</span>
+      <span class="go">找个人说说话</span>
+    </div>
+
+    <div class="grp g6 mt24">
+      <div class="quote">20:30 · 十五分钟 · 一起坐着</div>
+      <div class="live">此刻 23 人在</div>
+      <span class="go dim" style="margin-top:8px">那场是什么</span>
+    </div>
+
+    <div class="grp g14 mt24">
+      <span class="go main">我现在不太好</span>
+      <span class="go dim">试试含一口水，慢慢感受</span>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="sos"><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+  </div>
+  <figcaption>home · 首页</figcaption>
+  </figure>
+
+  <!-- ══ 我现在不太好 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="top"><span class="back">← 今天</span><span></span></div>
+    <div class="spacer"></div>
+    <div class="h">你来了。</div>
+    <div class="grp g30 mt56">
+      <span class="go pick">很想吃</span>
+      <span class="go pick">正在吃</span>
+      <span class="go pick">吃完了</span>
+    </div>
+    <div class="mt40"><span class="go dim">吃不下 · 说不上来</span></div>
+    <div class="spacer"></div>
+  </div>
+  <figcaption>mine · 三个岔口</figcaption>
+  </figure>
+
+  <!-- ══ 饿了 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="tide"></div>
+    <div class="top"><span class="back">← 返回</span><span></span></div>
+    <div class="spacer"></div>
+    <div class="grp g14">
+      <div class="h">饿了。</div>
+      <div class="p">太久没吃东西，饿的感觉会像潮水一样涨起来。</div>
+    </div>
+    <div class="grp g10 mt40">
+      <div class="h sm">想吃点什么样的？</div>
+    </div>
+    <div class="grp g26 mt22">
+      <span class="go">热乎乎的</span>
+      <span class="go">冰冰凉的</span>
+      <span class="go">软的、好咽的</span>
+      <span class="go">有嚼头的</span>
+      <span class="go dim">说不上来</span>
+    </div>
+    <div class="spacer"></div>
+    <span class="go dim">下一餐怎么吃</span>
+  </div>
+  <figcaption>empty · 潮水从下面涨上来</figcaption>
+  </figure>
+
+  <!-- ══ 滋味卡 ══ -->
+  <figure class="unit">
+  <div class="scr">
+    <div class="top"><span class="back">← 今天</span><span>NO. 001</span></div>
+    <div class="spacer"></div>
+    <div class="sheet big">
+      <div class="cap"><span>今天的滋味</span><span>27 AUG 2026</span></div>
+      <span class="art">{{SVG_00}}</span>
+      <div class="name">烤红薯</div>
+      <div class="desc">皮焦得裂开一道口子，里面是橙的。很烫，要在两只手之间倒来倒去。越靠里越甜。</div>
+      <div class="foot-line">ROASTED SWEET POTATO</div>
+    </div>
+    <div class="note mt30">想到什么都行，也可以什么都不想。</div>
+    <div class="spacer"></div>
+    <span class="go">看看这些天的滋味</span>
+  </div>
+  <figcaption>taste-card · 器物是主角</figcaption>
+  </figure>
+
+</div>
+</body></html>

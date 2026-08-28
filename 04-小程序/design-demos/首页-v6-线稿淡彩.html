@@ -1,0 +1,150 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>退潮 · 首页 v6 · 线稿淡彩</title>
+<style>
+:root{
+  --paper:#F4EDE3; --paper2:#C8BCAA; --paper3:#8B8073;
+  --line:#E4D7C0;
+  --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+  --body:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+  --hand:"STXingkai","STKaiti",KaiTi,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0806;font-family:var(--body);color:var(--paper);
+     display:flex;gap:44px;padding:52px 48px;align-items:flex-start;flex-wrap:wrap;
+     -webkit-font-smoothing:antialiased}
+.lab{position:fixed;top:0;left:0;right:0;padding:12px 48px;background:#0a0806ee;
+     border-bottom:1px solid #1f1a14;font-size:13px;color:var(--paper3);z-index:9;backdrop-filter:blur(8px)}
+.lab b{color:var(--brass);font-weight:500}
+.wrap{margin-top:42px}
+.cap{font-size:12.5px;color:var(--paper2);padding:11px 2px 0;line-height:1.55;max-width:390px}
+.cap i{color:var(--paper3);font-style:normal;font-size:11.5px}
+.ph{width:390px;height:844px;border-radius:44px;position:relative;overflow:hidden;
+    border:1px solid #241e18;box-shadow:0 26px 60px #0008;background:#0C0906}
+.in{position:relative;height:100%;padding:42px 26px 20px;display:flex;flex-direction:column}
+.day{text-align:center;font-size:10.5px;letter-spacing:.42em;color:var(--paper3);opacity:.7;text-indent:.42em}
+
+/* ══════════ 一碗蒸蛋 · 线稿淡彩 ══════════
+   和 v5 同一个物，换一种画法：细线勾轮廓，颜色只是淡淡地敷在里面。
+   线稿的三条讲究：
+   1 线宽全屏一致（2px）—— 粗细一变就散了
+   2 线不完全闭合（碗口留两处小缺口）—— 手绘的呼吸，不是矢量图形
+   3 淡彩略微出界／不到边 —— 填色不是精确遮罩，是手上色
+   全部用 SVG data URI：WXSS 不认 <svg> 标签，但 background 认 data URI。 */
+.dish{height:216px;margin:14px 0 0;
+  background:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 216'>\
+<defs><radialGradient id='eg' cx='40%25' cy='34%25' r='72%25'>\
+<stop offset='0' stop-color='%23D9C58C'/>\
+<stop offset='.62' stop-color='%23C9B278'/>\
+<stop offset='1' stop-color='%23AD9760'/></radialGradient></defs>\
+<g fill='none' stroke='%23E4D7C0' stroke-width='2' stroke-linecap='round'>\
+<path d='M126 30 C129 20, 120 14, 125 4' opacity='.4'/>\
+<path d='M152 38 C156 29, 148 23, 153 13' opacity='.3'/>\
+<path d='M100 40 C104 32, 97 27, 101 19' opacity='.24'/>\
+</g>\
+<ellipse cx='125' cy='94' rx='87' ry='21' fill='url(%23eg)'/>\
+<ellipse cx='122' cy='89' rx='71' ry='12' fill='%23E6D49B' opacity='.45'/>\
+<g fill='%236E9E6A'>\
+<ellipse cx='104' cy='90' rx='5.5' ry='2.4' transform='rotate(-14 104 90)'/>\
+<ellipse cx='146' cy='99' rx='4.6' ry='2.1' transform='rotate(22 146 99)'/>\
+<ellipse cx='170' cy='89' rx='4.2' ry='2' transform='rotate(-8 170 89)'/>\
+</g>\
+<g fill='none' stroke='%23E4D7C0' stroke-width='2' stroke-linecap='round'>\
+<path d='M36 94 A94 24 0 0 0 214 92'/>\
+<path d='M214 92 A94 24 0 0 0 152 71'/>\
+<path d='M118 70 A94 24 0 0 0 36 94'/>\
+<path d='M34 96 C36 148, 76 180, 126 180 C176 180, 214 146, 216 94'/>\
+<path d='M100 178 C112 181, 140 181, 152 178' opacity='.5'/>\
+</g>\
+<ellipse cx='126' cy='192' rx='62' ry='5' fill='%23E4D7C0' opacity='.11'/>\
+</svg>") no-repeat center/contain}
+
+.taste{text-align:center;margin:2px 0 0}
+.taste .lbl{font-size:10.5px;letter-spacing:.36em;color:var(--paper2);opacity:.8;text-indent:.36em}
+.taste .w{font-family:var(--hand);font-size:42px;color:#F6E9CE;line-height:1.2;margin:7px 0 0}
+.taste .go{font-size:12px;color:var(--paper3);margin:11px 0 0;letter-spacing:.08em}
+
+.spacer{flex:1;min-height:10px;max-height:32px}
+.spacer2{flex:1;min-height:12px}
+
+/* ══ 情绪：同一套线稿语言 —— 空心细线 + 淡彩敷在里面 ══ */
+.zt{font-size:11px;letter-spacing:.2em;color:var(--paper2);opacity:.78;padding:0 0 12px}
+.cells{display:flex;align-items:center;justify-content:space-between;height:50px;padding:0 2px 12px}
+.sh{display:block;flex:none;background-repeat:no-repeat;background-position:center;background-size:contain}
+.why{font-size:12.5px;color:var(--paper3);padding:0 0 13px}
+.links{display:flex;align-items:center;gap:13px;font-size:15px;color:var(--paper2)}
+.links s{text-decoration:none;color:var(--paper3);opacity:.45}
+
+.rule{height:9px;margin:15px 2px 4px;opacity:.36;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='330' height='9'><path d='M2 6 C28 2.4, 52 7.6, 78 4.6 S130 1.8, 158 5.4 S212 8, 240 4.2 S296 2, 328 5.6' fill='none' stroke='%23E4D7C0' stroke-width='1.6' stroke-linecap='round'/></svg>") no-repeat center/contain}
+.sleep{padding:8px 4px 0;font-size:14.5px;color:var(--paper3)}
+
+/* 那场：细线框，不用填色卡 */
+.sess{margin-top:14px;border-radius:14px;padding:14px 16px 13px;
+      border:1px solid rgba(228,215,192,.22);background:rgba(228,215,192,.022)}
+.sess .t{font-family:var(--hand);font-size:20px;color:#F0E2C4}
+.sess .r{display:flex;align-items:center;gap:8px;padding:9px 0 0}
+.ld{width:6px;height:6px;border-radius:50%;border:1px solid var(--jade);background:rgba(140,193,170,.35)}
+.sess .r b{font-size:13px;color:var(--jade);font-weight:400;opacity:.9}
+.sess .r span{margin-left:auto;font-size:13px;color:var(--paper3)}
+
+/* 急救：线框票券（参考图1 的 Log Now 就是线框，不是实心块） */
+.main{position:relative;border-radius:4px;padding:19px;text-align:center;font-size:21px;
+      color:#F8ECD8;letter-spacing:.1em;
+      border:1.6px solid rgba(228,215,192,.5);background:rgba(203,126,98,.07)}
+.main::before,.main::after{content:'';position:absolute;top:50%;width:13px;height:13px;
+      border-radius:50%;background:#0C0906;border:1.6px solid rgba(228,215,192,.5);
+      transform:translateY(-50%)}
+.main::before{left:-7.5px}
+.main::after{right:-7.5px}
+.sub{text-align:center;font-size:13px;color:var(--paper3);padding:12px 0 0}
+.foot{display:flex;justify-content:space-between;padding:15px 4px 0}
+.foot span{font-size:13px;color:var(--clay);opacity:.8}
+</style>
+
+<div class=lab>首页 <b>v6 · 线稿淡彩</b>　<span style="color:#5a5147">｜同一碗蒸蛋，细线勾轮廓＋淡彩敷色｜线宽全屏 2px 统一，碗口留缺口，主入口改线框票券</span></div>
+
+<div class=wrap>
+<div class=ph><div class=in>
+  <div class=day>八月廿七</div>
+
+  <div class=dish></div>
+
+  <div class=taste>
+    <div class=lbl>今天的滋味</div>
+    <div class=w>蒸蛋</div>
+    <div class=go>看看这些天的滋味 ›</div>
+  </div>
+
+  <div class=spacer></div>
+
+  <div class=zt>今天怎么样</div>
+  <div class=cells>
+    <!-- 记过的三个：线稿 + 淡彩；没记的三个：只有线，颜色留空 -->
+    <i class=sh style="width:42px;height:42px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><path d='M22 3 L27 16 L41 16 L30 25 L34 39 L22 30 L10 39 L14 25 L3 16 L17 16 Z' fill='%23BE7F55' stroke='%23E4D7C0' stroke-width='1.9' stroke-linejoin='round'/></svg>&quot;)"></i>
+    <i class=sh style="width:30px;height:30px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3 C24 11, 29 16, 29 21 C29 27, 23 30, 16 30 C9 30, 3 27, 3 21 C3 16, 8 11, 16 3 Z' fill='%23B9A05A' stroke='%23E4D7C0' stroke-width='1.9'/></svg>&quot;)"></i>
+    <i class=sh style="width:38px;height:38px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M20 3 C30 4, 37 11, 36 21 C35 31, 27 37, 18 36 C8 35, 3 27, 4 18 C5 9, 11 3, 20 3 Z' fill='%23629C7E' stroke='%23E4D7C0' stroke-width='1.9'/></svg>&quot;)"></i>
+    <i class=sh style="width:28px;height:28px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path d='M15 3 C22 10, 27 15, 27 20 C27 25, 21 28, 15 28 C9 28, 3 25, 3 20 C3 15, 8 10, 15 3 Z' fill='none' stroke='%23E4D7C0' stroke-width='1.6' stroke-opacity='.36'/></svg>&quot;)"></i>
+    <i class=sh style="width:34px;height:34px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><path d='M18 3 C27 4, 33 10, 32 19 C31 28, 24 33, 16 32 C7 31, 3 24, 4 16 C5 8, 10 3, 18 3 Z' fill='none' stroke='%23E4D7C0' stroke-width='1.6' stroke-opacity='.36'/></svg>&quot;)"></i>
+    <i class=sh style="width:25px;height:25px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><circle cx='13' cy='13' r='10.5' fill='none' stroke='%23E4D7C0' stroke-width='1.6' stroke-opacity='.36'/></svg>&quot;)"></i>
+  </div>
+  <div class=why>为什么 ›</div>
+  <div class=links><span>情绪瓶子</span><s>·</s><span>找个人说说话</span></div>
+
+  <div class=rule></div>
+  <div class=sleep>昨晚睡得怎么样 ›</div>
+
+  <div class=sess>
+    <div class=t>20:30 · 十五分钟 · 一起坐着</div>
+    <div class=r><span class=ld></span><b>此刻 23 人在</b><span>那场是什么 ›</span></div>
+  </div>
+
+  <div class=spacer2></div>
+
+  <div class=main>我现在不太好</div>
+  <div class=sub>试试含一口水，慢慢感受</div>
+  <div class=foot><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+</div></div>
+<div class=cap><b>v6 · 线稿淡彩</b>　<i>碗只有线：碗口三段弧留两处缺口（手绘的呼吸）＋三缕蒸汽＋淡彩略微出界。情绪六个也是线稿，记过的敷淡彩、没记的只留线。主入口改线框票券，两侧半圆缺口。全部 SVG data URI，可直接落 WXSS。</i></div>
+</div>
+</html>

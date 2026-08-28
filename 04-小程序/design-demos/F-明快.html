@@ -1,0 +1,227 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><title>F · 明快</title>
+<style>
+/* ── F · 明快 ────────────────────────────────────────────
+   照着她给的四张（Mood Gallery / Moments / MindMate / Echolamp）换语言。
+   前六版的共同错误：一直在守一条她早就作废的原则
+   （「高饱和暖色和插画是刺激」），所以做的全是暗调朦胧。
+   Echolamp 同样是睡前用、同样是夜里，但它是**明快的暖**。
+
+   四条照着改：
+   1 卡片比底色亮，有明确边界 —— 不再是化进背景的一团
+   2 大圆角（22-26px），不是 12/14 那种小圆角
+   3 彩色是明确的块，看得清是什么颜色
+   4 有生命的东西可以有眼睛 —— 有生命 ≠ 有评价 */
+:root{
+  /* 底提亮一档并往紫偏一点点：纯褐黑压不住高饱和的彩色，会显脏。
+     Echolamp 用的是深紫底，同理。 */
+  --bg:#1A1620; --card:#252031; --card2:#2E2840;
+  --paper:#F6F1EA; --paper2:#BDB4C4; --paper3:#8E8699;
+  --lamp:#FFC978;   --lampD:#E8A64E;
+  --jade:#7FD6B0; --berry:#FF8FA8; --plum:#B79BF0; --sky:#7EC4F5; --leaf:#B8DE6A;
+  --hand:"STXingkai","Xingkai SC","STKaiti","Kaiti SC",KaiTi,serif;
+  --disp:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0E0C12;font-family:var(--disp);color:var(--paper);
+     display:flex;gap:52px;padding:52px;align-items:flex-start}
+/* 纯色底是廉价感最大的来源 —— 真实的空间里光是不匀的。
+   两团极淡的氛围光，一暖一冷，让底色自己有起伏。 */
+.scr{width:390px;height:844px;position:relative;overflow:hidden;border-radius:6px;
+  background:
+    radial-gradient(120% 46% at 76% -8%, rgba(255,201,120,.10), transparent 62%),
+    radial-gradient(96% 40% at 8% 104%, rgba(127,214,176,.07), transparent 66%),
+    var(--bg);}
+.lbl{position:absolute;top:-30px;left:0;font-size:12px;letter-spacing:.16em;color:#6B6478;text-transform:uppercase}
+.pg{position:relative;z-index:2;padding:54px 20px 20px;height:100%;display:flex;flex-direction:column}
+.nav{font-size:14px;color:var(--paper3);margin-bottom:18px}
+.h{font-size:30px;font-weight:600;line-height:1.32;letter-spacing:-.01em}
+.p{font-size:16px;line-height:1.8;color:var(--paper2);margin-top:14px}
+.chev{color:var(--paper3);font-size:16px}
+
+/* 星星装饰 —— 参考图里每一张都有，我之前一个都没放 */
+.star{position:absolute;pointer-events:none;opacity:.5}
+.star::before,.star::after{content:'';position:absolute;background:var(--lamp);border-radius:2px}
+.star::before{width:100%;height:1.5px;top:50%;margin-top:-.75px}
+.star::after{height:100%;width:1.5px;left:50%;margin-left:-.75px}
+
+/* ── 卡片：比底色亮，有边界。这是和前六版最大的区别 ── */
+.card{background:var(--card);border-radius:24px;padding:20px 22px}
+
+/* 滋味卡：食物色是明确的一块，不是 14% 透出来的暗示 */
+.taste{border-radius:26px;padding:22px 24px 24px;position:relative;overflow:hidden;
+  background:linear-gradient(142deg,#5B2E3E,#3A2030);}
+/* 上一版这颗球比「草莓」两个字还显眼，主次反了。
+   压小、退到角上、亮度让给品名 —— 它是配角，是那样食物的颜色，不是主体。 */
+.tblob{position:absolute;right:-22px;top:-24px;width:112px;height:112px;
+  border-radius:60% 40% 52% 48% / 44% 58% 42% 56%;transform:rotate(-14deg);
+  background:radial-gradient(circle at 36% 30%,rgba(255,179,196,.82),rgba(200,72,102,.72) 78%);
+  box-shadow:0 0 46px -4px rgba(255,140,170,.34);
+  filter:blur(.4px);}
+.fsub{font-size:13px;color:rgba(246,241,234,.62);letter-spacing:.12em;position:relative;z-index:2}
+.food{font-family:var(--hand);font-size:46px;color:#FFE0B0;letter-spacing:.05em;
+      margin-top:6px;position:relative;z-index:2;line-height:1.15}
+
+/* 六格 = 六个圆润的发光小家伙。有眼睛，没有喜怒 */
+.days{display:flex;gap:9px;align-items:flex-end;height:64px;margin:6px 0 0}
+/* 实心塑料球 → 半透明的发光体。
+   三层叠出来：外面一圈自己的光晕、里面一点透光的亮心、下缘一道薄影。
+   发光的东西比实心的东西高级 —— 光晕就是那道分界。 */
+.bud{flex:1;height:50px;border-radius:50% 50% 46% 54% / 58% 58% 42% 42%;position:relative;
+     display:flex;align-items:center;justify-content:center;gap:7px;
+     box-shadow:0 0 20px -3px var(--glow),          /* 自己发的光 */
+                0 6px 16px -6px rgba(0,0,0,.55),
+                inset 0 -3px 7px rgba(0,0,0,.14),
+                inset 0 2px 5px rgba(255,255,255,.34);}
+/* 亮心：光是从里面透出来的，不是打在表面上 */
+.bud::after{content:'';position:absolute;left:18%;right:22%;top:14%;bottom:34%;
+  border-radius:50%;background:radial-gradient(circle at 42% 38%, rgba(255,255,255,.44), transparent 66%);
+  pointer-events:none;}
+.bud i{width:5px;height:6px;border-radius:50%;background:#3A2E22;display:block;opacity:.72}
+.bud.today{height:58px}
+.bud.e{background:none;box-shadow:none;border:1.5px dashed rgba(246,241,234,.16)}
+.bud.e i{display:none}
+
+/* 入口行：卡片化，圆角大，左边一个色点 */
+.row{display:flex;align-items:center;gap:13px;border-radius:20px;
+     padding:16px 18px;margin-top:10px;font-size:16.5px;color:var(--paper);
+     background:linear-gradient(168deg, #2A2437, #221D2E);
+     box-shadow:inset 0 1px 0 rgba(255,255,255,.055);}
+.row .dot{width:26px;height:26px;border-radius:48% 52% 56% 44% / 54% 46% 54% 46%;flex:none;
+          box-shadow:0 0 14px -2px var(--glow),
+                     inset 0 -2px 4px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.34)}
+.row .chev{margin-left:auto}
+
+/* 那场：一块有存在感的卡 */
+.field{background:linear-gradient(140deg,#243A38,#1D2C2E);border-radius:24px;
+       padding:18px 20px;margin-top:16px;position:relative;overflow:hidden;
+       box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 0 26px -14px rgba(127,214,176,.4);}
+.field .t{font-family:var(--hand);font-size:20px;letter-spacing:.04em}
+.field .n{font-size:14px;color:var(--jade);margin-top:8px;display:flex;align-items:center;gap:7px}
+.field .n em{width:7px;height:7px;border-radius:50%;background:var(--jade);font-style:normal;
+             box-shadow:0 0 0 4px rgba(127,214,176,.16)}
+
+/* 主操作：明确的暖色块，不是一层 7% 的光 */
+.act{position:relative;margin-top:auto;border-radius:26px;padding:21px;text-align:center;
+  font-size:19px;font-weight:600;color:#3A2410;overflow:hidden;
+  background:linear-gradient(140deg,#FFD79A,var(--lampD));
+  box-shadow:0 0 34px -6px rgba(255,201,120,.40),     /* 散开的光晕 */
+             0 12px 30px -12px rgba(255,180,90,.55),  /* 落影 */
+             inset 0 1px 0 rgba(255,255,255,.42);}    /* 顶部亮边 */
+.sub{display:flex;align-items:center;justify-content:space-between;
+     padding:15px 18px;margin-top:10px;font-size:15px;color:var(--paper2);
+     background:linear-gradient(168deg,#26212F,#201C29);border-radius:20px;
+     box-shadow:inset 0 1px 0 rgba(255,255,255,.04);}
+.foot{display:flex;justify-content:space-between;margin-top:12px;padding:0 6px;
+      font-size:13.5px;color:#F0967A}
+
+/* mine：三个选项各带一个小家伙，大小递增 */
+.opts{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.opt{display:flex;align-items:center;gap:15px;border-radius:22px;
+     padding:18px 20px;font-size:17.5px;
+     background:linear-gradient(168deg,#2A2437,#221D2E);
+     box-shadow:inset 0 1px 0 rgba(255,255,255,.055);}
+.opt .b{border-radius:50% 50% 46% 54% / 58% 58% 42% 42%;flex:none;position:relative;
+        display:flex;align-items:center;justify-content:center;gap:5px;
+        box-shadow:0 0 18px -3px var(--glow),
+                   inset 0 -3px 5px rgba(0,0,0,.16), inset 0 2px 4px rgba(255,255,255,.34)}
+.opt .b::after,.pk .b::after{content:'';position:absolute;left:18%;right:22%;top:14%;bottom:36%;
+  border-radius:50%;background:radial-gradient(circle at 42% 38%, rgba(255,255,255,.40), transparent 66%);}
+.opt .b i{width:4px;height:5px;border-radius:50%;background:#3A2E22;opacity:.7}
+.quiet{display:flex;justify-content:space-between;padding:15px 20px;margin-top:2px;
+       font-size:15px;color:var(--paper3)}
+
+/* empty：四支口味两列大卡 */
+.picks{display:flex;flex-wrap:wrap;gap:11px;margin-top:16px}
+/* 上一版这些卡是半透的，底下涨水的绿透上来，脏。改成不透的渐变面 */
+.pk{flex:1 1 calc(50% - 6px);border-radius:24px;padding:20px 16px 18px;text-align:center;
+    font-size:16px;display:flex;flex-direction:column;align-items:center;gap:11px;
+    background:linear-gradient(168deg,#2C2639,#241F31);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.055), 0 8px 20px -12px rgba(0,0,0,.6);}
+.pk .b{width:46px;height:42px;border-radius:50% 50% 46% 54% / 58% 58% 42% 42%;position:relative;
+       display:flex;align-items:center;justify-content:center;gap:6px;
+       box-shadow:0 0 20px -3px var(--glow),
+                  inset 0 -3px 6px rgba(0,0,0,.16), inset 0 2px 4px rgba(255,255,255,.34)}
+.pk .b i{width:5px;height:6px;border-radius:50%;background:#3A2E22;opacity:.72}
+.pk.wide{flex:1 1 100%;flex-direction:row;justify-content:center;padding:16px;
+         font-size:15px;color:var(--paper3);background:none;border:1.5px dashed rgba(246,241,234,.14)}
+.rise{position:absolute;left:-14%;right:-14%;bottom:-8%;height:44%;z-index:1;
+  border-radius:48% 52% 0 0 / 34% 32% 0 0;
+  background:linear-gradient(180deg,rgba(127,214,176,.14),rgba(30,44,44,.5));}
+</style></head><body>
+
+<!-- ══ home ══ -->
+<div class="scr"><div class="lbl">home</div>
+  <div class="star" style="width:9px;height:9px;left:32px;top:26px"></div>
+  <div class="star" style="width:6px;height:6px;left:330px;top:64px;opacity:.32"></div>
+  <div class="pg">
+    <div class="taste">
+      <div class="tblob"></div>
+      <div class="fsub">今天的滋味</div>
+      <div class="food">草莓</div>
+    </div>
+
+    <div style="margin-top:22px">
+      <div class="fsub" style="color:var(--paper3)">今天怎么样</div>
+      <div class="days">
+        <div class="bud" style="background:linear-gradient(160deg,#FFD98A,#E8A64E);--glow:rgba(255,190,96,.38)"><i></i><i></i></div>
+        <div class="bud" style="background:linear-gradient(160deg,#A5EBCB,#5FBF97);--glow:rgba(127,214,176,.34)"><i></i><i></i></div>
+        <div class="bud" style="background:linear-gradient(160deg,#CDB6FF,#9678E0);--glow:rgba(183,155,240,.36)"><i></i><i></i></div>
+        <div class="bud today" style="background:linear-gradient(160deg,#FFB3C4,#EE7392);--glow:rgba(255,143,168,.40)"><i></i><i></i></div>
+        <div class="bud e"></div><div class="bud e"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div class="row"><span class="dot" style="background:linear-gradient(150deg,#CDB6FF,#9678E0);--glow:rgba(183,155,240,.42)"></span>情绪瓶子<span class="chev">›</span></div>
+      <div class="row"><span class="dot" style="background:linear-gradient(150deg,#7EC4F5,#4E9BD6);--glow:rgba(126,196,245,.40)"></span>昨晚睡得怎么样<span class="chev">›</span></div>
+      <div class="row"><span class="dot" style="background:linear-gradient(150deg,#B8DE6A,#87B33F);--glow:rgba(184,222,106,.38)"></span>找个人说说话<span class="chev">›</span></div>
+    </div>
+
+    <div class="field">
+      <div class="t">20:30 · 十五分钟 · 一起坐着</div>
+      <div class="n"><em></em>此刻 23 人在</div>
+    </div>
+
+    <div class="act">我现在不太好</div>
+    <div class="sub">试试含一口水，慢慢感受<span class="chev">›</span></div>
+    <div class="foot"><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+  </div>
+</div>
+
+<!-- ══ mine ══ -->
+<div class="scr"><div class="lbl">mine</div>
+  <div class="star" style="width:8px;height:8px;left:300px;top:120px;opacity:.4"></div>
+  <div class="pg">
+    <div class="nav">← 今天</div>
+    <div class="h">你来了。</div>
+    <div class="opts">
+      <div class="opt"><span class="b" style="width:30px;height:28px;background:linear-gradient(160deg,#7EC4F5,#4E9BD6);--glow:rgba(126,196,245,.38)"><i></i><i></i></span>很想吃</div>
+      <div class="opt"><span class="b" style="width:38px;height:34px;background:linear-gradient(160deg,#FFD98A,#E8A64E);--glow:rgba(255,190,96,.40)"><i></i><i></i></span>正在吃</div>
+      <div class="opt"><span class="b" style="width:46px;height:42px;background:linear-gradient(160deg,#FFB3C4,#EE7392);--glow:rgba(255,143,168,.42)"><i></i><i></i></span>吃完了</div>
+      <div class="quiet">吃不下 · 说不上来<span class="chev">›</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ empty ══ -->
+<div class="scr"><div class="lbl">empty</div>
+  <div class="rise"></div>
+  <div class="star" style="width:7px;height:7px;left:44px;top:150px;opacity:.35"></div>
+  <div class="pg">
+    <div class="nav">← 返回</div>
+    <div class="h">饿了。</div>
+    <div class="p">太久没吃东西，饿的感觉会像潮水一样涨起来。</div>
+    <div style="margin-top:auto">
+      <div class="fsub" style="color:var(--paper3)">想吃点什么样的</div>
+      <div class="picks">
+        <div class="pk"><span class="b" style="background:linear-gradient(160deg,#FFD98A,#E8853E);--glow:rgba(255,180,90,.40)"><i></i><i></i></span>热乎乎的</div>
+        <div class="pk"><span class="b" style="background:linear-gradient(160deg,#A8DCF7,#5AA8DE);--glow:rgba(140,205,247,.38)"><i></i><i></i></span>冰冰凉的</div>
+        <div class="pk"><span class="b" style="background:linear-gradient(160deg,#D8EFA0,#9DC456);--glow:rgba(200,232,140,.36)"><i></i><i></i></span>软的、好咽的</div>
+        <div class="pk"><span class="b" style="background:linear-gradient(160deg,#CDB6FF,#9678E0);--glow:rgba(183,155,240,.36)"><i></i><i></i></span>有嚼头的</div>
+        <div class="pk wide">说不上来</div>
+      </div>
+      <div class="sub" style="background:none;padding:16px 6px 0">下一餐怎么吃<span class="chev">›</span></div>
+    </div>
+  </div>
+</div>
+</body></html>

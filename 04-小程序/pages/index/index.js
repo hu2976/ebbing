@@ -11,7 +11,21 @@ const LOGD = require('../../data/log.js');      // 本机记录：餐级的词 +
 const R7 = require('../../data/react7.js');     // 七张反应卡，两端共用同一份内容
 const ADV = require('../../data/advice.js');    // 按选项组合给建议（gate 七种 / two 两支）
 const RUNTIME = require('../../data/runtime-screens.js');   // 运行时挂载的那些屏
-const MY = require('../../data/mytaste.js');    // 我写的滋味：门槛、串联、本机存
+const MY = require('../../data/mytaste.js');
+const ART = require('../../data/art.js');   // 30 张滋味插画（data URI）
+
+/* 装订侧那行竖排日期。用汉字数字——竖排里阿拉伯数字会各自转 90 度，
+   「30」竖着读是两个躺倒的字符，汉字不会。 */
+const CN = ['零','一','二','三','四','五','六','七','八','九','十'];
+function cnNum(n) {
+  if (n <= 10) return CN[n];
+  if (n < 20) return '十' + (n % 10 ? CN[n % 10] : '');
+  return CN[Math.floor(n / 10)] + '十' + (n % 10 ? CN[n % 10] : '');
+}
+function cnDate() {
+  const d = new Date();
+  return cnNum(d.getMonth() + 1) + '月' + cnNum(d.getDate());
+}    // 我写的滋味：门槛、串联、本机存
 const OTH = require('../../data/others.js');    // 别人写的：静态公共池，读不用后端
 const MEN = require('../../data/mentor.js');    // 四个人：屏上每个字都在这里，模型只做分诊
 const TRI = require('../../data/triage.js');    // 分诊：本地关键词 → 模型 → 接不住，只输出 key
@@ -45,10 +59,26 @@ const rich = (t) => String(t).replace(/var\(--cool\)/g, '#7FBDA9');
 /* 用当日／本次内容替换屏上写死的那条。改的是渲染结果，不动 screens.js——
    原型仍是屏级文案的源，daily.js 是"同一屏每次换一条"这个维度的源。
    （这个函数曾被我改 jar.js 时连带删掉过一次，调用还在、定义没了。） */
+/* 色板条中间那一格：deep 和 lit 的中点。牌面顶上那三格取自这道菜的 cardHue，
+   和 design-demos/card-full.mjs 里的算法一致（那是这张卡的设计稿）。 */
+function midHue(deep, lit) {
+  return '#' + [1, 3, 5].map((k) => {
+    const v = Math.round((parseInt(deep.substr(k, 2), 16) + parseInt(lit.substr(k, 2), 16)) / 2);
+    return v.toString(16).padStart(2, '0');
+  }).join('');
+}
+
 function applyDaily(blocks, cur, wallDay) {
   if (cur === 'home') {
     const t = DAILY.pick(DAILY.taste);
     if (!t) return;
+    /* 给块编同类序号：WXSS 不支持 ~ / + 这类兄弟选择器（编译期就报
+       unexpected token），所以「第几个同类块」必须在这儿算好，挂成 class。 */
+    blocks.forEach((b, k) => {
+      const seen = blocks.slice(0, k).filter((x) => x.k === b.k).length;
+      b.ord = seen;
+      b.same = k > 0 && blocks[k - 1].k === b.k;   /* 替代 .s-p + .s-p */
+    });
     const fi = blocks.findIndex((b) => b.k === 'food');
     if (fi < 0) return;
     /* 夜里与那场前后是「烤红薯　·　明早再看」，后缀要留着，换的只是食物名 */
@@ -57,6 +87,8 @@ function applyDaily(blocks, cur, wallDay) {
        cardHue／cardTexFam）。首页这张卡是那张牌的入口，两处该是同一样东西。 */
     const [deep, lit] = DAILY.cardColor(t.food);
     blocks[fi] = { ...blocks[fi], t: rich(t.food + suffix), desc: t.desc,
+                   n: [...t.food].length, art: ART.of(t.food),   // 食物名按字数分档，见 index.wxss 的 .s-food.n*
+                   art: ART.of(t.food),
                    deep, lit, tex: DAILY.cardTex(t.food) };
     const next = blocks[fi + 1];
     if (next && next.k === 'p') blocks[fi + 1] = { ...next, t: rich(t.desc) };
@@ -79,7 +111,10 @@ function applyDaily(blocks, cur, wallDay) {
       /* 她写过就用她的话，把系统那段抹掉——这个产品最后会把自己说的话还给她。
          没写过（也包括没吃过、五栏全空）就还是系统那段。 */
       const desc = MY.textFor(t.food, t.desc);
+      /* art 走 paper 版：牌面是米白纸，深底版那套是给首页暗底用的，
+         放纸上会被它自带的近白高光层洗掉一层。见 design-demos/art-gen.mjs */
       blocks[ci] = { ...blocks[ci], food: t.food, desc: rich(desc), deep, lit, md,
+        n: [...t.food].length, art: ART.paper(t.food), mid: midHue(deep, lit),
         tex: DAILY.cardTex(t.food), mineOn: MY.hasMine(t.food) };
 
       /* 同一样食物写过好几条就按日期排开。
@@ -209,6 +244,10 @@ function mergeTaste(blocks) {
   /* go 要带上——原来这里丢了它，于是首页那张滋味卡怎么点都没反应：
      food 块的跳转在合并成 taste 块的时候被吞了。 */
   const card = { k: 'taste', ti: '', food: blocks[i].t, go: blocks[i].go || '',
+    /* n 是食物名的字数档（见 index.wxss 的 .s-food.n*）。
+       applyDaily 在这之前跑，已经算好挂在 food 块上——这里不带过来，
+       首页那张卡就会吃默认的 2 字档 138rpx，三个字刚好折行。 */
+    n: blocks[i].n || 0, art: blocks[i].art || '',
     p: '', s: '', mat: false,
     /* 由 applyDaily 挂上，见那里的注释；缺省值和牌面的 cardColor 兜底一致 */
     deep: blocks[i].deep || '#463A2A', lit: blocks[i].lit || '#A98A5E',
@@ -225,7 +264,7 @@ function mergeTaste(blocks) {
    三场的时间仍然写在 group 屏上，提醒用到的那份在 setRemind 里。 */
 
 Page({
-  data: { blocks: [], root: false, pick: null, slipOpen: false, star: null, balls: [], topPad: 0, onlineN: 0, seq: 0, dir: 'f', backLabel: '返回', tideMode: '', fold: [], foldLabel: '', moreOpen: false, sid: '' },
+  data: { blocks: [], root: false, todayCn: '', pick: null, slipOpen: false, star: null, balls: [], topPad: 0, onlineN: 0, seq: 0, dir: 'f', backLabel: '返回', tideMode: '', fold: [], foldLabel: '', moreOpen: false, sid: '' },
 
   /* options.role === 'care' 时整个 app 变成照护者端。
      入口是一张独立的小程序码（路径带 ?role=care），患者端首页没有任何通往
@@ -259,7 +298,7 @@ Page({
 
     /* 去掉了微信导航栏（沉浸式深色），自己让出状态栏 + 胶囊按钮的高度 */
     const info = wx.getSystemInfoSync();
-    this.setData({ topPad: (info.statusBarHeight || 20) + 40 });
+    this.setData({ topPad: (info.statusBarHeight || 20) + 40, todayCn: cnDate() });
     this.draw();
   },
   onShow() { this.draw(); },   // 回到前台重画一次：每日轮换的那几条要换
@@ -407,7 +446,7 @@ Page({
       /* 四个人。顺序固定，不排名——排名就是评价。
          上一页给 intro（一句）＋ lead（他会怎么说）——她得先知道找谁。 */
       case 'mentors': return { k, items: MEN.MENTORS.map((m) => ({
-        id: m.id, name: m.name, tag: m.tag, intro: m.intro, lead: m.lead })) };
+        id: m.id, name: m.name, tag: m.tag, intro: m.intro, lead: m.lead, open: false })) };
       /* 说点什么。⚠️ 不写「必填」，写不出来能直接走。 */
       case 'mentorin': return { k, v: '', busy: false };
       /* 聊。消息流：她说的靠右，某一位说的靠左带名字。
@@ -601,6 +640,12 @@ Page({
     const on = !this.data.blocks[i].on;
     this.setData({ [`blocks[${i}].on`]: on });
     wx.setStorage({ key: 'sw:' + this.cur + ':' + this.data.blocks[i].t, data: on });
+  },
+  /* 「他会怎么说」一段一段展开。不照抄 toggleS 的「整屏一起开」——
+     这一屏要做的事是把四个人比着看，四段全摊开就又回到 951px 要滑。 */
+  toggleMen(e) {
+    const { b, j } = e.currentTarget.dataset;
+    this.setData({ [`blocks[${b}].items[${j}].open`]: !this.data.blocks[b].items[j].open });
   },
   toggleS(e) {
     const on = !this.data.blocks[e.currentTarget.dataset.i].open;
@@ -1309,15 +1354,22 @@ Page({
           }
           g.globalCompositeOperation = 'source-over';
 
-          // 波脊：一道极细的亮线，两端淡出
+          /* 波脊：水面那一道。
+             原来是 1px 实线 alpha .15 —— 在文字后面横贯整屏，是一条硬边直线，
+             读起来不像水面像一条分隔线（她的原话：这后面这个线，好丑）。
+             改成宽 3px、alpha 压到 .06、再加一层 shadowBlur 糊开：
+             还看得出水到哪儿了，但不再是一条线。 */
           g.beginPath();
           for (let x = 0; x <= W; x += 3) { const y = wave(x, t); x ? g.lineTo(x, y) : g.moveTo(x, y); }
           const cg = g.createLinearGradient(0, 0, W, 0);
           cg.addColorStop(0, 'rgba(242,234,220,0)');
-          cg.addColorStop(0.22, 'rgba(242,234,220,0.15)');
-          cg.addColorStop(0.78, 'rgba(242,234,220,0.15)');
+          cg.addColorStop(0.22, 'rgba(242,234,220,0.06)');
+          cg.addColorStop(0.78, 'rgba(242,234,220,0.06)');
           cg.addColorStop(1, 'rgba(242,234,220,0)');
-          g.strokeStyle = cg; g.lineWidth = 1; g.stroke();
+          g.strokeStyle = cg; g.lineWidth = 3;
+          g.shadowBlur = 10; g.shadowColor = 'rgba(242,234,220,0.18)';
+          g.stroke();
+          g.shadowBlur = 0; g.shadowColor = 'transparent';
 
           g.globalAlpha = 0.55; g.drawImage(grain, 0, 0, W, H); g.globalAlpha = 1;
 

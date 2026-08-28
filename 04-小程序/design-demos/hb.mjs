@@ -50,15 +50,32 @@ if (!ALL && !D.SCREENS[id]) { console.error('没有这一屏：' + id); process.
    浏览器把 <text> 当未知元素按 inline 渲染，CSS 选得中，行为足够接近。
    写成 <span> 就静默失效，字色字号全不生效，而截图看不出哪里不对。
    已知需要照抄的：.base text / .cue text / .rx-cue text。 */
-/* 插画：和小程序一样走 data URI + background-image（data/art.js）。
-   不同步这个，这里量出来的首页就没有图，和真机对不上。 */
-const ARTM = (() => { try { return require(R + '/data/art.js'); } catch (e) { return { of: () => '', paper: () => '' }; } })();
+/* ── 按食物名取插画 ──────────────────────────────────────────
+   cards/ 里 30 张色块拼贴 SVG，文件名是「序号-食物名.svg」。
+   同一张图在一页里会出现多次（--all 时 64 屏都渲），SVG 内部的
+   filter / gradient id 会互相覆盖，所以每次注入都给 id 加唯一后缀。 */
+let __artN = 0;
+const CARDS = fs.existsSync(R + '/design-demos/cards')
+  ? fs.readdirSync(R + '/design-demos/cards').filter((f) => f.endsWith('.svg')) : [];
+function art(food) {
+  const hit = CARDS.find((f) => f.slice(3, -4) === food);
+  if (!hit) return '';
+  const tag = 'a' + (++__artN);
+  let sv = fs.readFileSync(R + '/design-demos/cards/' + hit, 'utf8');
+  for (const id of new Set([...sv.matchAll(/id="([^"]+)"/g)].map((m) => m[1]))) {
+    sv = sv.split(`id="${id}"`).join(`id="${id}_${tag}"`).split(`#${id})`).join(`#${id}_${tag})`);
+  }
+  return `<div class="art"><div class="artin">${sv}</div></div>`;
+}
 
 const rpx2px = (css) => css.replace(/([0-9.]+)rpx/g, (_, n) => (n * K).toFixed(3) + 'px');
 const tokens = rpx2px(fs.readFileSync(R + '/pages/index/tokens.wxss', 'utf8')
   .replace(/\/\*[\s\S]*?\*\//g, ''));
 const wxss = rpx2px(fs.readFileSync(R + '/pages/index/index.wxss', 'utf8')
-  .replace(/@import[^;]+;/g, ''));
+  .replace(/@import[^;]+;/g, ''))
+  /* ↓ 手账暗色。小程序一个字不改，只在预览时叠加。 */
+  + '\n' + rpx2px(fs.readFileSync(R + '/design-demos/hb.wxss', 'utf8')
+  .replace(/\/\*[\s\S]*?\*\//g, ''));
 /* page{} 是小程序的根，第一条当 :root 收变量，其余当 body。
    ⚠️ 正则必须带前边界：不带的话 `.page{` 里的 page{ 也会被换成 `.body{`，
    于是 index.wxss 里所有 .page 规则在截图里静默失效 —— 量出来的和真机不是
@@ -76,38 +93,31 @@ const esc = (t) => String(t ?? '').replace(/<br\s*\/?>/g, '<br>');
 const RENDER = {
   h:    (b) => `<div class="s-h">${esc(b[1])}</div>`,
   h2:   (b) => `<div class="s-h2">${esc(b[1])}</div>`,
-  p:    (b, ord, same) => `<div class="s-p ${same ? 'same' : ''}">${b[1]}</div>`,
+  p:    (b) => `<div class="s-p">${esc(b[1])}</div>`,
   /* 与 index.js 的 prep 同一条规则：20 字以上默认收起（见那里的注释） */
   s:    (b) => (String(b[1]).replace(/<[^>]+>/g, '').length > 20
           ? (seenLongS++ ? '' : `<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div>`)
           : `<div class="s-s">${esc(b[1])}</div>`),
   ti:   (b) => `<div class="s-ti">${b[1]}</div>`,
   /* 带第二个参数时是入口（点食物名进完整卡片），要带上 › 才和真机一致 */
-  /* n{字数} 是食物名的字号档，和 index.wxml 的 class="s-food n{{b.n}}" 对齐。
-     不同步加这个，这里量出来的高度就不是真机的——名字会全吃最大那档。 */
-  food: (b) => {
-    const n = [...String(b[1])].length;
-    return b[2]
-      ? `<div class="s-food fgo n${n}"><span>${esc(b[1])}</span><span class="chev">\u203a</span></div>`
-      : `<div class="s-food n${n}">${esc(b[1])}</div>`;
-  },
+  food: (b) => (b[2]
+    ? `<div class="s-food n${[...String(b[1])].length} fgo"><span>${esc(b[1])}</span><span class="chev">›</span></div>`
+    : `<div class="s-food n${[...String(b[1])].length}">${esc(b[1])}</div>`),
 
   /* 首页那张滋味卡。真机上 index.js 的 mergeTaste() 会把 ti+food(+p+s)
      合成一个 taste 块，这里以前没有对应实现，于是截图里首页永远是散着的
      ti 和 food —— 这张卡长什么样一直没法验证。b = ['taste', ti, food, go] */
+  /* 首页那张滋味卡 —— 手账暗色版：
+     不是一个盒子，是「一张插画从右边缘出血 + 左边一个手写大字」。
+     插画只露一半、身后一团暖光、左缘淡出；深色主体的那些（烤红薯／糖炒栗子／
+     可乐）就靠这团光把身后暗底提亮，不垫纸。 */
   taste:(b) => {
     const D2 = require(R + '/data/daily.js');
     const t = D2.pick(D2.taste) || { food: b[2] };
-    const [deep, lit] = D2.cardColor(t.food);
     const n = [...String(t.food)].length;
-    const uri = ARTM.of(t.food);
-    return `<div class="tcard"><div class="tbody tx-${D2.cardTex(t.food)}`
-      + `${b[3] ? ' go' : ''}" style="--deep:${deep};--lit:${lit}">`
-      + (uri ? `<div class="art" style="background-image:url('${uri}')"></div>` : '')
-      + '<div class="pgrain"></div>'
+    return `<div class="tcard${b[3] ? ' go' : ''}">${art(t.food)}`
       + (b[1] ? `<div class="s-ti">${b[1]}</div>` : '')
-      + `<div class="tline"><div class="s-food n${n}">${esc(t.food)}</div>`
-      + (b[3] ? '<span class="chev">\u203a</span>' : '') + '</div></div></div>';
+      + `<div class="s-food n${n}">${esc(t.food)}</div></div>`;
   },
   box:  (b) => `<div class="s-box">${esc(b[1])}</div>`,
   num:  (b) => `<div class="s-num">${esc(b[1])}</div>`,
@@ -124,14 +134,17 @@ const RENDER = {
   pastline:(b) => `<div class="past"><span class="past-at">${esc(b[1])}</span>`
     + `<span class="past-t">${esc(b[2])}</span></div>`,
   /* 四个人。量的是四张并列——这一屏最容易超，因为多了「他会怎么说」。 */
-  /* 「他会怎么说」默认收起（index.wxml 的 x.open 初值是 false），量的就是收起的样子 */
+  /* 四个人 —— 「他会怎么说」默认收起。
+     这一屏原来四段长文加起来两百多字，一屏读不完要滑，而主线场景是
+     「选一个人说话」：她需要的是快速分辨四个人的区别，名字 + 身份 +
+     那句一行的介绍已经够分辨了。那段详情是想深入才看的，收起来。
+     渐进披露的红线是「藏起来的东西必须一步能找到」——点名字就展开。 */
   mentors:() => '<div class="mens">' + MEN.MENTORS.map((m) =>
     `<div class="men"><div class="men-h"><span class="men-n">${esc(m.name)}</span>`
     + `<span class="men-g">${esc(m.tag)}</span></div>`
     + `<span class="men-i">${esc(m.intro)}</span>`
-    + `<span class="men-l fold">${esc(m.lead)}</span>`
-    + '<div class="men-more">他会怎么说</div></div>').join('') + '</div>',
-  /* 输入框。量空的状态——那才是她第一次进来看到的。 */
+    + `<span class="men-more">他会怎么说</span>`
+    + `<span class="men-l fold">${esc(m.lead)}</span></div>`).join('') + '</div>',
   mentorin:() => '<div class="mif"><div class="mif-in mif-ph">'
     + '今天发生了什么，或者心里那句话</div>'
     + '<div class="asp-ok">说给他们听</div></div>',
@@ -198,27 +211,20 @@ const RENDER = {
       + '<div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div></div>';
   },
   online:(b) => `<div class="online">此刻 ${b[1] || 23} 人在</div>`,
+  /* 滋味卡的牌面（taste-card 屏）——就是定稿里那张纸：
+     暗底上贴一张米白纸，插画印在纸上，手写食物名 + 描述 + 等宽标注。
+     这是那 30 张插画质感最好的舞台（米白纸底是它们的必要条件）。
+     去掉原来扑克牌式的四角标——两个角标会在右下重叠成一团，
+     而且纸卡不是扑克牌，不需要角标。 */
   card: (b) => {
     const D2 = require(R + '/data/daily.js');
     const t = D2.pick(D2.taste) || { food: b[1], desc: b[2] };
-    const [deep, lit] = D2.cardColor(t.food);
-    /* tx-* 是这样食物的质感族（烙／蒸／汤／粒／冰／糕）。少了它 30 张牌的纹理全一样，
-       而每张牌对应那样食物的质感正是要在截图里看的东西。 */
-    /* 结构要和 index.wxml 的 card 块逐个对上：色板条＋日期 / 插画 / 名字 /
-       手画横线 / 描述 / 脚注。对不上就是这份预览在替真机说谎。 */
-    const mid = '#' + [1, 3, 5].map((k) => {
-      const v = Math.round((parseInt(deep.substr(k, 2), 16) + parseInt(lit.substr(k, 2), 16)) / 2);
-      return v.toString(16).padStart(2, '0');
-    }).join('');
-    const uri = ARTM.paper ? ARTM.paper(t.food) : '';
-    return `<div class="deck"><div class="pcard" style="--deep:${deep};--lit:${lit}">`
-      + `<div class="pcap"><div class="chips"><div class="chip" style="background:${lit}"></div>`
-      + `<div class="chip" style="background:${mid}"></div>`
-      + `<div class="chip" style="background:${deep}"></div></div><span class="pno">今天</span></div>`
-      + (uri ? `<div class="art" style="background-image:url('${uri}')"></div>` : '')
-      + `<span class="pname">${t.food}</span><div class="prule"></div>`
-      + `<div class="pdesc">${esc(t.desc)}</div>`
-      + '<div class="pfoot"><span>今天的滋味</span><span>TUICHAO</span></div></div></div>';
+    const n = [...String(t.food)].length;
+    return '<div class="deck"><div class="pcard">'
+      + `<div class="pcap"><span>今天的滋味</span><span>${D2.dayIndex ? '八月三十' : ''}</span></div>`
+      + art(t.food)
+      + `<div class="pname n${n}">${esc(t.food)}</div>`
+      + `<div class="pdesc">${esc(t.desc)}</div></div></div>`;
   },
   wall: () => {
     const pool = require(R + '/data/daily.js');
@@ -267,7 +273,7 @@ const RENDER = {
         + '<span class="swt"><span class="swd"></span></span></div>',
   warn: (b) => `<div class="s-warn"><span class="wt">必须动</span><span class="wb">${esc(b[1])}</span></div>`,
   q:    (b) => `<div class="s-q">${b[1]}<span class="chev">›</span></div>`,
-  b:    (b, ord) => `<div class="s-b o${ord} ${b[1]}">${esc(b[2])}</div>`,
+  b:    (b) => `<div class="s-b ${b[1]}">${esc(b[2])}</div>`,
   bbig: (b) => `<div class="s-b big">${esc(b[1])}</div>`,
   pair: (b) => `<div class="s-pair"><div class="s-q">${b[1]}</div><div class="s-q">${b[2]}</div></div>`,
   pair2:(b) => `<div class="s-pair">${b.slice(1).map((x) => `<div class="s-b cl flat">${x[0]}</div>`).join('')}</div>`,
@@ -372,19 +378,10 @@ function build(sid) {
     return cp;
   })();
   /* 每块后跟一个 .vgap，和 index.wxml 一样 —— 少了它截图里的间距就不是真机的 */
-  /* 同类块序号 + 「和上一块同类」+ vgap 的 tight —— 和 index.js／index.wxml 一致。
-     WXSS 不支持 ~ 和 +，兄弟关系全靠这几个 class 表达；
-     这里不同步，截图里就看不到三个岔口的缩进递进和配色轮换，工具和真机分叉。 */
-  const ordCnt = {};
-  const kept = withVis.filter((b) => !['dim', 'clockbar', 'tide'].includes(b[0]));
-  const html = kept
-    .map((b, i) => {
-      const ord = (ordCnt[b[0]] = (ordCnt[b[0]] === undefined ? 0 : ordCnt[b[0]] + 1));
-      const same = i > 0 && kept[i - 1][0] === b[0];
-      const tight = b[0] === 'ti' ? ' tight' : '';   /* 只给题头：大标题后面跟什么都该拉开 */
-      const one = RENDER[b[0]] ? RENDER[b[0]](b, ord, same) : `<!-- 未映射块型 ${b[0]} -->`;
-      return one + `<div class="vgap${tight}"></div>`;
-    })
+  const html = withVis
+    .filter((b) => !['dim', 'clockbar', 'tide'].includes(b[0]))
+    .map((b) => (RENDER[b[0]] ? RENDER[b[0]](b) : `<!-- 未映射块型 ${b[0]} -->`)
+                + '<div class="vgap"></div>')
     .join('\n');
   return { html, folded: from > 0 ? raw.length - from : 0, n: shown.length };
 }
@@ -392,7 +389,7 @@ const screen = (sid) => {
   const { html, folded } = build(sid);
   const r = D.SCREENS[sid].root;
   return `${sid === 'entry' ? '<div class="haze"><div class="hz h1"></div><div class="hz h2"></div><div class="hz h3"></div></div>' : ''}<div class="view s-${sid}" style="padding-top:${TOP}px"><div class="page" data-id="${sid}">
-<div class="binder"><div class="binder-mk"></div><text class="binder-tx">${r ? '八月三十' : '返回'}</text></div>
+<div class="binder"><span class="binder-mk"></span><span class="binder-tx">${r ? '八月三十' : '← 返回'}</span></div>
 <div class="nav${r ? ' root' : ''}">${r ? '' : '<div class="navbtn">← 返回</div>'}</div>
 ${html}
 ${folded ? '<div class="foldwrap"><div class="morebtn"><span>更多</span><span class="chev mchev">›</span></div></div>' : ''}
@@ -417,7 +414,7 @@ if (ALL) {
   .wrap{display:inline-block;vertical-align:top}</style>${parts.join('')}
   <script>addEventListener('load',()=>{document.title=[...document.querySelectorAll('.wrap')]
     .map(w=>w.dataset.key+':'+Math.round(w.querySelector('.page').getBoundingClientRect().height)).join('|')})</script>`;
-  const out2 = R + '/.sync-mp/out'; fs.mkdirSync(out2, { recursive: true });
+  const out2 = R + '/design-demos/hb-out'; fs.mkdirSync(out2, { recursive: true });
   const f = out2 + '/_all.html'; fs.writeFileSync(f, all);
   const dom = execFileSync(CHROME, ['--headless', '--disable-gpu', '--dump-dom',
     `--window-size=${W * 4},2000`, 'file://' + f], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
@@ -429,6 +426,7 @@ if (ALL) {
      这三屏都不是发作当下，硬压反而会砍掉它们真正要给的东西： */
   const SCROLL_OK = {
     sos: '红旗清单是查阅型安全信息，不该为「不用滑」牺牲行距',
+    mentors: '四个人各带介绍，本来就该读——压它就要删掉「他会怎么说」',
     'mentor-chat': '聊天窗天生往上滑，输入框吸底不动。压它等于限制对话长度',
   };
   const rows = t[1].split('|').map((x) => { const [k, v] = x.split(':'); return [k, +v]; })
@@ -471,7 +469,7 @@ html,body{margin:0} ${css}
   font:11px/1.4 -apple-system,sans-serif;color:#CB7E62}
 </style><div id=vp>${screen(id)}</div><div class="vpline"></div>`;
 
-const out = R + '/.sync-mp/out';
+const out = R + '/design-demos/hb-out';
 fs.mkdirSync(out, { recursive: true });
 const page = `${out}/${id}-${clock}.html`;
 const png = `${out}/${id}-${clock}.png`;

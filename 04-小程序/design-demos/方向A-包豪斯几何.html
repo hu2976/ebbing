@@ -1,0 +1,160 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>退潮 · 方向A · 包豪斯几何</title>
+<style>
+:root{
+  --n1:#171310; --n2:#1F1A15; --n3:#2A231C;
+  --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#968979;
+  --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+  --hair:rgba(244,237,227,.10);
+  --body:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+  --hand:"STXingkai","STKaiti",KaiTi,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0b09;font-family:var(--body);color:var(--paper);
+     display:flex;gap:52px;padding:56px;align-items:flex-start;flex-wrap:wrap;
+     -webkit-font-smoothing:antialiased}
+.lab{position:fixed;top:0;left:0;right:0;padding:13px 56px;background:#0d0b09ee;
+     border-bottom:1px solid #241d17;font-size:13px;color:var(--paper3);z-index:9;
+     letter-spacing:.04em;backdrop-filter:blur(8px)}
+.lab b{color:var(--brass);font-weight:500}
+.wrap{margin-top:46px}
+.cap{font-size:12.5px;color:var(--paper3);padding:11px 2px 0;letter-spacing:.05em}
+.ph{width:390px;height:844px;background:var(--n1);border-radius:44px;
+    padding:54px 26px 30px;position:relative;overflow:hidden;
+    border:1px solid #2a231c;box-shadow:0 30px 70px #0006}
+
+/* ══ 包豪斯几何：情绪 = 原始几何形。圆/三角/方/半圆，硬边、扁平、无渐变 ══
+   暖化处理：包豪斯原色（红黄蓝）换成产品自己的赭红/黄铜/灰绿，
+   避免"设计课作业"感，保持产品温度。 */
+
+/* 顶：日期 —— 竖排小字，包豪斯式的边缘编排 */
+.date{position:absolute;top:56px;right:26px;font-size:11px;letter-spacing:.26em;
+      color:var(--paper3);writing-mode:vertical-rl}
+
+/* 主构成区：罐 = 一个梯形容器，几何情绪块堆在里面 */
+.stage{height:352px;position:relative;margin:14px 0 0}
+.jar{position:absolute;left:50%;top:14px;transform:translateX(-50%);
+     width:212px;height:264px;
+     /* 梯形罐身：上窄下宽，硬边，包豪斯不用圆润 */
+     clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);
+     background:linear-gradient(180deg,#211b15,#1a1611);
+     border-top:3px solid var(--brass)}
+.lid{position:absolute;left:50%;top:0;transform:translateX(-50%);
+     width:96px;height:11px;background:var(--brass)}
+/* 情绪几何块：每种形状 = 一类唤起度 */
+.g{position:absolute}
+.circ{border-radius:50%}
+.tri{width:0;height:0;background:none!important;
+     border-left:22px solid transparent;border-right:22px solid transparent}
+.half{border-radius:100px 100px 0 0}
+.sq{border-radius:2px}
+.count{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+       font-size:11px;letter-spacing:.2em;color:var(--paper3)}
+
+/* 今天的滋味：包豪斯的横条带 + 大写编号 */
+.taste{display:flex;align-items:center;gap:14px;padding:16px 0 18px;
+       border-top:2px solid var(--paper);margin-top:26px}
+.taste .n{font-size:11px;letter-spacing:.18em;color:var(--paper3);flex:none}
+.taste .w{font-family:var(--hand);font-size:34px;color:var(--brass);line-height:1;flex:1}
+.taste .go{font-size:19px;color:var(--paper3)}
+
+/* 三个次级入口：包豪斯的等分栅格，靠几何符号区分而不是箭头 */
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:var(--hair);
+       border:1px solid var(--hair);margin:0 0 22px}
+.cell{background:var(--n1);padding:17px 11px 15px;text-align:center}
+.cell i{display:block;width:19px;height:19px;margin:0 auto 10px}
+.cell span{font-size:12.5px;color:var(--paper2);letter-spacing:.02em;line-height:1.35;display:block}
+
+/* 主入口：整块实心色 —— 包豪斯最强的语汇就是一个纯色块 */
+.main{background:var(--clay);color:#1a120e;text-align:center;
+      padding:23px;font-size:21px;font-weight:600;letter-spacing:.06em;margin:0 0 12px}
+.sub{text-align:center;font-size:14px;color:var(--paper2);padding:0 0 20px}
+
+/* 急救线：底部两端，硬边分割 */
+.foot{position:absolute;left:26px;right:26px;bottom:30px;display:flex;
+      justify-content:space-between;border-top:2px solid var(--clay);padding-top:13px}
+.foot span{font-size:14px;color:var(--clay);letter-spacing:.02em}
+
+/* ══ 第二屏：情绪瓶子 ══ */
+.bk{font-size:13px;color:var(--paper3);letter-spacing:.08em}
+.h2{font-size:29px;font-weight:600;letter-spacing:.03em;margin:22px 0 4px}
+.mon{font-size:11px;letter-spacing:.24em;color:var(--brass);margin:0 0 26px}
+.bigjar{height:392px;position:relative;
+        background:repeating-linear-gradient(90deg,transparent,transparent 42px,var(--hair) 42px,var(--hair) 43px)}
+.bj{position:absolute;left:50%;top:8px;transform:translateX(-50%);
+    width:250px;height:320px;clip-path:polygon(13% 0,87% 0,100% 100%,0 100%);
+    background:linear-gradient(180deg,#221c16,#191410);border-top:3px solid var(--brass)}
+.note{border-top:2px solid var(--paper);padding:16px 0 0;margin:20px 0 0}
+.note p{font-size:16px;line-height:1.7;color:var(--paper)}
+.note p+p{color:var(--paper2);font-size:14px;margin-top:7px}
+.quote{font-family:var(--hand);font-size:19px;color:var(--brass);
+       margin:20px 0 0;line-height:1.6}
+</style>
+
+<div class=lab>方向 <b>A</b> · 包豪斯几何 + 扁平插画系统　<span style="color:#5a5147">｜轮盘 10 号 · 情绪＝原始几何形，硬边扁平，暖化包豪斯三原色</span></div>
+
+<div class=wrap>
+<div class=ph>
+  <div class=date>八月廿七</div>
+
+  <div class=stage>
+    <div class=lid></div>
+    <div class=jar></div>
+    <!-- 情绪块：形状=唤起类型，颜色=退潮已有色相表 -->
+    <div class="g circ" style="left:132px;bottom:66px;width:44px;height:44px;background:#CB7E62"></div>
+    <div class="g sq"   style="left:180px;bottom:62px;width:38px;height:38px;background:#C9A063"></div>
+    <div class="g circ" style="left:158px;bottom:110px;width:30px;height:30px;background:#8CC1AA"></div>
+    <div class="g half" style="left:200px;bottom:100px;width:40px;height:22px;background:#9A8FB8"></div>
+    <div class="g tri"  style="left:118px;bottom:112px;border-bottom:36px solid #7FA5B8"></div>
+    <div class="g circ" style="left:206px;bottom:140px;width:22px;height:22px;background:#D4A574"></div>
+    <div class="g sq"   style="left:146px;bottom:150px;width:24px;height:24px;background:#B8776B"></div>
+    <div class=count>十一天</div>
+  </div>
+
+  <div class=taste>
+    <div class=n>今天的滋味</div>
+    <div class=w>蒸蛋</div>
+    <div class=go>→</div>
+  </div>
+
+  <div class=grid3>
+    <div class=cell><i style="background:#8CC1AA;border-radius:50%"></i><span>情绪瓶子</span></div>
+    <div class=cell><i style="background:#7FA5B8;border-radius:100px 100px 0 0;height:11px;margin-top:8px"></i><span>昨晚睡得怎么样</span></div>
+    <div class=cell><i style="background:#C9A063"></i><span>找个人说说话</span></div>
+  </div>
+
+  <div class=main>我现在不太好</div>
+  <div class=sub>试试含一口水，慢慢感受</div>
+
+  <div class=foot><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+</div>
+<div class=cap>首页 · 罐子成为主视觉，列表行改成等分几何栅格</div>
+</div>
+
+<div class=wrap>
+<div class=ph>
+  <div class=bk>← 返回</div>
+  <div class=h2>情绪瓶子</div>
+  <div class=mon>八月</div>
+
+  <div class=bigjar>
+    <div class=bj></div>
+    <div class="g circ" style="left:calc(50% - 56px);bottom:74px;width:52px;height:52px;background:#CB7E62"></div>
+    <div class="g sq"   style="left:calc(50% + 4px);bottom:70px;width:46px;height:46px;background:#C9A063"></div>
+    <div class="g circ" style="left:calc(50% - 20px);bottom:126px;width:36px;height:36px;background:#8CC1AA"></div>
+    <div class="g half" style="left:calc(50% + 26px);bottom:118px;width:48px;height:26px;background:#9A8FB8"></div>
+    <div class="g tri"  style="left:calc(50% - 74px);bottom:128px;border-bottom:42px solid #7FA5B8"></div>
+    <div class="g circ" style="left:calc(50% + 34px);bottom:158px;width:26px;height:26px;background:#D4A574"></div>
+    <div class="g sq"   style="left:calc(50% - 44px);bottom:170px;width:28px;height:28px;background:#B8776B"></div>
+    <div class="g circ" style="left:calc(50% + 2px);bottom:190px;width:20px;height:20px;background:#8CC1AA"></div>
+  </div>
+
+  <div class=note>
+    <p>颜色都不一样，都可以在这儿。</p>
+    <p>合起来才是你。</p>
+  </div>
+  <div class=quote>「满足」「踏实」多半写在一顿饭之后。</div>
+</div>
+<div class=cap>情绪瓶子 · 每颗是一天，形状分唤起类型，颜色不编码好坏</div>
+</div>
+</html>

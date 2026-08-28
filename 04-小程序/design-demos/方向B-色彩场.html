@@ -1,0 +1,160 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>退潮 · 方向B · 色彩场</title>
+<style>
+:root{
+  --n1:#171310; --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#968979;
+  --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+  --body:-apple-system,"PingFang SC","Source Han Sans SC",sans-serif;
+  --hand:"STXingkai","STKaiti",KaiTi,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0b09;font-family:var(--body);color:var(--paper);
+     display:flex;gap:52px;padding:56px;align-items:flex-start;flex-wrap:wrap;
+     -webkit-font-smoothing:antialiased}
+.lab{position:fixed;top:0;left:0;right:0;padding:13px 56px;background:#0d0b09ee;
+     border-bottom:1px solid #241d17;font-size:13px;color:var(--paper3);z-index:9;
+     letter-spacing:.04em;backdrop-filter:blur(8px)}
+.lab b{color:var(--jade);font-weight:500}
+.wrap{margin-top:46px}
+.cap{font-size:12.5px;color:var(--paper3);padding:11px 2px 0;letter-spacing:.05em}
+.ph{width:390px;height:844px;background:var(--n1);border-radius:44px;
+    padding:0;position:relative;overflow:hidden;border:1px solid #2a231c;
+    box-shadow:0 30px 70px #0006}
+
+/* ══ How We Feel 的 Mood Meter 迁移：情绪是一片连续的场，不是一格一格的选项 ══
+   两轴沿用退潮已有的色相逻辑：暖=高唤起（烫辣烦紧张高兴），冷=低唤起（平静累空孤单）。
+   深色底转译：色场不是铺色块，是从暗里发出来的光。硬边全部取消。 */
+
+.field{position:absolute;inset:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(58px)}
+
+/* 今天的场：这一天记过的词聚合成的光。一致的日子色纯，杂的日子灰调 */
+.b1{width:250px;height:250px;left:-38px;top:56px;background:#CB7E62;opacity:.44}
+.b2{width:214px;height:214px;right:-30px;top:22px;background:#C9A063;opacity:.36}
+.b3{width:182px;height:182px;left:96px;top:180px;background:#8CC1AA;opacity:.28}
+.b4{width:146px;height:146px;right:52px;top:210px;background:#9A8FB8;opacity:.22}
+.veil{position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 0,transparent 26%,#171310e0 52%,#171310 66%)}
+
+.in{position:relative;padding:54px 28px 30px;height:100%;display:flex;flex-direction:column}
+.day{font-size:11.5px;letter-spacing:.24em;color:var(--paper2);opacity:.8}
+
+/* 场的中心：今天的滋味浮在光里，没有卡片没有边框 */
+.hero{padding:74px 0 0;text-align:center}
+.hero .lbl{font-size:12.5px;letter-spacing:.2em;color:var(--paper2);opacity:.85}
+.hero .w{font-family:var(--hand);font-size:62px;color:#FFF3E0;line-height:1.1;
+         margin:12px 0 0;text-shadow:0 0 34px #C9A06366,0 0 74px #CB7E6244}
+.hero .more{font-size:13px;color:var(--paper2);margin:14px 0 0;letter-spacing:.06em;opacity:.9}
+
+.spacer{flex:1}
+
+/* 内容浮在场的下沿——圆角、无边框、靠底色深浅分组（亲密性靠距离不靠线） */
+.soft{background:rgba(244,237,227,.045);border-radius:22px;padding:6px 4px;margin:0 0 14px}
+.row{display:flex;align-items:center;justify-content:space-between;
+     padding:14px 18px;border-radius:18px}
+.row span{font-size:16px;color:var(--paper)}
+.row i{font-size:15px;color:var(--paper3);font-style:normal}
+.row+.row{box-shadow:0 -1px 0 rgba(244,237,227,.055)}
+
+.live{display:flex;align-items:center;gap:9px;padding:0 6px 12px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--jade);
+     box-shadow:0 0 10px var(--jade)}
+.live b{font-size:13.5px;color:var(--jade);font-weight:400;letter-spacing:.03em}
+.live em{font-size:13.5px;color:var(--paper3);font-style:normal;margin-left:auto}
+
+/* 主入口：不是方块按钮，是一片暖光 */
+.main{border-radius:26px;padding:22px;text-align:center;font-size:21px;
+      color:#FFF6EA;letter-spacing:.05em;
+      background:radial-gradient(120% 150% at 50% 0%,#7A4634 0%,#4A2A20 62%,#33201a 100%);
+      box-shadow:0 0 40px #CB7E6233,inset 0 1px 0 #ffffff14}
+.sub{text-align:center;font-size:14px;color:var(--paper2);padding:15px 0 18px;opacity:.9}
+.foot{display:flex;justify-content:space-between;padding:15px 6px 0;
+      border-top:1px solid rgba(244,237,227,.07)}
+.foot span{font-size:14px;color:var(--clay);opacity:.92}
+
+/* ══ 第二屏 ══ */
+.bk{font-size:13px;color:var(--paper3);letter-spacing:.08em}
+.h2{font-size:30px;margin:20px 0 3px;font-weight:500;letter-spacing:.02em}
+.mon{font-size:11.5px;letter-spacing:.24em;color:var(--brass);opacity:.9}
+/* 罐 = 一团被容纳的光，玻璃只是一层极淡的轮廓 */
+.jarwrap{height:400px;position:relative;margin:18px 0 0}
+.glass{position:absolute;left:50%;top:16px;transform:translateX(-50%);
+       width:236px;height:308px;border-radius:26px 26px 74px 74px;
+       background:linear-gradient(180deg,rgba(244,237,227,.05),rgba(244,237,227,.015));
+       border:1px solid rgba(244,237,227,.09);
+       box-shadow:inset 0 2px 16px #ffffff10, 0 18px 50px #0008;overflow:hidden}
+.neck{position:absolute;left:50%;top:2px;transform:translateX(-50%);width:104px;height:15px;
+      border-radius:8px;background:rgba(244,237,227,.09)}
+.bead{position:absolute;border-radius:50%;filter:blur(.4px)}
+.bead::after{content:'';position:absolute;left:22%;top:16%;width:26%;height:26%;
+             border-radius:50%;background:#ffffffb0}
+.note{padding:22px 4px 0}
+.note p{font-size:16.5px;line-height:1.75;color:var(--paper)}
+.note p+p{color:var(--paper2);font-size:14.5px;margin-top:6px}
+.quote{font-family:var(--hand);font-size:19px;color:var(--brass);margin:18px 0 0;line-height:1.65}
+</style>
+
+<div class=lab>方向 <b>B</b> · 色彩场　<span style="color:#5a5147">｜现实参照：How We Feel（Yale 情绪智力中心 · App Store 2022 Cultural Impact Award）的 Mood Meter 迁移到深色底</span></div>
+
+<div class=wrap>
+<div class=ph>
+  <div class=field>
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="blob b3"></div><div class="blob b4"></div>
+    <div class=veil></div>
+  </div>
+  <div class=in>
+    <div class=day>八月廿七</div>
+    <div class=hero>
+      <div class=lbl>今天的滋味</div>
+      <div class=w>蒸蛋</div>
+      <div class=more>今天怎么样 · 为什么</div>
+    </div>
+    <div class=spacer></div>
+
+    <div class=soft>
+      <div class=row><span>情绪瓶子</span><i>›</i></div>
+      <div class=row><span>昨晚睡得怎么样</span><i>›</i></div>
+      <div class=row><span>找个人说说话</span><i>›</i></div>
+    </div>
+
+    <div class=live><span class=dot></span><b>此刻 23 人在</b><em>20:30 · 十五分钟 · 一起坐着　›</em></div>
+
+    <div class=main>我现在不太好</div>
+    <div class=sub>试试含一口水，慢慢感受</div>
+    <div class=foot><span>身体不舒服</span><span>什么时候必须去医院</span></div>
+  </div>
+</div>
+<div class=cap>首页 · 今天的情绪聚合成一片光，内容浮在光的下沿</div>
+</div>
+
+<div class=wrap>
+<div class=ph>
+  <div class=in>
+    <div class=bk>← 返回</div>
+    <div class=h2>情绪瓶子</div>
+    <div class=mon>八月</div>
+    <div class=jarwrap>
+      <div class=neck></div>
+      <div class=glass>
+        <div class=bead style="left:38px;bottom:26px;width:56px;height:56px;background:radial-gradient(circle at 34% 30%,#E09070,#B85F44)"></div>
+        <div class=bead style="left:98px;bottom:20px;width:48px;height:48px;background:radial-gradient(circle at 34% 30%,#DFB878,#B98B4C)"></div>
+        <div class=bead style="left:150px;bottom:28px;width:52px;height:52px;background:radial-gradient(circle at 34% 30%,#A0D2BA,#6FA48D)"></div>
+        <div class=bead style="left:62px;bottom:76px;width:44px;height:44px;background:radial-gradient(circle at 34% 30%,#B0A4CC,#7E739C)"></div>
+        <div class=bead style="left:112px;bottom:70px;width:40px;height:40px;background:radial-gradient(circle at 34% 30%,#93B8CC,#66879C)"></div>
+        <div class=bead style="left:158px;bottom:82px;width:36px;height:36px;background:radial-gradient(circle at 34% 30%,#E6C08C,#B08C58)"></div>
+        <div class=bead style="left:84px;bottom:118px;width:38px;height:38px;background:radial-gradient(circle at 34% 30%,#D69880,#A66450)"></div>
+        <div class=bead style="left:128px;bottom:112px;width:32px;height:32px;background:radial-gradient(circle at 34% 30%,#9ACBB4,#6C9682)"></div>
+        <div class=bead style="left:104px;bottom:152px;width:28px;height:28px;background:radial-gradient(circle at 34% 30%,#C8B49C,#94816C)"></div>
+      </div>
+    </div>
+    <div class=note>
+      <p>颜色都不一样，都可以在这儿。</p>
+      <p>合起来才是你。</p>
+    </div>
+    <div class=quote>「满足」「踏实」多半写在一顿饭之后。</div>
+  </div>
+</div>
+<div class=cap>情绪瓶子 · 玻璃退成一层轮廓，主角是里面的光</div>
+</div>
+</html>

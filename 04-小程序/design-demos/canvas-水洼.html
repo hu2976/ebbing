@@ -1,0 +1,137 @@
+<!doctype html><html><head><meta charset="utf-8"><title>canvas 水洼</title>
+<style>body{background:#141110;margin:0;padding:40px;display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+canvas{display:block}</style></head><body>
+<script>
+/* 朦胧手绘的水洼 · canvas
+   CSS 做不出来的三件事，canvas 都能：
+   1 任意贝塞尔闭合路径 —— 不规则形状，不是 border-radius 硬凑
+   2 ctx.filter='blur()' —— 真模糊，朦胧的来源
+   3 逐层半透明叠加 —— 水彩的原理就是一层层洇上去 */
+
+// 种子化随机：同一颗永远长一样，不然每次刷新形状都变
+const rnd = (i, s) => { const x = Math.sin(i*127.1 + s*311.7) * 43758.5453; return x - Math.floor(x); };
+
+/* 不规则的闭合路径。几个低频正弦叠加 —— 周期互质，
+   所以轮廓的起伏自己漂移，看不出是数学画的 */
+function blob(ctx, cx, cy, rx, ry, seed) {
+  const N = 72;
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const a = i / N * Math.PI * 2;
+    const r = 1
+      + 0.17 * Math.sin(a * 2 + seed * 1.7)
+      + 0.11 * Math.sin(a * 3 + seed * 2.9)
+      + 0.07 * Math.sin(a * 5 + seed * 4.3);
+    const x = cx + Math.cos(a) * rx * r;
+    const y = cy + Math.sin(a) * ry * r;
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.closePath();
+}
+
+function pool(cv, seed, opt) {
+  opt = opt || {};
+  const W = cv.width, H = cv.height, g = cv.getContext('2d');
+  const cx = W/2, cy = H/2;
+  const rx = W * (opt.rx || 0.30), ry = H * (opt.ry || 0.26);
+
+  g.clearRect(0,0,W,H);
+
+  /* ① 湿痕：路径外一圈，比沙深。模糊得最狠 —— 水和沙的交界是渗的 */
+  g.save();
+  g.filter = 'blur(7px)';
+  g.fillStyle = 'rgba(9,8,7,.88)';
+  blob(g, cx, cy+1, rx*1.16, ry*1.20, seed);
+  g.fill();
+  g.restore();
+
+  /* ② 水体：几乎黑。夜里的水没有自己的颜色 —— 这一条试错两版才想明白 */
+  g.save();
+  g.filter = 'blur(2.5px)';
+  /* ⚠️ 上一版这里带青绿（15,22,22），和暖黄倒影叠起来成了土黄一团。
+     夜里的水是黑的、略带一点暖 —— 因为它映的是暖光，不是天空。 */
+  const body = g.createLinearGradient(0, cy-ry, 0, cy+ry);
+  body.addColorStop(0, 'rgba(13,12,11,.97)');
+  body.addColorStop(1, 'rgba(6,6,6,.99)');
+  g.fillStyle = body;
+  blob(g, cx, cy, rx, ry, seed);
+  g.fill();
+  g.restore();
+
+  /* ③ 灯的倒影：几处柔和的暖黄，被水面揉碎了。
+     lighter 混合 —— 光是加上去的，不是盖上去的 */
+  g.save();
+  blob(g, cx, cy, rx*0.98, ry*0.98, seed); g.clip();
+  g.globalCompositeOperation = 'lighter';
+  /* ⚠️ 上一版用圆形光斑，两个圆点读成了「眼睛」。
+     真实水面的倒影是被波纹**横向拉长**的一条条，不是圆点 ——
+     灯是竖着的一个点，落在水面上被涟漪拉成横的。
+     所以：圆形渐变 + scale 压扁成横椭圆，画三到五条错开的，
+     长短亮暗都不同 = 被水面揉碎的那盏灯。 */
+  const spots = opt.spots || [[-0.18,0.22,0.42,0.50],[0.24,-0.10,0.26,0.30],[0.02,0.40,0.18,0.22]];
+  for (const [ox, oy, sr, al] of spots) {
+    const px = cx + ox*rx*2, py = cy + oy*ry*2;
+    const stretch = 2.4 + (sr * 2.2);          // 越大的倒影拉得越长
+    g.save();
+    g.filter = 'blur(' + (2 + sr*3.2).toFixed(1) + 'px)';
+    g.translate(px, py);
+    /* 每条略微转一点角度 —— 全部水平会读成百叶窗。
+       水面不是绝对平的，倒影跟着起伏歪一点点，那一点歪就是「活的」 */
+    g.rotate((rnd(Math.round(sr*100), seed) - 0.5) * 0.22);
+    g.scale(stretch, 0.42);
+    const R = rx * sr * 0.9;
+    const gr = g.createRadialGradient(0, 0, 0, 0, 0, R);
+    gr.addColorStop(0,    'rgba(255,238,202,' + Math.min(0.98, al*1.9).toFixed(3) + ')');
+    gr.addColorStop(0.30, 'rgba(246,196,124,' + (al*0.72).toFixed(3) + ')');
+    gr.addColorStop(0.68, 'rgba(198,142,80,'  + (al*0.22).toFixed(3) + ')');
+    gr.addColorStop(1,    'rgba(0,0,0,0)');
+    g.fillStyle = gr;
+    g.fillRect(-R*2, -R*2, R*4, R*4);
+    g.restore();
+  }
+  /* 再补两三道更细更暗的横线 —— 涟漪把光切开的那几道 */
+  for (let k = 0; k < 3; k++) {
+    const t = rnd(k + 11, seed);
+    const yy = cy + (t - 0.5) * ry * 1.4;
+    g.save();
+    g.filter = 'blur(1.6px)';
+    g.translate(cx + (rnd(k+21, seed) - 0.5) * rx * 0.6, yy);
+    g.rotate((rnd(k+31, seed) - 0.5) * 0.3);
+    g.scale(3.2, 0.16);
+    const R2 = rx * (0.24 + t * 0.22);
+    const g2 = g.createRadialGradient(0,0,0,0,0,R2);
+    g2.addColorStop(0, 'rgba(255,226,178,' + (0.34 + t*0.22).toFixed(3) + ')');
+    g2.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = g2;
+    g.fillRect(-R2*2, -R2*2, R2*4, R2*4);
+    g.restore();
+  }
+  g.restore();
+
+  /* ④ 水面边缘的一线亮：只在朝光的那半边，很浅 */
+  g.save();
+  g.filter = 'blur(2px)';
+  /* 上一版这圈偏青，读作塑料边。改成极淡的暖 —— 那是水边被灯照到的一线 */
+  g.strokeStyle = 'rgba(214,170,110,.13)';
+  g.lineWidth = 1.2;
+  blob(g, cx, cy-0.5, rx*0.99, ry*0.99, seed);
+  g.stroke();
+  g.restore();
+}
+
+// 六洼，形状和倒影各不相同
+const cfg = [
+  {rx:0.34, ry:0.20, spots:[[-0.30,0.20,0.40,0.52],[0.20,-0.06,0.22,0.26]]},           // 长条拖尾
+  {rx:0.28, ry:0.27, spots:[[0.04,0.28,0.38,0.48],[-0.22,-0.14,0.20,0.22]]},           // 圆润
+  {rx:0.32, ry:0.22, spots:[[-0.34,0.10,0.30,0.46],[0.30,0.16,0.26,0.34]]},            // 两块感
+  {rx:0.35, ry:0.16, spots:[[-0.20,0.10,0.48,0.40],[0.34,0.04,0.20,0.24]]},            // 细长弯
+  {rx:0.30, ry:0.26, spots:[[-0.10,0.24,0.52,0.54]]},                                   // 最大最舒展
+  {rx:0.24, ry:0.18, spots:[[0.06,0.22,0.20,0.30]]},                                    // 快干了
+];
+for (let i = 0; i < 6; i++) {
+  const cv = document.createElement('canvas');
+  cv.width = 176; cv.height = 132;   // 44×33 的 4 倍，看细节
+  document.body.appendChild(cv);
+  pool(cv, i * 1.9 + 0.7, cfg[i]);
+}
+</script></body></html>
