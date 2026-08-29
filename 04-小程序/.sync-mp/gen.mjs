@@ -1,7 +1,7 @@
 /* 从 02-可交互原型.html 生成小程序的数据与样式。
    屏级文字与样式的唯一源仍是原型——这里只抽，不抄。 */
 import fs from 'fs';
-const SRC='/Users/hujinghan/Desktop/搓点有趣的/退潮/01-Demo-可交互原型.html';
+const SRC='/Users/hujinghan/Desktop/搓点有趣的/退潮/_工作过程/01-给UI-可交互原型.html';
 const OUT='/Users/hujinghan/Desktop/搓点有趣的/退潮/04-小程序';
 const html=fs.readFileSync(SRC,'utf8');
 

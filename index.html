@@ -14,47 +14,64 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
        -webkit-font-smoothing:antialiased;line-height:1.75}
-  main{max-width:34rem;margin:0 auto;padding:14vh 1.5rem 6rem}
+  main{max-width:36rem;margin:0 auto;padding:12vh 1.5rem 6rem}
   h1{font-size:2rem;font-weight:600;letter-spacing:.04em;margin:0}
   .sub{font-family:var(--hand);font-size:1.15rem;color:var(--brass);margin:.6rem 0 0}
-  .lede{color:var(--paper2);margin:2.5rem 0 0;font-size:.95rem}
+  .lede{color:var(--paper2);margin:2.2rem 0 0;font-size:.95rem}
   .lede b{color:var(--paper);font-weight:600}
-  nav{margin:3rem 0 0;border-top:1px solid var(--hair)}
-  a.row{display:block;padding:1.15rem 0;border-bottom:1px solid var(--hair);
+  h2{font-size:.78rem;font-weight:600;letter-spacing:.18em;color:var(--paper3);
+     margin:3.5rem 0 1rem;text-transform:uppercase}
+  video{width:100%;border:1px solid var(--hair);background:#000;display:block}
+  .qr{display:flex;gap:1.4rem;align-items:center;padding:1.2rem;
+      border:1px solid var(--hair);background:var(--n2)}
+  .qr img{width:9rem;height:9rem;object-fit:contain;background:var(--paper);flex:none}
+  .qr .none{width:9rem;height:9rem;flex:none;border:1px dashed var(--hair);
+            display:flex;align-items:center;justify-content:center;
+            color:var(--paper3);font-size:.75rem;text-align:center;padding:.8rem}
+  .qr .t{font-size:.95rem}
+  .qr .d{font-size:.8rem;color:var(--paper3);margin-top:.4rem}
+  nav{border-top:1px solid var(--hair)}
+  a.row{display:block;padding:1.1rem 0;border-bottom:1px solid var(--hair);
         color:var(--paper);text-decoration:none}
   a.row:hover{background:var(--n2)}
-  .row .t{font-size:1.05rem}
+  .row .t{font-size:1.02rem}
   .row .t::after{content:" →";color:var(--brass)}
-  .row .d{font-size:.82rem;color:var(--paper3);margin-top:.2rem}
-  footer{margin-top:3rem;font-size:.78rem;color:var(--paper3)}
+  .row .d{font-size:.8rem;color:var(--paper3);margin-top:.2rem}
+  footer{margin-top:3.5rem;font-size:.78rem;color:var(--paper3)}
 </style>
 <main>
   <h1>退潮 · ebbing</h1>
   <p class="sub">我们让她重新拥有形容词。</p>
 
   <p class="lede">面向<b>进食障碍全谱系</b>（暴食 / 厌食 / 贪食）本人及照护者的<b>匿名自助</b>微信小程序。
-  无账号、无登录、数据不出设备。</p>
+  无账号、无登录、数据不出设备。62 屏患者端 + 22 屏照护者端。</p>
 
+  <h2>作品演示</h2>
+  <video controls preload="none" playsinline src="03-演示视频.mp4"></video>
+
+  <h2>扫码体验</h2>
+  <div class="qr">
+    <div class="none">体验版二维码<br>待放入</div>
+    <div>
+      <div class="t">微信扫码打开小程序</div>
+      <div class="d">体验版。个人主体小程序的体验成员有人数上限，
+        扫不进去请看上面的演示视频，或用源码在微信开发者工具里跑。</div>
+    </div>
+  </div>
+
+  <h2>材料</h2>
   <nav>
-    <a class="row" href="01-Demo-可交互原型.html">
-      <div class="t">打开可交互原型</div>
-      <div class="d">62 屏全部能点。这是小程序的同构原型，浏览器直接玩，不用装开发者工具</div>
-    </a>
-    <a class="row" href="03-路演PPT.pdf">
-      <div class="t">路演 PPT</div>
-      <div class="d">四分钟版本</div>
-    </a>
-    <a class="row" href="02-项目文档.html">
+    <a class="row" href="01-项目文档.html">
       <div class="t">项目文档</div>
       <div class="d">背景 · 目标用户 · 技术栈 · 创新点 · 团队分工 · 开发过程 · 后续计划</div>
     </a>
-    <a class="row" href="05-演示视频.mp4">
-      <div class="t">演示视频</div>
-      <div class="d">作品演示</div>
+    <a class="row" href="02-路演PPT.pdf">
+      <div class="t">路演 PPT</div>
+      <div class="d">四分钟版本</div>
     </a>
     <a class="row" href="https://github.com/hu2976/ebbing">
       <div class="t">源码</div>
-      <div class="d">小程序本体在 04-小程序/。chk.mjs 17 项自检，立场是机器验证的</div>
+      <div class="d">04-小程序/。微信开发者工具导入仓库根目录即可运行，chk.mjs 17 项自检</div>
     </a>
   </nav>
 
