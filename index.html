@@ -1,6 +1,8 @@
 <!doctype html><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>退潮 · Demo</title><style>
+[hidden]{ display:none !important; }
+
 *{box-sizing:border-box}
 :root{
       --n1:#171310; --n2:#1F1A15; --n3:#2A231C;
@@ -2831,7 +2833,8 @@ view, text, rich-text, canvas, image{ box-sizing:border-box; }
 .skyread .none{ font-size: 12.480px; }
 
 
-.shelf{ display: none; }
+/* 这里原来是 .shelf{display:none}——把一整屏做完的卡片墙关掉了，
+   而屏上标题「这些天的滋味。」还在，点进来是空的。已移除。 */
 .sboard{
   border-radius: 1.560px; border: none;
   box-shadow: 0 1px 0 rgba(255,255,255,.10) inset,
@@ -3123,7 +3126,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
         <div class="roll" id="roll"><section class="scr" data-scr="p:home"><div class="view s-home" style="padding-top:94px"><div class="page" data-id="home">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">八月三十</span></div>
 <div class="nav root"></div>
-<div class="tcard go"><div class="art"><div class="artin"><svg viewBox="0 0 340 262" xmlns="http://www.w3.org/2000/svg">
+<div class="tcard go" data-go="taste-card"><div class="art"><div class="artin"><svg viewBox="0 0 340 262" xmlns="http://www.w3.org/2000/svg">
 <defs><filter id="d_1248093_a1" x="-10%" y="-10%" width="120%" height="120%">
 <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="93" result="n"/>
 <feColorMatrix in="n" type="saturate" values="0" result="g"/>
@@ -3213,8 +3216,8 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 </svg></div></div><div class="s-ti">今天的滋味</div><div class="s-food n2">饺子</div></div><div class="vgap"></div>
 <div class="s-hr"></div><div class="vgap"></div>
 <div class="s-ti">今天怎么样</div><div class="vgap"></div>
-<div class="cells"><div class="cell "></div><div class="cell "></div><div class="cell "></div><div class="cell on"></div><div class="cell e next"></div><div class="cell e"></div></div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="cells"><div class="cell " data-go="mood"></div><div class="cell " data-go="mood"></div><div class="cell " data-go="mood"></div><div class="cell on" data-go="mood"></div><div class="cell e next" data-go="mood"></div><div class="cell e" data-go="mood"></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>三顿正餐 + 三次加餐，中间隔三到四个小时。隔太久，后面会难扛一些。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="bottle">情绪瓶子<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="sleep">昨晚睡得怎么样<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="mentors">找个人说说话<span class="chev">›</span></div><div class="vgap"></div>
@@ -3262,7 +3265,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-p">太久没吃东西，饿的感觉会像潮水一样涨起来。</div><div class="vgap"></div>
 <div class="s-hr"></div><div class="vgap"></div>
 <div class="s-h2">想吃点什么样的？</div><div class="vgap"></div>
-<div class="pick"><div class="pickbtn">热乎乎的</div><div class="pickbtn">冰冰凉的</div><div class="pickbtn">软的、好咽的</div><div class="pickbtn">有嚼头的</div><div class="pickbtn wide">说不上来</div></div><div class="vgap"></div>
+<div class="pick"><div class="pickbtn" data-go="eat">热乎乎的</div><div class="pickbtn" data-go="eat">冰冰凉的</div><div class="pickbtn" data-go="eat">软的、好咽的</div><div class="pickbtn" data-go="eat">有嚼头的</div><div class="pickbtn wide" data-go="eat">说不上来</div></div><div class="vgap"></div>
 <div class="s-q" data-go="gate">下一餐怎么吃<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:eat"><div class="view s-eat" style="padding-top:94px"><div class="page" data-id="eat">
@@ -3325,7 +3328,8 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-row"><span class="rk">下一顿还是到点吃</span><span class="rv">相信我们的身体</span></div><div class="vgap"></div>
 <div class="s-b dg" data-go="sos">这些情况，等一等风险更大</div><div class="vgap"></div>
 <div class="s-q" data-go="swell">停下来的头几天会怎样<span class="chev">›</span></div><div class="vgap"></div>
-<div class="foldwrap"><div class="morebtn"><span>更多</span><span class="chev mchev">›</span></div></div>
+<div class="foldwrap"><div class="morebtn"><span>下一顿吃点什么</span><span class="chev mchev">›</span></div></div>
+<div class="foldbody" hidden><div class="s-hr"></div><div class="vgap"></div><div class="s-ti">下一顿吃点什么</div><div class="vgap"></div><div class="s-p">温的、软的，好咽的。</div><div class="vgap"></div><div class="s-p">粥或者软面条，卧一个蛋。<br>或者牛奶泡面包。</div><div class="vgap"></div><div class="s-s">这几天先避开很酸、很辣、很硬、很烫的——刚才那一下之后，喉咙和食管都比平时脆。</div><div class="vgap"></div><div class="s-s">一次少一点，隔一会儿再吃一点，比一大顿好受。</div><div class="vgap"></div><div class="s-box">饭就是饭。吃下去，人就有力气。</div><div class="vgap"></div></div>
 </div></div></section><section class="scr" data-scr="p:swell"><div class="view s-swell" style="padding-top:94px"><div class="page" data-id="swell">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
@@ -3339,8 +3343,8 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">下一餐怎么吃，<br>有一种情况要先看化验单。</div><div class="vgap"></div>
-<div class="checks"><div class="chk"><div class="cbox"><div class="cmark"></div></div><span class="ctext">最近两周有过几乎不吃的日子</span></div><div class="chk"><div class="cbox"><div class="cmark"></div></div><span class="ctext">很长时间没有按顿吃三餐了</span></div><div class="chk"><div class="cbox"><div class="cmark"></div></div><span class="ctext">有人担心过我的身体</span></div></div><div class="vgap"></div>
-<div class="s-b big gatego">看下一餐怎么吃</div><div class="vgap"></div>
+<div class="checks"><div class="chk" data-i="0"><div class="cbox"><div class="cmark"></div></div><span class="ctext">最近两周有过几乎不吃的日子</span></div><div class="chk" data-i="1"><div class="cbox"><div class="cmark"></div></div><span class="ctext">很长时间没有按顿吃三餐了</span></div><div class="chk" data-i="2"><div class="cbox"><div class="cmark"></div></div><span class="ctext">有人担心过我的身体</span></div></div><div class="vgap"></div>
+<div class="s-b big gatego" data-go="empty">看下一餐怎么吃</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:three"><div class="view s-three" style="padding-top:94px"><div class="page" data-id="three">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -3455,14 +3459,14 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">这些天的滋味。</div><div class="vgap"></div>
-<div class="shelf"><div class="srow"><div class="spine  out" style="--deep:#645A4F;--lit:#BCB2A1"><span class="sd">08/30</span><span class="sf">饺子</span></div><div class="spine on " style="--deep:#6F472D;--lit:#A26E41"><span class="sd">08/29</span><span class="sf">烤红薯</span></div><div class="spine on " style="--deep:#6D543E;--lit:#A78967"><span class="sd">08/28</span><span class="sf">羊肉汤</span></div></div><div class="sboard"></div><div class="srow"><div class="spine on " style="--deep:#746638;--lit:#E2C65A"><span class="sd">08/27</span><span class="sf">蒸蛋</span></div><div class="spine on " style="--deep:#6F353B;--lit:#A6545D"><span class="sd">08/26</span><span class="sf">草莓</span></div><div class="spine on " style="--deep:#70685A;--lit:#C8C1B3"><span class="sd">08/25</span><span class="sf">热牛奶</span></div></div><div class="sboard"></div><div class="srow"><div class="spine on " style="--deep:#6B6255;--lit:#BAB2A5"><span class="sd">08/24</span><span class="sf">排骨汤</span></div><div class="spine on " style="--deep:#525C3A;--lit:#7F8F53"><span class="sd">08/23</span><span class="sf">韭菜盒子</span></div><div class="spine on " style="--deep:#685F4F;--lit:#B5AB93"><span class="sd">08/22</span><span class="sf">烧麦</span></div></div><div class="sboard"></div><div class="srow"><div class="spine on " style="--deep:#725A30;--lit:#B89444"><span class="sd">08/21</span><span class="sf">蒸南瓜</span></div><div class="spine on " style="--deep:#423E3C;--lit:#77716B"><span class="sd">08/20</span><span class="sf">芝麻汤圆</span></div></div><div class="sboard"></div></div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="shelf"><div class="srow"><div class="spine  out" data-go="taste-card" style="--deep:#645A4F;--lit:#BCB2A1"><span class="sd">08/30</span><span class="sf">饺子</span></div><div class="spine on " data-go="taste-card" style="--deep:#6F472D;--lit:#A26E41"><span class="sd">08/29</span><span class="sf">烤红薯</span></div><div class="spine on " data-go="taste-card" style="--deep:#6D543E;--lit:#A78967"><span class="sd">08/28</span><span class="sf">羊肉汤</span></div></div><div class="sboard"></div><div class="srow"><div class="spine on " data-go="taste-card" style="--deep:#746638;--lit:#E2C65A"><span class="sd">08/27</span><span class="sf">蒸蛋</span></div><div class="spine on " data-go="taste-card" style="--deep:#6F353B;--lit:#A6545D"><span class="sd">08/26</span><span class="sf">草莓</span></div><div class="spine on " data-go="taste-card" style="--deep:#70685A;--lit:#C8C1B3"><span class="sd">08/25</span><span class="sf">热牛奶</span></div></div><div class="sboard"></div><div class="srow"><div class="spine on " data-go="taste-card" style="--deep:#6B6255;--lit:#BAB2A5"><span class="sd">08/24</span><span class="sf">排骨汤</span></div><div class="spine on " data-go="taste-card" style="--deep:#525C3A;--lit:#7F8F53"><span class="sd">08/23</span><span class="sf">韭菜盒子</span></div><div class="spine on " data-go="taste-card" style="--deep:#685F4F;--lit:#B5AB93"><span class="sd">08/22</span><span class="sf">烧麦</span></div></div><div class="sboard"></div><div class="srow"><div class="spine on " data-go="taste-card" style="--deep:#725A30;--lit:#B89444"><span class="sd">08/21</span><span class="sf">蒸南瓜</span></div><div class="spine on " data-go="taste-card" style="--deep:#423E3C;--lit:#77716B"><span class="sd">08/20</span><span class="sf">芝麻汤圆</span></div></div><div class="sboard"></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>点一张看当天那段。空着的那些日子，格子也在。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:stars"><div class="view s-stars" style="padding-top:94px"><div class="page" data-id="stars">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">这些天的夜里。</div><div class="vgap"></div>
-<div class="sky"><div class="starhit" style="left:42.7%;top:25.3%"><div class="star d1"></div></div><div class="starhit" style="left:45.0%;top:56.8%"><div class="star d2"></div></div><div class="starhit" style="left:77.3%;top:76.5%"><div class="star d0"></div></div><div class="starhit" style="left:18.8%;top:22.5%"><div class="star d2"></div></div><div class="starhit" style="left:88.8%;top:18.2%"><div class="star d1"></div></div><div class="starhit" style="left:75.0%;top:39.8%"><div class="star d2"></div></div><div class="starhit" style="left:21.2%;top:72.0%"><div class="star d0"></div></div><div class="starhit" style="left:60.5%;top:42.0%"><div class="star d1"></div></div><div class="starhit" style="left:43.6%;top:70.9%"><div class="star d2"></div></div><div class="starhit" style="left:56.3%;top:28.2%"><div class="star d1"></div></div></div><div class="skyread"><span class="none">点一颗星</span></div><div class="vgap"></div>
+<div class="sky"><div class="starhit" style="left:42.7%;top:25.3%" data-day="08 / 20" data-label="凑合"><div class="star d1"></div></div><div class="starhit" style="left:45.0%;top:56.8%" data-day="08 / 21" data-label="睡够了"><div class="star d2"></div></div><div class="starhit" style="left:77.3%;top:76.5%" data-day="08 / 22" data-label="几乎没睡"><div class="star d0"></div></div><div class="starhit" style="left:18.8%;top:22.5%" data-day="08 / 23" data-label="睡够了"><div class="star d2"></div></div><div class="starhit" style="left:88.8%;top:18.2%" data-day="08 / 24" data-label="凑合"><div class="star d1"></div></div><div class="starhit" style="left:75.0%;top:39.8%" data-day="08 / 25" data-label="睡够了"><div class="star d2"></div></div><div class="starhit" style="left:21.2%;top:72.0%" data-day="08 / 26" data-label="几乎没睡"><div class="star d0"></div></div><div class="starhit" style="left:60.5%;top:42.0%" data-day="08 / 27" data-label="凑合"><div class="star d1"></div></div><div class="starhit" style="left:43.6%;top:70.9%" data-day="08 / 28" data-label="睡够了"><div class="star d2"></div></div><div class="starhit" style="left:56.3%;top:28.2%" data-day="08 / 29" data-label="凑合"><div class="star d1"></div></div></div><div class="skyread"><span class="none">点一颗星</span></div><div class="vgap"></div>
 <div class="s-s">一颗是一晚。亮一点暗一点，都在天上。</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:clock"><div class="view s-clock" style="padding-top:94px"><div class="page" data-id="clock">
@@ -3471,7 +3475,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-h">到点了就吃点东西叭。</div><div class="vgap"></div>
 <div class="s-p">饿不饿都可以吃一点点。</div><div class="vgap"></div>
 <div class="s-p">三顿正餐 + 三次加餐，中间隔三到四个小时。</div><div class="vgap"></div>
-<div class="cells"><div class="cell "></div><div class="cell "></div><div class="cell "></div><div class="cell on"></div><div class="cell e next"></div><div class="cell e"></div></div><div class="vgap"></div>
+<div class="cells"><div class="cell " data-go="mood"></div><div class="cell " data-go="mood"></div><div class="cell " data-go="mood"></div><div class="cell on" data-go="mood"></div><div class="cell e next" data-go="mood"></div><div class="cell e" data-go="mood"></div></div><div class="vgap"></div>
 <div class="s-s">隔太久，后面会难扛一些。<br>下一格照常吃。</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:mood"><div class="view s-mood" style="padding-top:94px"><div class="page" data-id="mood">
@@ -3479,10 +3483,10 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">写下感受吧，<br>一个词就够。</div><div class="vgap"></div>
 <div class="s-ti">心情</div><div class="vgap"></div>
-<div class="words"><span class="word">平静</span><span class="word">轻松</span><span class="word">满足</span><span class="word">踏实</span><span class="word">有力气</span><span class="word">高兴</span><span class="word">还行</span><span class="word">说不上来</span><span class="word">累</span><span class="word">烦</span></div><div class="vgap"></div>
-<div class="words"><span class="word">空</span><span class="word">孤单</span><span class="word">羞耻</span><span class="word">紧张</span></div><div class="vgap"></div>
+<div class="words"><span class="word" data-go="logged">平静</span><span class="word" data-go="logged">轻松</span><span class="word" data-go="logged">满足</span><span class="word" data-go="logged">踏实</span><span class="word" data-go="logged">有力气</span><span class="word" data-go="logged">高兴</span><span class="word" data-go="logged">还行</span><span class="word" data-go="logged">说不上来</span><span class="word" data-go="logged">累</span><span class="word" data-go="logged">烦</span></div><div class="vgap"></div>
+<div class="words"><span class="word" data-go="logged">空</span><span class="word" data-go="logged">孤单</span><span class="word" data-go="logged">羞耻</span><span class="word" data-go="logged">紧张</span></div><div class="vgap"></div>
 <div class="s-ti">滋味</div><div class="vgap"></div>
-<div class="words"><span class="word">咸</span><span class="word">甜</span><span class="word">烫</span><span class="word">脆</span><span class="word">香</span><span class="word">软</span><span class="word">酸</span><span class="word">辣</span><span class="word">凉</span><span class="word">鲜</span></div><div class="vgap"></div>
+<div class="words"><span class="word" data-go="logged">咸</span><span class="word" data-go="logged">甜</span><span class="word" data-go="logged">烫</span><span class="word" data-go="logged">脆</span><span class="word" data-go="logged">香</span><span class="word" data-go="logged">软</span><span class="word" data-go="logged">酸</span><span class="word" data-go="logged">辣</span><span class="word" data-go="logged">凉</span><span class="word" data-go="logged">鲜</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:logged"><div class="view s-logged" style="padding-top:94px"><div class="page" data-id="logged">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -3675,7 +3679,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">昨晚睡得怎么样。</div><div class="vgap"></div>
 <div class="s-p">只问这一件。<br>睡不够的第二天，拦住自己的那个力气本来就少一些。</div><div class="vgap"></div>
-<div class="spick"><div class="sp-b">睡够了</div><div class="sp-b">凑合</div><div class="sp-b">几乎没睡</div></div><div class="vgap"></div>
+<div class="spick"><div class="sp-b" data-go="stars">睡够了</div><div class="sp-b" data-go="stars">凑合</div><div class="sp-b" data-go="stars">几乎没睡</div></div><div class="vgap"></div>
 <div class="s-q" data-go="stars">这些天的夜里<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:group"><div class="view s-group" style="padding-top:94px"><div class="page" data-id="group">
@@ -3684,7 +3688,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">一起正念</div><div class="vgap"></div>
 <div class="s-ti">现在自己做</div><div class="vgap"></div>
 <div class="s-pair"><div class="s-b cl flat" data-go="mind">正念</div><div class="s-b cl flat" data-go="medit">冥想</div></div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>随时开始，做多久都行。这一种屏幕上不显示人数。</div></div><div class="vgap"></div>
 <div class="s-hr"></div><div class="vgap"></div>
 <div class="s-ti">今天三场 · 一起</div><div class="vgap"></div>
 <div class="s-row"><span class="rk">17:00</span><span class="rv">饭前那场 · 5 分钟</span></div><div class="vgap"></div>
@@ -3734,7 +3738,8 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-hr"></div><div class="vgap"></div>
 <div class="s-ti">第一次见面可以直接说</div><div class="vgap"></div>
 <div class="s-box">最近吃得很少，现在恢复吃东西，想查电解质，也查一下维生素B1。</div><div class="vgap"></div>
-<div class="foldwrap"><div class="morebtn"><span>更多</span><span class="chev mchev">›</span></div></div>
+<div class="foldwrap"><div class="morebtn"><span>怎么看出这个人合不合适</span><span class="chev mchev">›</span></div></div>
+<div class="foldbody" hidden><div class="s-hr"></div><div class="vgap"></div><div class="s-ti">怎么看出这个人合不合适</div><div class="vgap"></div><div class="s-p">会先问你吃得够不够，而不是先给你定一个体重目标。</div><div class="vgap"></div><div class="s-p">不给你节食方案，也不让你记热量。</div><div class="vgap"></div><div class="s-p">愿意和内科、营养一起看你的化验单。</div><div class="vgap"></div><div class="s-p">说得清下一步是什么，而不是只让你放松心情。</div><div class="vgap"></div><div class="s-s">这四条里有一条不对，可以换一个人。换人不是你的问题。</div><div class="vgap"></div></div>
 </div></div></section><section class="scr" data-scr="p:notyet"><div class="view s-notyet" style="padding-top:94px"><div class="page" data-id="notyet">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
@@ -3773,9 +3778,10 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">家里的食物少了，<br>或者 ta 房间里囤着吃的。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">发作需要储备。囤积是这件事的一部分，不是贪吃。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>发作之后常会补货——那是怕被发现，不是没吃够。家里食物越是紧张、越是被清点，囤积越重。</div></div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-box">反过来做：保证家里随时有正常的、可及的食物。</div><div class="vgap"></div>
+<div class="s-s open" hidden>不清点存货，也不说「是不是你吃的」。匮乏感会直接加重这个行为。</div><div class="vgap"></div>
 <div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:tr-hide"><div class="view s-tr-hide" style="padding-top:94px"><div class="page" data-id="tr-hide">
@@ -3785,9 +3791,10 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">深夜有声音，<br>ta 一个人在厨房。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">隐秘是这件事的核心特征，不是欺骗。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>秘密进食反映的是与食物、身体相关的羞耻。撞破不会让它停止，只会让下一次藏得更深——而藏得更深意味着你更晚才会知道。</div></div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-box">这一夜什么都不做。第二天也不在厨房或饭桌旁提起。</div><div class="vgap"></div>
+<div class="s-s open" hidden>这不等于永远不谈，而是换一个平静的、不挨着食物的时间谈。</div><div class="vgap"></div>
 <div class="vgap"></div>
 <div class="s-warn"><span class="wt">必须动</span><span class="wb">听到摔倒、呕吐后没动静、喊痛、有自伤迹象——立刻下楼。不作为的边界只到「不要在行为进行中对质」，不包括躯体安全。</span></div><div class="vgap"></div>
 
@@ -3798,9 +3805,10 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">ta 说吃过了，<br>或者在饭桌上<br>把食物拨来拨去。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">不是撒谎，是在躲那一场围观。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>同桌吃饭意味着每一口都被看见，而被看见本身就是压力源。拨来拨去往往是在制造「我在吃」的样子，好让你别开口。</div></div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-box">把「吃完了」的判定权交回给 ta。</div><div class="vgap"></div>
+<div class="s-s open" hidden>不劝食、不数吃了几口、不评论盘子。由别人宣布一顿饭结束，是这件事里最难受的时刻之一。</div><div class="vgap"></div>
 <div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:tr-swell"><div class="view s-tr-swell" style="padding-top:94px"><div class="page" data-id="tr-swell">
@@ -3810,9 +3818,10 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">ta 好像脸肿了。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">那多半是停清除之后的水肿。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>停止清除行为之后会有反跳性水肿。这几天最容易被读成「胖了」——包括 ta 自己也在这么读。</div></div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-box">这几天一句外形都不评论。</div><div class="vgap"></div>
+<div class="s-s open" hidden>包括「你气色好多了」这种好意的话。这几天评论外形的风险最高。</div><div class="vgap"></div>
 <div class="vgap"></div>
 <div class="s-q" data-go="swell">这几天不看秤<span class="chev">›</span></div><div class="vgap"></div>
 
@@ -3823,9 +3832,10 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">ta 手背指关节上有老茧。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">叫 Russell 征，自诱发呕吐特有。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>看见了不必对质——对质会把下一次推到你看不见的地方。能确定的只有一件：如果存在清除行为，它带来的是真实的躯体风险。</div></div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-box">把红旗清单贴到冰箱上，或者发在家庭群里。</div><div class="vgap"></div>
+<div class="s-s open" hidden>讲的是身体风险，不是道德，不针对任何人——这样它才不会变成一次指控。</div><div class="vgap"></div>
 <div class="vgap"></div>
 <div class="s-b dg" data-go="sos">哪些情况必须立刻送医院</div><div class="vgap"></div>
 
@@ -3873,14 +3883,14 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-row"><span class="rk">肚子胀得很硬、很痛、吐不出来</span><span class="rv">别再吃、别再喝水，直接去医院</span></div><div class="vgap"></div>
 <div class="s-row"><span class="rk">觉得活不下去</span><span class="rv">和上面几条一样重要</span></div><div class="vgap"></div>
 <div class="s-s">到了可以直接说：想查电解质和心电图。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>吐和泻药会带走钾这类电解质，少得多了会影响心脏。白水和补液盐都补不回来——上面这几条出现了，别在家里扛。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:taste-write"><div class="view s-taste-write" style="padding-top:94px"><div class="page" data-id="taste-write">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">它是什么样的。</div><div class="vgap"></div>
 <div class="asp"><div class="asp-row"><span class="asp-k">色</span><span class="asp-in asp-ph">什么颜色，什么样子</span></div><div class="asp-row"><span class="asp-k">香</span><span class="asp-in asp-ph">闻起来</span></div><div class="asp-row"><span class="asp-k">味</span><span class="asp-in asp-ph">嘴里是什么</span></div><div class="asp-row"><span class="asp-k">声</span><span class="asp-in asp-ph">有没有声音</span></div><div class="asp-row"><span class="asp-k">质地</span><span class="asp-in asp-ph">牙齿和手的感觉</span></div><div class="asp-ok">存下来</div></div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>想到哪个写哪个。都想不起来也没关系，这一张就还是原来那段。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:taste-others"><div class="view s-taste-others" style="padding-top:94px"><div class="page" data-id="taste-others">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -3893,7 +3903,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">四个人在这儿。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>同一件事，ta 们看的地方不一样。说给谁听都行，也可以四个一起听。</div></div><div class="vgap"></div>
 <div class="mens"><div class="men"><div class="men-h"><span class="men-n">岸</span><span class="men-g">先过这一阵</span></div><span class="men-i">不问为什么，只问你此刻手上能做什么。</span><span class="men-more">他会怎么说</span><span class="men-l fold">ta 给的都是马上能做的小动作——接一杯水、换一把椅子、把手放到凉的地方。做完一件，这一阵就过去一些。ta 不分析，也不追问。</span></div><div class="men"><div class="men-h"><span class="men-n">回声</span><span class="men-g">那句话是谁说的</span></div><span class="men-i">把你心里那句话拎出来，放在桌上听一听。</span><span class="men-more">他会怎么说</span><span class="men-l fold">ta 会引用你刚说的那句，问它是一件正在发生的事，还是一个说法。有时会问那是谁的声音、从哪儿学来的。ta 不给动作，也不安慰。</span></div><div class="men"><div class="men-h"><span class="men-n">同路</span><span class="men-g">不用先感觉好</span></div><span class="men-i">难受可以一直在，你也可以同时往前走一点。</span><span class="men-more">他会怎么说</span><span class="men-l fold">ta 从不劝你想开、放下。ta 说的是：一边这么难受，一边仍然可以去做本来要做的事。ta 也会点出你正在等的那个条件，然后说不用等。</span></div><div class="men"><div class="men-h"><span class="men-n">地面</span><span class="men-g">此刻的身体</span></div><span class="men-i">只问你身上现在什么感觉。</span><span class="men-more">他会怎么说</span><span class="men-l fold">手是凉的还是温的，肩膀端着没有，脚有没有踩实。ta 只问当下的身体，不问过去，不解释道理。ta 说得比谁都短。</span></div></div><div class="vgap"></div>
 <div class="s-q" data-go="mentor-say">说点什么<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="mentor-past">以前说过的<span class="chev">›</span></div><div class="vgap"></div>
@@ -3902,7 +3912,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">今天怎么样。</div><div class="vgap"></div>
-<div class="mif"><div class="mif-in mif-ph">今天发生了什么，或者心里那句话</div><div class="asp-ok">说给他们听</div></div><div class="vgap"></div>
+<div class="mif"><div class="mif-in mif-ph">今天发生了什么，或者心里那句话</div><div class="asp-ok" data-go="mentor-chat">说给他们听</div></div><div class="vgap"></div>
 <div class="s-s">写一句就够，写不出来就先放着。</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:mentor-chat"><div class="view s-mentor-chat" style="padding-top:94px"><div class="page" data-id="mentor-chat">
@@ -3923,7 +3933,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">最近有过几乎不吃的日子，<br>下一餐要慢一点。</div><div class="vgap"></div>
 <div class="s-p">很久吃得很少之后突然大量进食，<b>磷、钾、镁会掉得很快</b>，严重时会出事。这是身体的反应，不是意志的问题。</div><div class="vgap"></div>
 <div class="s-box">看医生时可以直接说：最近吃得很少，现在恢复吃东西，想查电解质，也查一下维生素B1。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>所以具体吃什么，等医生看过化验单再定。在那之前，到点吃，别一次补回来。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="sos">先看这些情况<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:g-B"><div class="view s-g-B" style="padding-top:94px"><div class="page" data-id="g-B">
@@ -3932,7 +3942,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">很长时间没按顿吃了，<br>先把节奏找回来。</div><div class="vgap"></div>
 <div class="s-p">不是每一顿都要"够"，是先让身体知道饭会按时来。三顿正餐加三次加餐，中间隔三到四个小时。</div><div class="vgap"></div>
 <div class="s-box">下一顿到点就吃。蛋白质、主食、油都在。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>长时间不进食确实会让第二天更难扛——这是唯一一条经得住检验的关联。所以要修的是"按顿"，不是"吃多少"。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="clock">看下一顿是几点<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:g-C"><div class="view s-g-C" style="padding-top:94px"><div class="page" data-id="g-C">
@@ -3941,7 +3951,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">有人担心过你的身体。</div><div class="vgap"></div>
 <div class="s-p">那句担心里通常有真的东西，但它不一定说得准。你自己的感觉也算证据。</div><div class="vgap"></div>
 <div class="s-box">下一顿照常吃。到点，蛋白质、主食、油都在。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>如果你愿意，让担心你的那个人陪你去看一次——有人一起去，那一趟会好走很多。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="help">如果愿意，可以找人帮忙<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:g-AB"><div class="view s-g-AB" style="padding-top:94px"><div class="page" data-id="g-AB">
@@ -3950,7 +3960,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">吃得少，又很久没按顿，<br>这两条叠在一起<br>要先看化验单。</div><div class="vgap"></div>
 <div class="s-p">长期摄入不足加上突然大量进食，<b>磷、钾、镁掉得最快的就是这种情况</b>。严重时会影响心脏。</div><div class="vgap"></div>
 <div class="s-box">看医生时可以直接说：最近吃得很少，现在恢复吃东西，想查电解质，也查一下维生素B1。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>在看到化验单之前，到点少量多次地吃，不要一次补回来。这不是节制，是让身体跟得上。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="sos">先看这些情况<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:g-AC"><div class="view s-g-AC" style="padding-top:94px"><div class="page" data-id="g-AC">
@@ -3959,7 +3969,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">有过几乎不吃的日子，<br>而且已经有人看出来了。</div><div class="vgap"></div>
 <div class="s-p">很久吃得很少之后突然大量进食，<b>磷、钾、镁会掉得很快</b>。别人的担心多半是从外表来的，而这一条在化验单上。</div><div class="vgap"></div>
 <div class="s-box">看医生时可以直接说：最近吃得很少，现在恢复吃东西，想查电解质，也查一下维生素B1。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>让担心你的那个人陪你去。有人一起去，那一趟会好走很多。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="help">如果愿意，可以找人帮忙<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:g-BC"><div class="view s-g-BC" style="padding-top:94px"><div class="page" data-id="g-BC">
@@ -3968,7 +3978,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">很久没按顿吃，<br>而且已经有人看出来了。</div><div class="vgap"></div>
 <div class="s-p">先把节奏找回来：三顿正餐加三次加餐，中间隔三到四个小时。不是每一顿都要"够"，是先让身体知道饭会按时来。</div><div class="vgap"></div>
 <div class="s-box">下一顿到点就吃。蛋白质、主食、油都在。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>如果这样过了几天还是很难扛，或者担心你的人还在担心，那就去看一次——挂精神科或者临床心理科，有进食障碍门诊的医院优先。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="help">如果愿意，可以找人帮忙<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:g-ABC"><div class="view s-g-ABC" style="padding-top:94px"><div class="page" data-id="g-ABC">
@@ -3977,7 +3987,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">这三条都占的时候，<br>值得让专业的人看一次。</div><div class="vgap"></div>
 <div class="s-p">长期吃得很少、没有按顿、身边已经有人担心——这几条一起出现，比任何一条单独出现都更需要一次化验单。<b>磷、钾、镁掉得多了会影响心脏。</b></div><div class="vgap"></div>
 <div class="s-box">挂精神科或者临床心理科，有进食障碍专门门诊的医院优先。见面可以直接说：最近吃得很少，现在恢复吃东西，想查电解质，也查一下维生素B1。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>ta 们见过很多这样的情况，这件事有人能接得住——可以把它交出去一部分。在挂上号之前，到点少量多次地吃，不要一次补回来。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="sos">哪些情况必须立刻去<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-say"><div class="view s-w-say" style="padding-top:94px"><div class="page" data-id="w-say">
@@ -3986,7 +3996,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">你说的每一句都是对的，<br>这件事就难在这儿。</div><div class="vgap"></div>
 <div class="s-p">正在发生的时候讲道理，ta 听到的不是道理，是「你又要跟我吵」。提醒的次数越多，ta 越需要藏——你想制止的那个行为，正在被你的关心推着往隐蔽处走。</div><div class="vgap"></div>
 <div class="s-box">一天只说一次。说完就走开，不等回答。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>要谈，挑一个不挨着饭桌、也不挨着卫生间的时间。这不是让你闭嘴，是把同一句话挪到它能被听见的时刻。</div></div><div class="vgap"></div>
 <div class="s-ti">这一支对着两张卡：</div><div class="vgap"></div>
 <div class="beasts"><div class="bcard a-rhino " data-go="w-rhino"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">想把道理讲清楚</span><span class="ba">「犀牛」</span></div><div class="bcard a-terrier " data-go="w-terrier"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">忍不住一直提</span><span class="ba">「梗犬」</span></div></div><div class="vgap"></div>
 
@@ -3996,7 +4006,8 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">不说，也是一种在起作用的反应。</div><div class="vgap"></div>
 <div class="s-p">沉默不会让它停下来，只会让它更省事。而且 ta 多半知道你看见了——你什么都没说这件事本身，ta 也读得到。</div><div class="vgap"></div>
 <div class="s-box">不用先弄清全部。只说你看见的一件事，不带评价，也不问是不是。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>「昨天厨房的灯亮到很晚」就够了，不用接问句。说完停在那儿，让 ta 决定要不要接。怕说错的人常常一句都不说，而一句不带判断的观察，几乎不会说错。</div></div><div class="vgap"></div>
+<div class="s-s open" hidden>另一半是替 ta 挡：不让 ta 做饭、替 ta 拒绝聚餐、事后默默打扫。挡得越干净，ta 越没有机会发现自己其实应付得来。留一件 ta 能自己做的小事，哪怕做得不好。</div><div class="vgap"></div>
 <div class="vgap"></div>
 <div class="s-ti">这一支对着两张卡：</div><div class="vgap"></div>
 <div class="beasts"><div class="bcard a-ostrich " data-go="w-ostrich"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">看见了但装作没看见</span><span class="ba">「鸵鸟」</span></div><div class="bcard a-kangaroo " data-go="w-kangaroo"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">把所有难都替 ta 挡掉</span><span class="ba">「袋鼠」</span></div></div><div class="vgap"></div>
@@ -4005,7 +4016,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">你自己的反应，<br>也在起作用。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>这七张不给人贴标签，只给反应命名。前五种有代价，后两种是理想的样子。</div></div><div class="vgap"></div>
 <div class="beasts"><div class="bcard a-rhino " data-go="w-rhino"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">想把道理讲清楚</span><span class="ba">「犀牛」</span></div><div class="bcard a-terrier " data-go="w-terrier"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">忍不住一直提</span><span class="ba">「梗犬」</span></div><div class="bcard a-ostrich " data-go="w-ostrich"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">看见了但装作没看见</span><span class="ba">「鸵鸟」</span></div><div class="bcard a-kangaroo " data-go="w-kangaroo"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">把所有难都替 ta 挡掉</span><span class="ba">「袋鼠」</span></div><div class="bcard a-jelly " data-go="w-jelly"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">自己先撑不住</span><span class="ba">「水母」</span></div><div class="bcard a-dolphin ideal" data-go="w-dolphin"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">在旁边一起走</span><span class="ba">「海豚」</span></div><div class="bcard a-stbernard ideal" data-go="w-stbernard"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">不慌</span><span class="ba">「圣伯纳犬」</span></div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-rhino"><div class="view s-w-rhino" style="padding-top:94px"><div class="page" data-id="w-rhino">
@@ -4018,7 +4029,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">正在发生的时候讲道理，ta 听到的不是道理，是「你又要跟我吵」。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">这一刻不谈。要谈，挑一个不挨着饭桌、也不挨着卫生间的时间。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「犀牛」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-terrier"><div class="view s-w-terrier" style="padding-top:94px"><div class="page" data-id="w-terrier">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4030,7 +4041,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">提醒的次数越多，ta 越需要藏。你想制止的那个行为，正在被你的关心推着往隐蔽处走。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">一天只说一次。说完就走开，不等回答。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「梗犬」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-ostrich"><div class="view s-w-ostrich" style="padding-top:94px"><div class="page" data-id="w-ostrich">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4042,7 +4053,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">沉默不会让它停下来，只会让它更省事。而且 ta 多半知道你看见了。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">不用先弄清全部。只说你看见的一件事，不带评价，也不问是不是。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「鸵鸟」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-kangaroo"><div class="view s-w-kangaroo" style="padding-top:94px"><div class="page" data-id="w-kangaroo">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4054,7 +4065,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">挡得越干净，ta 越没有机会发现自己其实应付得来。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">留一件 ta 能自己做的小事，哪怕做得不好。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「袋鼠」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-jelly"><div class="view s-w-jelly" style="padding-top:94px"><div class="page" data-id="w-jelly">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4066,7 +4077,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">这些情绪 ta 全都收得到，然后还给你同样的失控。你们会在同一个情绪里越转越紧。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">先管你自己那一份。你稳一点，ta 才有一个稳的地方可以靠。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「水母」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-dolphin"><div class="view s-w-dolphin" style="padding-top:94px"><div class="page" data-id="w-dolphin">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4076,7 +4087,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">不在前面拉，不在后面推。ta 慢，你就慢；ta 停下来，你就在旁边站一会儿再说话。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">温和地推一下就够了，一次一下。方向由 ta 定。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「海豚」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-stbernard"><div class="view s-w-stbernard" style="padding-top:94px"><div class="page" data-id="w-stbernard">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4087,7 +4098,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">先确认身体上是安全的。确认了，就可以慢下来——慢下来不是放弃，是这件事本来就快不了。</div><div class="vgap"></div>
 <div class="s-q" data-go="sos">先确认身体是安全的<span class="chev">›</span></div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「圣伯纳犬」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:care"><div class="view s-care" style="padding-top:94px"><div class="page" data-id="care">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">八月三十</span></div>
@@ -4111,16 +4122,17 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-ti">今天这一条</div><div class="vgap"></div>
 <div class="s-h">你看见的每一个行为，都不是它看起来的<br>那个意思。</div><div class="vgap"></div>
 <div class="s-p">这是七张翻译卡共用的那一句。今天先只记这一句就够。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>七张翻译卡共用这一句。它不是安慰——把行为读成品行、然后批评，是这个病最常见的加速器。</div></div><div class="vgap"></div>
 <div class="s-ti">今天可以做的一件</div><div class="vgap"></div>
 <div class="s-box">今天先只做一件：看见什么，先不说。</div><div class="vgap"></div>
+<div class="s-s open" hidden>一天一条。看过就好，不用记住——记不住的那条明天还会有别的。</div><div class="vgap"></div>
 <div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:care-trans"><div class="view s-care-trans" style="padding-top:94px"><div class="page" data-id="care-trans">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">ta 的动作是什么意思。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>每一张三段：你会怎么想、真实是什么、现在做什么。</div></div><div class="vgap"></div>
 <div class="s-q" data-go="c-trash">ta 把饭倒进了垃圾桶<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="c-fat">ta 问「我是不是很胖」<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="c-table">ta 说「我吃过了」<span class="chev">›</span></div><div class="vgap"></div>
@@ -4137,10 +4149,11 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">浪费。任性。不知道珍惜。跟 ta 说了多少次了。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">那不是浪费，但也不必急着定性。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>可能是想从食物上找回一点支配权，可能是发作后的羞耻，也可能是在清掉家里的诱发物。这三种你现在都不需要判断。</div></div><div class="vgap"></div>
 <div class="s-box">ta 也知道不该浪费——那份自责在你开口之前就已经在了，你的话只是把它加倍。</div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-p">不清点、不对质、不在垃圾桶旁边说话。</div><div class="vgap"></div>
+<div class="s-s open" hidden>这件事本身不值得开战，而开战会把下一次推到你看不见的地方。</div><div class="vgap"></div>
 <div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:c-fat"><div class="view s-c-fat" style="padding-top:94px"><div class="page" data-id="c-fat">
@@ -4151,7 +4164,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">赶紧安慰 ta。「你哪里胖了」「你一点都不胖」。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">这是最容易好心办坏事的一句。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>「你不胖」看起来是否认，实际是在确认两件事：ta 的身体是一个可以被评价的对象，以及胖是坏的。这两条正是病的地基。而且这类询问通常是焦虑找出口，不是真的要一个答案——你答什么都不够，ta 会再问。</div></div><div class="vgap"></div>
 <div class="s-box">不回答这个问题本身，回应它下面的东西：你今天是不是很难受？</div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-p">把话题从身体挪到感受上。</div><div class="vgap"></div>
@@ -4165,7 +4178,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">撒谎。挑食。不给面子。一家人吃饭都不肯坐下来。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">不是撒谎，是回避那一场围观。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>同桌吃饭意味着每一口都被看见，而被看见本身就是压力源。拨来拨去往往是在制造「我在吃」的样子，好让你别开口。</div></div><div class="vgap"></div>
 <div class="s-box">把「吃完了」的判定权交回给 ta——由别人宣布一顿饭结束，是这个病里最难受的时刻之一。</div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-p">不劝食、不数 ta 吃了几口、不评论 ta 的盘子。</div><div class="vgap"></div>
@@ -4178,7 +4191,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">嘴太馋。一点自制力都没有。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">发作需要储备，囤积是症状的一部分，不是贪吃。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>而且发作之后常会补货——那是怕被发现，不是没吃够。家里食物越是紧张、越是被清点，囤积越重。</div></div><div class="vgap"></div>
 <div class="s-box">反过来做：保证家里随时有正常的、可及的食物。匮乏感会直接加重这个行为。</div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-p">不清点存货、不说「是不是你吃的」。</div><div class="vgap"></div>
@@ -4191,7 +4204,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">偷偷摸摸的，有什么不能见人的。要不要下去看看。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">隐秘是这个病的核心特征，不是欺骗。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>秘密进食反映的是与食物、身体相关的羞耻。撞破不会让它停止，只会让下一次藏得更深——而藏得更深意味着你更晚才会知道。</div></div><div class="vgap"></div>
 <div class="s-box">不开灯、不下楼、不要在当下闯进去。第二天也不要在厨房或饭桌旁提起——但这不等于永远不谈，而是换一个平静的、不挨着食物的时间谈。</div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-p">这一夜什么都不做。</div><div class="vgap"></div>
@@ -4205,7 +4218,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">是不是不舒服……还是说，是那个？然后你不敢往下想。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">这里不做判断，也不替你下结论。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>能说的是：如果存在清除行为，它带来的是真实的躯体风险——电解质紊乱可致心律失常。这不是道德问题，是医学问题。</div></div><div class="vgap"></div>
 <div class="s-box">红旗清单要成为家里的公共信息：贴在冰箱上、发在家庭群里，讲的是身体风险不是道德，不针对任何人。</div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-p">不守门口、不计时、不在门口开战。</div><div class="vgap"></div>
@@ -4219,7 +4232,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">又闹脾气。还是我刚才说错什么了？得问清楚。</div><div class="vgap"></div>
 <div class="s-ti">真实是</div><div class="vgap"></div>
 <div class="s-p">这常常紧跟在一次发作之后。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>此刻的羞耻是压倒性的，「你怎么了」这个问题 ta 答不了——说出来等于承认，而承认在此刻是做不到的。你的追问会让羞耻再加一层。</div></div><div class="vgap"></div>
 <div class="s-box">等 ta 出来之后，表现得像什么都没发生。这不是回避，是给 ta 一个不需要解释就能回来的入口——这个入口是很多人唯一能走的路。</div><div class="vgap"></div>
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-p">不追问。</div><div class="vgap"></div>
@@ -4242,7 +4255,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">正在发生的时候讲道理，ta 听到的不是道理，是「你又要跟我吵」。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">这一刻不谈。要谈，挑一个不挨着饭桌、也不挨着卫生间的时间。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「犀牛」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:r-terrier"><div class="view s-r-terrier" style="padding-top:94px"><div class="page" data-id="r-terrier">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4254,7 +4267,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">提醒的次数越多，ta 越需要藏。你想制止的那个行为，正在被你的关心推着往隐蔽处走。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">一天只说一次。说完就走开，不等回答。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「梗犬」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:r-ostrich"><div class="view s-r-ostrich" style="padding-top:94px"><div class="page" data-id="r-ostrich">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4266,7 +4279,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">沉默不会让它停下来，只会让它更省事。而且 ta 多半知道你看见了。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">不用先弄清全部。只说你看见的一件事，不带评价，也不问是不是。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「鸵鸟」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:r-kangaroo"><div class="view s-r-kangaroo" style="padding-top:94px"><div class="page" data-id="r-kangaroo">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4278,7 +4291,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">挡得越干净，ta 越没有机会发现自己其实应付得来。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">留一件 ta 能自己做的小事，哪怕做得不好。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「袋鼠」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:r-jelly"><div class="view s-r-jelly" style="padding-top:94px"><div class="page" data-id="r-jelly">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4290,7 +4303,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">这些情绪 ta 全都收得到，然后还给你同样的失控。你们会在同一个情绪里越转越紧。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">先管你自己那一份。你稳一点，ta 才有一个稳的地方可以靠。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「水母」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:r-dolphin"><div class="view s-r-dolphin" style="padding-top:94px"><div class="page" data-id="r-dolphin">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4300,7 +4313,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-p">不在前面拉，不在后面推。ta 慢，你就慢；ta 停下来，你就在旁边站一会儿再说话。</div><div class="vgap"></div>
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">温和地推一下就够了，一次一下。方向由 ta 定。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「海豚」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:r-stbernard"><div class="view s-r-stbernard" style="padding-top:94px"><div class="page" data-id="r-stbernard">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4311,7 +4324,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-ti">换成什么</div><div class="vgap"></div>
 <div class="s-box">先确认身体上是安全的。确认了，就可以慢下来——慢下来不是放弃，是这件事本来就快不了。</div><div class="vgap"></div>
 <div class="s-q" data-go="care-red">先确认身体是安全的<span class="chev">›</span></div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>文献里这叫「圣伯纳犬」——New Maudsley Model，Treasure／Schmidt 组。动物是可查的记法，不是贴在人身上的标签。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:care-obs"><div class="view s-care-obs" style="padding-top:94px"><div class="page" data-id="care-obs">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4322,7 +4335,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-box">这几天最容易被读成胖，而这几天评论外形的风险最高。一句都不要说。</div><div class="vgap"></div>
 <div class="s-ti">手背指关节上的老茧</div><div class="vgap"></div>
 <div class="s-p">叫 Russell 征，自诱发呕吐特有。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>看见了不必对质。可以做的是把红旗清单贴到冰箱上——讲身体风险，不针对任何人。</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:care-red"><div class="view s-care-red" style="padding-top:94px"><div class="page" data-id="care-red">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4336,9 +4349,10 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-row"><span class="rk">肚子胀得很硬、很痛、吐不出来</span><span class="rv">undefined</span></div><div class="vgap"></div>
 <div class="s-row"><span class="rk">说活不下去</span><span class="rv">undefined</span></div><div class="vgap"></div>
 <div class="s-box">出现这几条，直接送医。不需要 ta 同意，也不需要先把话说开。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>吐和泻药会带走钾这类电解质，少得多了会影响心脏。白水和补液盐都补不回来。到了可以直接说：想查电解质和心电图。</div></div><div class="vgap"></div>
 <div class="s-ti">这份清单该贴出来</div><div class="vgap"></div>
 <div class="s-p">贴在冰箱上，或者发在家庭群里。</div><div class="vgap"></div>
+<div class="s-s open" hidden>讲的是身体风险，不是道德，不针对任何人——这样它才不会变成一次指控。</div><div class="vgap"></div>
 <div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:care-minor"><div class="view s-care-minor" style="padding-top:94px"><div class="page" data-id="care-minor">
@@ -4349,7 +4363,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-box">监护责任不能被「给 ta 空间」取代。</div><div class="vgap"></div>
 <div class="s-ti">该做的是</div><div class="vgap"></div>
 <div class="s-p">直接去精神科或临床心理科，有进食障碍专门门诊的医院优先。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>监护人有就医决定权与责任。发病高峰在青少年，停在自助内容里会错过时间窗。</div></div><div class="vgap"></div>
 <div class="s-b big" data-go="care-red">什么时候必须去医院</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:care-one"><div class="view s-care-one" style="padding-top:94px"><div class="page" data-id="care-one">
@@ -4359,10 +4373,11 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-box">最该做的不是盯着 ta 吃饭，是保证家里有正常规律的饭。</div><div class="vgap"></div>
 <div class="s-ti">还有一半</div><div class="vgap"></div>
 <div class="s-p">家里没有节食氛围——包括不要当着 ta 的面谈自己的减肥。</div><div class="vgap"></div>
-<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div><div class="s-s open" hidden>限制是通往暴食最大的一条来路。家里任何形式的「少吃一点」都不是中立的建议。</div></div><div class="vgap"></div>
 <div class="s-hr"></div><div class="vgap"></div>
 <div class="s-ti">还有一句</div><div class="vgap"></div>
 <div class="s-box">你的批评正在生产你想制止的那个行为。</div><div class="vgap"></div>
+<div class="s-s open" hidden>看见行为 → 读成浪费或撒谎 → 批评 → 沟通失败 → ta 为避免冲突转入更隐蔽的行为 → 你更警觉 → 冲突升级。这条链在第二环就能切断。</div><div class="vgap"></div>
 <div class="vgap"></div>
 
 </div></div></section></div>
@@ -4513,23 +4528,111 @@ function stopTide(){ if(ST.raf) cancelAnimationFrame(ST.raf); ST.raf=0; }
     if(push&&cur) hist.push(cur);
     stopTide();
     roll.querySelectorAll('.scr.on').forEach(function(s){s.classList.remove('on')});
-    el.classList.add('on'); roll.scrollTop=0; cur=key;
+    el.classList.add('on'); reset(el); roll.scrollTop=0; cur=key;
     var cv=el.querySelector('[data-tide]');
     /* 等一帧再起：display 刚从 none 变 block，此时 clientWidth 还是 0 */
     if(cv) requestAnimationFrame(function(){ startTide(cv,cv.dataset.tide); });
   }
   function back(){ var p=hist.pop(); if(p) show(p,false); }
+  /* 小程序里 draw() 每次重画都把这些状态清掉（setData 里的 star / moreOpen /
+     slipOpen，以及块上的 open / on）。demo 换屏也得清，否则退回来还是展开的。
+     ⚠️ .swt 不清：那一个在小程序里是 wx.setStorage 存着的，跨屏跨次都记得。 */
+  function reset(el){
+    el.querySelectorAll('.s-s.open').forEach(function(x){x.hidden=true});
+    el.querySelectorAll('.sbtn').forEach(function(x){x.hidden=false});
+    el.querySelectorAll('.chk.on,.player.on,.remind.on,.chat-p.on').forEach(function(x){x.classList.remove('on')});
+    el.querySelectorAll('.star.on').forEach(function(x){x.classList.remove('on')});
+    el.querySelectorAll('.men-l').forEach(function(x){x.classList.add('fold')});
+    var sr=el.querySelector('.skyread'); if(sr) sr.innerHTML='<span class="none">点一颗星</span>';
+    var fb=el.querySelector('.foldbody'), mb=el.querySelector('.morebtn');
+    if(fb){ fb.hidden=true; mb.querySelector('.mchev').classList.remove('up');
+            mb.firstElementChild.textContent=mb.dataset.label; }
+    var rm=el.querySelector('.remind'); if(rm) rm.textContent='到点叫我';
+  }
+  /* 折叠入口的字要记下来——展开时换成「收起」，收起时换回去 */
+  roll.querySelectorAll('.morebtn').forEach(function(b){ b.dataset.label=b.firstElementChild.textContent; });
+
   roll.addEventListener('click',function(e){
     /* 屏内自带的返回键（.navbtn / .binder），和小程序里 bindtap="back" 是同一个 */
     if(e.target.closest('.navbtn,.binder')){ back(); return; }
+    var scr=roll.querySelector('.scr.on');
+
+    /* ── 原地状态：小程序里是 setData，这里就是切 class ────────────────
+       展开后的正文原本不在这份快照里（WXML 那两支是 wx:if 二选一，
+       生成时只落了折叠那一支），已按屏注入成 hidden 的 .s-s.open。 */
+
+    /* 「为什么」：一屏所有长说明一起开合，和 toggleS 一样 */
+    var sb=e.target.closest('.sbtn, .s-s.open');
+    if(sb){
+      var openNow=sb.classList.contains('sbtn');
+      scr.querySelectorAll('.s-s.open').forEach(function(x){x.hidden=!openNow});
+      scr.querySelectorAll('.sbtn').forEach(function(x){x.hidden=openNow});
+      return;
+    }
+    /* 那一层折叠（vom / help 的「下一顿吃点什么」「怎么看出这个人合不合适」） */
+    var mb=e.target.closest('.morebtn');
+    if(mb){
+      var fb=scr.querySelector('.foldbody'); fb.hidden=!fb.hidden;
+      mb.querySelector('.mchev').classList.toggle('up',!fb.hidden);
+      mb.firstElementChild.textContent=fb.hidden?mb.dataset.label:'收起';
+      return;
+    }
+    var chk=e.target.closest('.chk');   if(chk){ chk.classList.toggle('on'); return; }
+    var swt=e.target.closest('.swrow'); if(swt){ swt.querySelector('.swt').classList.toggle('on'); return; }
+    var pl =e.target.closest('.player');if(pl ){ pl.classList.toggle('on'); return; }
+    var men=e.target.closest('.men-h'); if(men){ men.parentNode.querySelector('.men-l').classList.toggle('fold'); return; }
+    var cp =e.target.closest('.chat-p');
+    if(cp){ var was=cp.classList.contains('on');
+            scr.querySelectorAll('.chat-p').forEach(function(x){x.classList.remove('on')});
+            cp.classList.toggle('on',!was); return; }
+    /* 到点叫我。真机上是排一个前台提醒，demo 只把按钮的状态演出来 */
+    var rm=e.target.closest('.remind');
+    if(rm){ var on=rm.classList.toggle('on');
+            rm.textContent=on?'到点会叫你 · 再点取消':'到点叫我'; return; }
+    /* 点一颗星 → 下面那行读出是哪一晚。一次只亮一颗 */
+    var st=e.target.closest('.starhit');
+    if(st){ scr.querySelectorAll('.star').forEach(function(x){x.classList.remove('on')});
+            st.querySelector('.star').classList.add('on');
+            scr.querySelector('.skyread').innerHTML=st.dataset.day+'　<span class="sk-l">'+st.dataset.label+'</span>';
+            return; }
+
     var t=e.target.closest('[data-go]'); if(!t) return;
-    show(end+':'+t.dataset.go,true);
+    /* 化验单那一步跳哪一屏，取决于勾了哪几条（gateKey：A/B/C 七种组合）。
+       一条都没勾就直接下一餐，也就是 data-go 里写着的 empty。 */
+    var go=t.dataset.go;
+    if(t.classList.contains('gatego')){
+      var k=[].filter.call(scr.querySelectorAll('.chk'),function(c){return c.classList.contains('on')})
+              .map(function(c){return 'ABC'[c.dataset.i]}).join('');
+      go=k?'g-'+k:'empty';
+    }
+    show(end+':'+go,true);
   });
   document.querySelectorAll('[data-end]').forEach(function(b){
     b.addEventListener('click',function(){
       document.querySelectorAll('[data-end]').forEach(function(x){x.classList.remove('on')});
       b.classList.add('on'); end=b.dataset.end; hist=[]; show(first[end],false);
     });
+  });
+  /* 输入框。小程序是 textarea + placeholder-class，这里用 contenteditable：
+     写了字就去掉 placeholder 那一档灰，清空了再还回来。存进哪儿是本机的事，
+     demo 只负责让人能真的打进去。 */
+  roll.querySelectorAll('.mif-in,.asp-in').forEach(function(el){
+    var ph=el.textContent, phc=el.classList.contains('mif-ph')?'mif-ph':'asp-ph';
+    el.contentEditable='true';
+    el.addEventListener('focus',function(){ if(el.classList.contains(phc)){ el.textContent=''; el.classList.remove(phc); } });
+    el.addEventListener('blur', function(){ if(!el.textContent.trim()){ el.textContent=ph; el.classList.add(phc); } });
+  });
+  /* 「存下来」记完退回卡片那屏，和小程序 aspSave 末尾的 back() 一样 */
+  var save=roll.querySelector('.s-taste-write .asp-ok');
+  if(save) save.addEventListener('click',back);
+  /* 把这段复制走 */
+  var cpb=roll.querySelector('.chat-foot');
+  if(cpb) cpb.addEventListener('click',function(){
+    var t=[].map.call(cpb.closest('.page').querySelectorAll('.msg'),function(m){
+      var w=m.querySelector('.msg-w'); return (w?w.textContent+'：':'')+m.querySelector('.msg-t').textContent;
+    }).join('\n');
+    if(navigator.clipboard) navigator.clipboard.writeText(t);
+    var o=cpb.textContent; cpb.textContent='复制好了'; setTimeout(function(){cpb.textContent=o},1400);
   });
   document.getElementById('back').addEventListener('click',back);
   document.getElementById('home').addEventListener('click',function(){hist=[];show(first[end],false)});
