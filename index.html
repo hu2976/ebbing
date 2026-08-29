@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>退潮 · ebbing</title>
+<style>
+  :root{
+    --n1:#171310; --n2:#1F1A15;
+    --paper:#F4EDE3; --paper2:#BDB1A1; --paper3:#968979;
+    --hair:rgba(244,237,227,.10);
+    --brass:#C9A063;
+    --body:-apple-system,"PingFang SC","HarmonyOS Sans SC","Source Han Sans SC",sans-serif;
+    --hand:"STXingkai","Xingkai SC","STKaiti","Kaiti SC",KaiTi,"Noto Serif CJK SC",serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--n1);color:var(--paper);font-family:var(--body);
+       -webkit-font-smoothing:antialiased;line-height:1.75}
+  main{max-width:34rem;margin:0 auto;padding:14vh 1.5rem 6rem}
+  h1{font-size:2rem;font-weight:600;letter-spacing:.04em;margin:0}
+  .sub{font-family:var(--hand);font-size:1.15rem;color:var(--brass);margin:.6rem 0 0}
+  .lede{color:var(--paper2);margin:2.5rem 0 0;font-size:.95rem}
+  .lede b{color:var(--paper);font-weight:600}
+  nav{margin:3rem 0 0;border-top:1px solid var(--hair)}
+  a.row{display:block;padding:1.15rem 0;border-bottom:1px solid var(--hair);
+        color:var(--paper);text-decoration:none}
+  a.row:hover{background:var(--n2)}
+  .row .t{font-size:1.05rem}
+  .row .t::after{content:" →";color:var(--brass)}
+  .row .d{font-size:.82rem;color:var(--paper3);margin-top:.2rem}
+  footer{margin-top:3rem;font-size:.78rem;color:var(--paper3)}
+</style>
+<main>
+  <h1>退潮 · ebbing</h1>
+  <p class="sub">我们让她重新拥有形容词。</p>
+
+  <p class="lede">面向<b>进食障碍全谱系</b>（暴食 / 厌食 / 贪食）本人及照护者的<b>匿名自助</b>微信小程序。
+  无账号、无登录、数据不出设备。</p>
+
+  <nav>
+    <a class="row" href="02-给UI-可交互原型.html">
+      <div class="t">打开可交互原型</div>
+      <div class="d">62 屏全部能点。这是小程序的同构原型，浏览器直接玩，不用装开发者工具</div>
+    </a>
+    <a class="row" href="12-路演deck/退潮-路演.html">
+      <div class="t">路演 deck</div>
+      <div class="d">四分钟版本</div>
+    </a>
+    <a class="row" href="03-路演-PRD与四分钟脚本.html">
+      <div class="t">PRD 与演示脚本</div>
+      <div class="d">产品文档</div>
+    </a>
+    <a class="row" href="https://github.com/hu2976/ebbing">
+      <div class="t">源码</div>
+      <div class="d">小程序本体在 04-小程序/。chk.mjs 17 项自检，立场是机器验证的</div>
+    </a>
+  </nav>
+
+  <footer>烈变 · 2026 夏季千人黑客松 · 北京 g001　|　软件应用赛道 · 滴水穿石</footer>
+</main>
