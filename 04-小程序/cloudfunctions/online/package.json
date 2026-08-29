@@ -1,0 +1,7 @@
+{
+  "name": "online",
+  "version": "1.0.0",
+  "description": "在场人数。只存 openid 的哈希，只回一个数。",
+  "main": "index.js",
+  "dependencies": { "wx-server-sdk": "~2.6.3" }
+}

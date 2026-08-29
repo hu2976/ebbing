@@ -302,7 +302,7 @@ Page({
     this.draw();
   },
   onShow() { this.draw(); },   // 回到前台重画一次：每日轮换的那几条要换
-  onUnload() { this.stopTide(); this.stopJar(); if (this._on) clearInterval(this._on);
+  onUnload() { this.stopTide(); this.stopJar(); if (this._on) clearInterval(this._on); if (this._drift) clearInterval(this._drift);
     if (this._remind) clearTimeout(this._remind); },
   onHide() { this.stopTide(); this.stopJar(); },   // 珠子的位置在 stopJar 里落盘
 
@@ -1386,7 +1386,28 @@ Page({
     if (this._on) return;
     this.onlineN = base;
     this.setData({ onlineN: base });
-    this._on = setInterval(() => {
+    /* 先走真数：云函数 online 拿窗口内的心跳数。
+       ⚠️ 拿不到就退回原来的随机游走——摆摊网络不可控，
+       这一行不能因为后端不通就空着或者显示 0。
+       「凌晨三点看到还有 0 个人」比看不到更糟，那条规则在这里同样成立。 */
+    this._beat = () => {
+      if (typeof wx === 'undefined' || !wx.cloud) return;
+      wx.cloud.callFunction({
+        name: 'online',
+        success: (r) => {
+          const d = r && r.result;
+          if (!d || !d.ok || typeof d.n !== 'number') return;   // 失败就让游走继续
+          if (this._drift) { clearInterval(this._drift); this._drift = 0; }
+          this.onlineN = d.n;
+          this.setData({ onlineN: d.n });
+        },
+        fail: () => {},
+      });
+    };
+    this._beat();
+    this._on = setInterval(this._beat, 30000);     // 心跳 30 秒，窗口 90 秒，容得下两次丢包
+    /* 后端没通之前先游走，一旦拿到真数就停掉 */
+    this._drift = setInterval(() => {
       const step = (Math.random() < 0.3 ? 2 : 1) * (Math.random() < 0.5 ? -1 : 1);
       this.onlineN = Math.max(0, this.onlineN + step);
       this.setData({ onlineN: this.onlineN });
