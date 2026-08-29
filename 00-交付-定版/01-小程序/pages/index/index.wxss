@@ -1,0 +1,2248 @@
+@import "./tokens.wxss";
+
+/* 视觉规格全部来自 设计画布/System.dc.html「夜里的暖」。
+   px → rpx 一律 ×2（画板 390 宽，750rpx 基准下差 4%，看不出来）；
+   边框的 1px 不换——细线的绝对细度比自适应重要。
+
+   字号阶梯：36 标题 / 22 段首 / 19 正文 / 15 次级 / 13.5 标签（原 11 标签低于
+   可读下限，凌晨三点认知窄化时读不清——PRD 视觉规格要的是大字号）
+   强调色三个，各只做一件事：黄铜=品名与主入口描边、青玉=在场人数与一口水、
+   陶土=急救线与「身体不太对」。 */
+
+.view{
+  padding:0 48rpx 32rpx;
+  /* 顶上那团光。暖来自材质和光，不来自饱和度 */
+  background:radial-gradient(120% 55% at 50% -10%, #251E17 0%, rgba(37,30,23,0) 62%), var(--n1);
+  min-height:100vh;
+}
+
+/* ── 顶栏 ─────────────────────────────────────────── */
+.nav{ display:flex; align-items:center; min-height:64rpx; margin-bottom:8rpx; }
+/* 根屏没有返回键，那 64rpx 就不该白占——首屏每一行都在和「不用滑」抢空间 */
+.nav.root{ min-height:0; margin-bottom:0; }
+.navbtn{ font-size:26rpx; letter-spacing:.1em; color:var(--paper3); padding:10rpx 0; }
+
+/* ── 文字五级 ───────────────────────────────────────── */
+/* 字号阶梯：31 标题 / 21 段首 / 17.7 正文 / 14.6 次级 / 13.5 标签
+   苹方 300 字重在深色底上会发虚，标题一律 600——层次靠字重不靠字族。
+   上一版标题是 72rpx 宋体 300 字重，那是"跟恐怖片一样"的主因。 */
+/* 下边距归 0，理由同 .s-ti：flex 里不折叠，而下一块（.s-p 20rpx）本来
+   就是折叠后说了算的那个值。entry 的 .s-h 例外——它下面跟的是空档，没得折叠。 */
+.s-h{ font-family:var(--disp); font-size:50rpx; font-weight:600; line-height:1.3;
+      letter-spacing:0; margin:16rpx 0 0; display:block; }
+.s-h2{ font-family:var(--disp); font-size:40rpx; font-weight:600; line-height:1.5;
+       margin:26rpx 0 0; display:block; }
+/* 38→32rpx：654rpx 宽里每行从 17 字变 20 字，「很/烫」这类拆词明显减少，
+   home 那段 60 字的描述从 4 行变 3 行。16.6px 是中文正文的标准舒适区。
+   justify 是中文段落的常规做法，右边不再参差 */
+.s-p{ font-family:var(--body); font-size:32rpx; font-weight:400; line-height:1.8;
+      margin:20rpx 0 0; display:block; text-align:justify; }
+.s-s{ font-size:28rpx; line-height:1.85; color:var(--paper2); margin:20rpx 0 0; display:block;
+      text-align:justify; }
+/* 下边距归 0：.page 是 flex 容器，里面的 margin 不折叠，
+   原来的 8rpx 会和下一块的 margin-top 相加而不是取大值 —— home 本来只余 7px，
+   两个 ti 加两条 hr 一共多出 14px 就直接超屏。
+   下一块的 margin-top（cells 20rpx、food 6rpx…）本来就是折叠后说了算的那个值，
+   所以去掉下边距＝精确还原折叠时代的间距，不是把它改紧。 */
+.s-ti{ font-size:26rpx; letter-spacing:.22em; color:var(--paper3); margin:34rpx 0 0; }
+/* 品名——全屏最暖的东西，用得最省 */
+/* 品名的字体本来是 --disp（无衬线），也就是和正文、按钮、标题同一个字族，
+   只是更大更金 —— 她说"太丑了"。问题不是字丑，是品名没有自己的字：
+   一个词只靠字号和颜色区分，读起来就是"一行被放大的正文"。
+   改成 --hand（行楷）：牌面正中那个名字（.pname）本来就是这个字族，
+   首页这一行是那张牌的入口，两处同字才是同一件东西。 */
+.s-food{ font-family:var(--hand); font-size:58rpx; font-weight:400; color:var(--brass);
+         letter-spacing:.06em; line-height:1.42;
+         margin:6rpx 0 0; display:block; }
+/* 引文卡：楷体有手写起伏，像便签不像医嘱。只用在这里——大标题用楷体会散 */
+.s-box{ background:var(--n2); border-radius:14rpx; padding:26rpx 32rpx 28rpx; margin:26rpx 0 0;
+        font-family:var(--hand); font-size:36rpx; line-height:1.8; display:block;
+        border:1px solid var(--hair2); }
+.s-num{ font-family:var(--disp); font-size:32rpx; color:var(--jade); margin:16rpx 0 0; display:block; }
+.s-hr{ border:none; border-top:1px solid var(--hair2); margin:34rpx 0 0; }   /* 同上 */
+
+/* ── 按钮四级：主入口 70 / 分岔 64 / 次级 46，触区下限 44 ────────── */
+.s-b{
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  min-height:104rpx; padding:26rpx 32rpx; margin:22rpx 0 0;
+  border:1px solid var(--hair); border-radius:14rpx;
+  background:linear-gradient(168deg, #26201A, #1D1813);
+  font-family:var(--disp); font-size:38rpx; color:var(--paper);
+}
+.s-b.big{
+  min-height:120rpx; padding:28rpx 32rpx; font-size:38rpx; margin-top:26rpx;
+  border-color:rgba(201,160,99,.42);
+  background:linear-gradient(165deg, #2E251C, #231D16);
+  box-shadow:0 14rpx 30rpx -18rpx rgba(0,0,0,.9), inset 0 1px 0 rgba(244,237,227,.05);
+}
+/* 青玉只给一口水；陶土只给急救线与「身体不太对」，低饱和，不与主入口争视觉 */
+.s-b.cl{ min-height:104rpx; padding:30rpx; font-family:var(--body); font-size:30rpx;
+         background:none; border-color:rgba(140,193,170,.32); color:var(--jade); }
+.s-b.dg{ min-height:104rpx; padding:30rpx; font-size:34rpx;
+         background:none; border-color:rgba(203,126,98,.5); color:var(--clay); }
+.s-b.flat{ margin:0; flex:1; }
+
+.s-q{
+  display:flex; align-items:center; justify-content:space-between; gap:16rpx;
+  /* 原来是 158rpx 高的卡片，三个并排吃掉六成屏，把主入口「我现在不太好」挤出首屏。
+     这几个是次级入口（记录类），本来就不该和主动作一样重：改成列表行，
+     分隔靠底部细线不靠卡片边框——等大圆角矩形连着堆才是那股 AI 味的来源。 */
+  min-height:0; padding:22rpx 4rpx; margin:0;
+  border:none; border-bottom:1px solid var(--hair2); border-radius:0; background:none;
+  font-size:30rpx; color:var(--paper2); text-align:left;
+}
+.s-pair{ display:flex; gap:16rpx; margin:16rpx 0 0; }
+.s-pair .s-q{ margin:0; flex:1; justify-content:center; }
+
+.s-row{ display:flex; justify-content:space-between; align-items:baseline; gap:20rpx; line-height:1.45;
+        border-bottom:1px solid var(--hair2); padding:15rpx 0; }
+.rk{ font-family:var(--disp); font-size:32rpx; }
+.rv{ font-size:28rpx; color:var(--paper3); text-align:right; flex:none; max-width:54%;
+     line-height:1.6; }
+
+/* 横排一行：竖排两行要 184rpx，横排 106rpx。急救线必须在首屏可见，
+   省下来的高度正好抵掉它从折叠区搬出来的成本 */
+.s-foot{ margin-top:24rpx; padding-top:20rpx; border-top:1px solid var(--hair2);
+         display:flex; flex-direction:row; justify-content:space-between; gap:20rpx; }
+/* 急救线在底部——顶部会被当标题跳过，底部在拇指区 */
+.footbtn{ font-size:28rpx; color:var(--clay); padding:8rpx 0; letter-spacing:.04em; }
+
+/* ── 六格：本身就是入口，不需要文字标签 ──────────────────────
+   空格用虚线，不用红色不用感叹号。无连续天数、无百分比、无月历 */
+.cells{ display:flex; gap:12rpx; margin:20rpx 0 0; }
+.cell{ flex:1; height:64rpx; border-radius:12rpx; display:block;
+       border:1px solid rgba(244,237,227,.22); }
+.cell.on{ border-color:rgba(140,193,170,.7); background:rgba(140,193,170,.07); }
+.cell.e{ border-style:dashed; border-color:rgba(244,237,227,.10); }
+
+/* ── 六格的两个新状态 ──────────────────────────────────────
+   六格没有文字标签（PRD：本身就是入口，不需要标签），代价是
+   「这里可以点」这件事没人说。市面上的记录类 app 首页都有一个明确的
+   「今天记录了吗」入口 —— next 就是这个产品的说法：
+   下一个该记的那格慢慢亮一下再暗回去，四秒一轮。
+   不用箭头不用文字不用红点，那些都会变成催促。 */
+.cell.next{ border-color:rgba(201,160,99,.34); animation:cellwait 4s ease-in-out infinite; }
+@keyframes cellwait{
+  0%,100%{ background:rgba(201,160,99,.02) }
+  50%    { background:rgba(201,160,99,.09) }
+}
+/* 刚记完回到首页：这一格亮一次就停。
+   静默完成 —— 不弹提示条、不撒花，那些是给成就感设计的，这个产品不给分。 */
+.cell.just{ animation:celljust 1.1s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes celljust{
+  0%  { transform:scale(1);    box-shadow:0 0 0 0 rgba(201,160,99,.42) }
+  38% { transform:scale(1.10); box-shadow:0 0 0 7rpx rgba(201,160,99,.16) }
+  100%{ transform:scale(1);    box-shadow:0 0 0 0 rgba(201,160,99,0) }
+}
+
+/* ── 词 chip 44：颜色只用来认出是哪个词，不用来说它值多少 ───────── */
+.words{ display:flex; flex-wrap:wrap; gap:14rpx; margin:20rpx 0 0; }
+.word{ display:inline-flex; align-items:center; justify-content:center; gap:10rpx;
+       min-height:88rpx; padding:16rpx 28rpx; border-radius:44rpx;
+       border:1px solid rgba(244,237,227,.13); font-size:30rpx; color:var(--paper); }
+.dot{ width:18rpx; height:18rpx; border-radius:50%; display:block; }
+
+/* ── 想吃点什么样的：五支，「说不上来」跨两列 ───────────────── */
+.pick{ display:flex; flex-wrap:wrap; gap:18rpx; margin:20rpx 0 0; }
+.pickbtn{ display:flex; align-items:center; justify-content:center; text-align:center;
+          flex:1 1 44%; min-height:104rpx; padding:24rpx 20rpx;
+          border:1px solid rgba(244,237,227,.16); border-radius:14rpx;
+          font-family:var(--disp); font-size:34rpx; color:var(--paper); letter-spacing:.02em; }
+.pickbtn.wide{ flex:1 1 100%; font-size:30rpx; color:var(--paper2); }
+
+/* ── 在场人数：全屏唯一会自己变的东西 ─────────────────────── */
+.online{ font-size:28rpx; letter-spacing:.1em; color:var(--jade); text-align:right;
+         margin:4rpx 0 0; }
+
+.player{ display:flex; align-items:center; gap:20rpx; margin:24rpx 0 0;
+         min-height:104rpx; padding:26rpx 30rpx; background:var(--n2);
+         border:1px solid var(--hair); border-radius:14rpx; }
+.player.on{ border-color:rgba(140,193,170,.45); }
+.pl-ico{ color:var(--jade); font-size:26rpx; }
+.pl-t{ font-size:26rpx; color:var(--paper2); flex:none; }
+.pl-bar{ flex:1; height:2px; background:var(--hair); border-radius:12rpx; position:relative; }
+.pl-fill{ position:absolute; left:0; top:0; height:100%; background:var(--jade);
+          border-radius:12rpx; transition:width 12s linear; }
+
+/* ── 潮汐：产品的中心隐喻，也是名字的来源。两端淡出 ──────────── */
+/* 环境层。fixed 到屏底，内容层 .page 压在它上面。
+   高潮那一态占得最高——水该显得快要漫上来。 */
+.tide-bg{ position:fixed; left:0; right:0; bottom:0; z-index:0; pointer-events:none;
+          width:100%; height:52vh; opacity:0; animation:tidein 1.6s ease-out forwards; }
+.tide-bg.peak{ height:68vh; }
+.tide-bg.ebb{ height:58vh; }
+@keyframes tidein{ to{ opacity:1 } }
+.page{ position:relative; z-index:1; }
+
+/* ── 模块之间的呼吸：剩余高度平分到每个间隙 ──────────────────────
+   她的原话是"模块间很挤"。mine 那屏标题、三个选项、「吃不下」贴成一块砖，
+   读起来是一坨，不是三个可以分开考虑的选择 —— 发作当下认知本来就窄，
+   选项分不开就难选。
+
+   ⚠️ 走过两版弯路，记下来免得再踩：
+   v1 照 entry 的排法插一个撑开的空档，标题留顶上、操作沉到拇指区。
+      entry 那么排是对的（一句提问加两个答案），但 sip 的标题和正文
+      是同一句话的两半，中间塞个空档就是把话割断 —— 她说"太空了"。
+   v2 改成上下各一个空档、整块居中，sip 好了，urge 更糟：那屏底下有潮水在涨，
+      按钮沉到底就是推进水里 —— 她说"要被水淹没了"。
+   两版的共同错误是把空白当一整块搬来搬去。她要的不是空白换地方，是间隙变松。
+
+   flex 列里多个 auto margin 会平分剩余空间，所以这里不需要判断哪屏算短：
+   home 余 7px，每个间隙分到 1px，看不出来；mine 余 345px 就自己松开。
+   min-height 不用 height —— 内容超出时容器自己长高，没有余量可分，
+   auto margin 归零，长屏一像素不动。 */
+.page{ display:flex; flex-direction:column; min-height:calc(100vh - 260rpx); }
+/* 每个块后面跟一个可压缩的间隙。flex:1 1 0 让它去分剩余高度，
+   max-height 给它封顶 —— 上一版用 .page > *{margin-bottom:auto} 平分，
+   没有上限，mine 的 345px 余量摊成每个间隙 100px，三个选项散成
+   三件不相干的事，「吃完了」还被挤出了视口。松是要松，不是要散。
+
+   home 那种满屏的屏没有余量可分，basis 0 直接压回 0，一像素不动。
+   ⚠️ 它不进 blocks 数组，是 wxml 里跟在每个块后面的固定兄弟节点 ——
+   进数组会让 setData(`blocks[i].on`) 那一批按下标的局部更新全部错位。 */
+/* min-height:0 不能省 —— flex item 的 min-height 默认是 auto，
+   列方向上会挡住收缩，home 那种满屏的屏就压不回 0，白白多出 14px 变成超屏。 */
+.vgap{ flex:1 1 0; min-height:0; max-height:56rpx; }
+/* entry 已经有自己的一套节奏（54rpx 标题、40rpx 按钮间距、64rpx 次级间距，
+   外加那个撑开的 .s-gap），再叠 vgap 就从余 31px 变成余 2px。 */
+.s-entry .vgap{ max-height:0; }
+
+/* 三张卡：一个念头 + 它的解释。
+   原来是三个 h2 加三段 p 连着排，读起来像条款（她说"又像是规则怪谈一样"）。
+   摞成一列条文的观感来自两件事：标题和正文同宽同色块、以及没有边界。
+   所以给每条一个自己的框、一个小圆点起头，念头本身用正文的字号不用标题的
+   ——它是她心里的一句话，不是一条法规。 */
+.c3{ margin:22rpx 0 0; }
+.c3card{ position:relative; margin-top:16rpx; padding:24rpx 26rpx 26rpx 44rpx;
+         border-radius:16rpx; background:var(--n2);
+         border:1px solid var(--hair2); }
+.c3dot{ position:absolute; left:22rpx; top:34rpx; width:10rpx; height:10rpx;
+        border-radius:50%; background:var(--brass); opacity:.7; }
+.c3t{ display:block; font-family:var(--disp); font-size:34rpx; font-weight:600;
+      color:var(--paper); line-height:1.45; }
+.c3p{ display:block; margin-top:10rpx; font-size:31rpx; line-height:1.78;
+      color:var(--paper2); text-align:justify; }
+
+/* 食物色带。eat 屏顶上那一条：那一支口味的颜色 + 同一套麻点质感。
+   不放照片、不做识别——PRD：识别通往量化，技术上做得到、产品上不做。
+   所以"质感"全部由颜色、受光斑和麻点合成。 */
+.fband{ position:relative; height:168rpx; margin:18rpx 0 4rpx; border-radius:16rpx;
+        overflow:hidden; display:flex; align-items:flex-end; padding:20rpx 26rpx;
+        background:
+          radial-gradient(26% 34% at 66% 26%, rgba(255,255,255,.11), transparent 70%),
+          radial-gradient(20% 26% at 32% 62%, rgba(0,0,0,.16), transparent 72%),
+          radial-gradient(86% 70% at 24% 12%, var(--lit), transparent 62%),
+          linear-gradient(168deg, rgba(0,0,0,.06), rgba(0,0,0,.42) 100%),
+          var(--deep);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.12),
+                   inset 0 0 0 1px rgba(244,237,227,.09); }
+.fgrain{ position:absolute; left:0; top:0; right:0; bottom:0; opacity:.45;
+  background-image:
+    radial-gradient(rgba(0,0,0,.20) 0.8px, transparent 0.9px),
+    radial-gradient(rgba(255,255,255,.12) 0.7px, transparent 0.8px);
+  background-size:7px 7px, 12px 12px; background-position:0 0, 4px 6px; }
+.ftext{ position:relative; z-index:2; font-family:var(--hand); font-size:38rpx;
+        color:var(--paper); letter-spacing:.1em;
+        text-shadow:0 2rpx 10rpx rgba(0,0,0,.55); }
+
+/* two 的两支。左边是那句话，右边是它的样子，末尾一个 ›——
+   原来这两行是静态的 row，点不动，而屏上写着"这两种需要的建议正好相反"
+   却没有那两份建议。 */
+.twoway{ margin:24rpx 0 0; }
+.tw{ display:flex; align-items:baseline; gap:16rpx; padding:24rpx 4rpx;
+     border-bottom:1px solid var(--hair2);
+     transition:opacity .16s ease, transform .16s ease; }
+.twt{ font-size:33rpx; color:var(--paper); flex:none; }
+.twh{ font-size:26rpx; color:var(--paper3); flex:1; text-align:right; line-height:1.5; }
+
+/* 清单。勾选框是方的不是圆的——圆的读成单选，而这三条可以都勾。
+   勾中不用对号（那是评分的符号），用一个填进去的方块。 */
+.checks{ margin:22rpx 0 0; }
+.chk{ display:flex; align-items:flex-start; gap:20rpx; padding:22rpx 4rpx;
+      border-bottom:1px solid var(--hair2);
+      transition:opacity .16s ease, transform .16s ease; }
+.cbox{ flex:none; width:34rpx; height:34rpx; margin-top:4rpx; border-radius:6rpx;
+       border:1px solid rgba(244,237,227,.30);
+       display:flex; align-items:center; justify-content:center;
+       transition:border-color .2s ease, background .2s ease; }
+.cmark{ width:16rpx; height:16rpx; border-radius:3rpx; background:transparent;
+        transition:background .2s ease, transform .2s ease; transform:scale(.6); }
+.chk.on .cbox{ border-color:rgba(201,160,99,.65); background:rgba(201,160,99,.10); }
+.chk.on .cmark{ background:var(--brass); transform:scale(1); }
+.ctext{ font-size:32rpx; line-height:1.5; color:var(--paper); }
+.gatego{ margin-top:30rpx; }
+
+/* 到点叫我。排上了就换文案，再点取消 */
+.remind.on{ border-color:rgba(140,193,170,.5); color:var(--jade); }
+
+/* ── 屏级排版例外 ──────────────────────────────────────────
+   .view 带 s-<屏id>，个别屏可以有自己的节奏。
+
+   entry 只有一句问话加两个选项。上一版用 flex + margin-top:auto 撑开，
+   但 :first-of-type 在小程序里靠不住（WXSS 对伪类支持有限），
+   撑没撑开全看运气。改成给整屏一个下沉的内边距 + 逐块加大间距，
+   不依赖任何伪类。 */
+/* flex 列 + 一个 flex:1 的空档，把选项压到拇指区。
+   PRD：全部操作在拇指范围内，可能躺着用、桌下用。 */
+.s-entry .page{ padding-top:56rpx; display:flex; flex-direction:column;
+                min-height:calc(100vh - 240rpx); }
+.s-gap{ flex:1; min-height:56rpx; }
+.s-entry .s-h{ font-size:54rpx; line-height:1.42; margin:0 0 12rpx; }
+.s-entry .s-b{ margin-top:40rpx; min-height:136rpx; font-size:36rpx;
+               background:linear-gradient(166deg, rgba(46,37,28,.86), rgba(30,25,19,.86));
+               border-color:rgba(244,237,227,.14);
+               backdrop-filter:blur(2px); }
+.s-entry .s-s{ margin-top:64rpx; }
+.s-entry .s-q{ border-bottom:none; }
+
+/* ── 入口屏的雾 ────────────────────────────────────────────
+   PRD 说深色为底、低对比低饱和，也说"刻意的朴素"——所以雾要非常淡，
+   淡到你不确定它在动。三层不同速度、不同方向，一层 70 秒一层 96 秒一层 124 秒，
+   周期互质，所以看不出循环。
+   这是全屏唯一一处纯装饰的动效，只在入口屏出现：那是唯一一个
+   还没进入任何流程、可以慢一点的时刻。 */
+.haze{ position:fixed; left:0; top:0; right:0; bottom:0; z-index:0;
+       pointer-events:none; overflow:hidden; }
+.hz{ position:absolute; border-radius:50%; }
+.hz.h1{ left:-24%; top:-14%; width:96%; height:52%;
+        background:radial-gradient(closest-side, rgba(201,160,99,.12), transparent 72%);
+        animation:drift1 70s ease-in-out infinite; }
+.hz.h2{ right:-30%; top:22%; width:104%; height:58%;
+        background:radial-gradient(closest-side, rgba(140,193,170,.075), transparent 74%);
+        animation:drift2 96s ease-in-out infinite; }
+.hz.h3{ left:-14%; bottom:-22%; width:120%; height:60%;
+        background:radial-gradient(closest-side, rgba(203,126,98,.07), transparent 76%);
+        animation:drift3 124s ease-in-out infinite; }
+@keyframes drift1{ 0%,100%{ transform:translate(0,0) scale(1) }
+  34%{ transform:translate(9%,5%) scale(1.1) } 68%{ transform:translate(-5%,9%) scale(.96) } }
+@keyframes drift2{ 0%,100%{ transform:translate(0,0) scale(1) }
+  40%{ transform:translate(-11%,-6%) scale(1.13) } 72%{ transform:translate(6%,7%) scale(.94) } }
+@keyframes drift3{ 0%,100%{ transform:translate(0,0) scale(1.04) }
+  46%{ transform:translate(7%,-8%) scale(.95) } 78%{ transform:translate(-8%,-3%) scale(1.12) } }
+
+/* ── 七只动物 ──────────────────────────────────────────────
+   用三条线／弧勾出形态的特征，不画完整的动物：
+   犀牛＝低头前冲的角　梗犬＝竖着的耳朵和短腿　鸵鸟＝埋下去的长颈
+   袋鼠＝前抱的育儿袋　水母＝伞盖和垂须　海豚＝并行的两道弧
+   圣伯纳犬＝厚重的坐姿
+   emoji 不用：craft-floor 明确禁"用 Unicode 字形顶替图标系统"，
+   而且同一个 emoji 在安卓和 iOS 上是两种画风。 */
+.beasts{ display:flex; flex-wrap:wrap; gap:14rpx; margin:24rpx 0 0; }
+.bcard{ flex:0 0 calc((100% - 14rpx) / 2); box-sizing:border-box;
+        min-height:186rpx; padding:18rpx 20rpx 16rpx; border-radius:16rpx;
+        border:1px solid var(--hair2); background:var(--n2); position:relative;
+        display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden;
+        transition:opacity .16s ease, transform .16s ease; }
+/* 理想的那两张：一层极淡的光，不是描边——描边会读成"选中" */
+.bcard.ideal{ background:
+    radial-gradient(72% 60% at 70% 24%, rgba(201,160,99,.13), transparent 70%), var(--n2);
+  border-color:rgba(201,160,99,.30);
+  box-shadow:inset 0 0 26rpx -6rpx rgba(201,160,99,.22); }
+.bt{ font-size:29rpx; color:var(--paper); line-height:1.4; position:relative; z-index:2; }
+.ba{ font-size:24rpx; color:var(--paper3); margin-top:4rpx; letter-spacing:.06em;
+     position:relative; z-index:2; }
+
+/* 线条本体：SVG stroke 走 background-image 的 data URI。
+   一开始用 CSS 边框弧拼形态，在 54px 的格子里完全读不出来——
+   border-radius 只能画矩形和椭圆，勾不出轮廓。SVG 是矢量的，多小都清楚。
+   小程序不支持 <svg> 标签，但 WXSS 的 background 认 data URI。
+   只勾特征，不画完整的动物：
+   犀牛＝低头的背线加前冲的角　梗犬＝竖耳方头短腿　鸵鸟＝圆身加埋下去的长颈
+   袋鼠＝直立的身加前抱的袋　水母＝伞盖加三道垂须
+   海豚＝并行的两道弧（一起走）　圣伯纳犬＝厚重的坐姿、重心压得很低（不慌） */
+.bart{ position:absolute; right:14rpx; top:12rpx; width:112rpx; height:112rpx;
+       opacity:.42; background-repeat:no-repeat; background-position:center;
+       background-size:100% 100%; }
+.bart.big{ position:relative; right:auto; top:auto; width:190rpx; height:190rpx;
+           margin:10rpx auto 2rpx; opacity:.62; }
+/* 理想的那两张：线条本身不换色，靠一层金光染——换色会让它读成"选中" */
+.bcard.ideal .bart, .bhead.ideal .bart{ opacity:.72;
+  filter:drop-shadow(0 0 8rpx rgba(224,191,140,.75)) drop-shadow(0 0 20rpx rgba(201,160,99,.35)); }
+.a-rhino .bart{ background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M6 46C10 27 26 20 45 22c11 1 17 8 19 16M62 30l12-9-4 14M18 62h40%22 fill=%22none%22 stroke=%22%23BDB1A1%22 stroke-width=%222.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+.a-terrier .bart{ background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M20 32l3-15 9 11M48 28l7-12 4 15M17 31h46v22H17zM26 53v9M54 53v9%22 fill=%22none%22 stroke=%22%23BDB1A1%22 stroke-width=%222.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+.a-ostrich .bart{ background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M32 56a16 15 0 1 0 32 0 16 15 0 1 0-32 0M36 46C24 42 16 32 20 24c3-6 10-5 11 1 1 4-3 7-6 5M30 70v6M50 70v6%22 fill=%22none%22 stroke=%22%23BDB1A1%22 stroke-width=%222.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+.a-kangaroo .bart{ background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M46 16c6 0 9 4 9 10l-1 20c0 6-5 9-11 8M44 26c-7 1-11 6-11 13 0 6 3 10 8 12M44 54L16 74M36 40h14%22 fill=%22none%22 stroke=%22%23BDB1A1%22 stroke-width=%222.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+.a-jelly .bart{ background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M19 37a21 17 0 0 1 42 0zM28 39c-2 12 2 18 0 26M40 39c-2 14 2 20 0 28M52 39c-2 12 2 18 0 26%22 fill=%22none%22 stroke=%22%23BDB1A1%22 stroke-width=%222.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+.a-dolphin .bart{ background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M9 47C22 30 45 26 63 34l8-9-5 15M17 60C30 45 51 41 67 47%22 fill=%22none%22 stroke=%22%23BDB1A1%22 stroke-width=%222.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+.a-stbernard .bart{ background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M26 31a15 13 0 0 1 29 0l4 26c0 9-38 9-38 0zM19 66h42%22 fill=%22none%22 stroke=%22%23BDB1A1%22 stroke-width=%222.4%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E"); }
+
+
+/* 首页那张滋味卡：可点时右边给个 ›，整块有按下反馈 */
+.tbody.go{ transition:opacity .16s ease, transform .16s ease; }
+.tline{ display:flex; align-items:center; justify-content:space-between; gap:16rpx; }
+.tline .chev{ font-size:32rpx; }
+
+/* 食物名作为入口时：和列表行一样有个 ›，但保持它原来的字号字重 */
+.s-food.fgo{ display:flex; align-items:center; justify-content:space-between; gap:16rpx;
+             transition:opacity .16s ease, transform .16s ease; }
+.s-food.fgo .chev{ font-size:32rpx; }
+
+/* 正反问的两个选项。选中的那个有描边——原来选了没有任何变化 */
+.s-pair{ display:flex; gap:14rpx; }
+.s-pair .pr{ flex:1; justify-content:center; text-align:center;
+             border:1px solid var(--hair2); border-radius:12rpx; padding:20rpx 8rpx;
+             transition:border-color .2s ease, background .2s ease, opacity .16s ease, transform .16s ease; }
+.s-pair .pr.on{ border-color:rgba(201,160,99,.5); background:rgba(201,160,99,.07);
+                color:var(--paper); }
+
+/* ── 一张牌 ────────────────────────────────────────────────
+   她要"悬浮卡牌的效果，就是一张扑克牌，手写字的感觉，背景是食物的颜色和质感"。
+   一张牌立得住靠四件事：
+   1 比例 —— 扑克是 5:7，不是随便一个圆角矩形
+   2 牌角标 —— 左上右下各一个小字，右下那个是倒的（真牌就是这样）
+   3 悬浮 —— 轻微仰角 + 一道落在下方的影，不是贴在页面上
+   4 材质 —— 那样食物的颜色打底，压一层纸纹，再来一道斜高光
+   颜色从 data/daily.js 的 cardHue 来：每张牌是那样食物本身的颜色。 */
+.deck{ display:flex; justify-content:center; padding:34rpx 0 22rpx;
+       perspective:1200rpx; }
+.pcard{ position:relative; width:480rpx; height:672rpx;   /* 5:7 */
+        border-radius:26rpx; overflow:hidden;
+        /* 底色不能收到写死的黑：那样食物的颜色就没了，整张牌只剩暗。
+           改成 deep 打底、叠一层半透明黑压暗边角，色相始终透得出来。 */
+        /* 食物质感：三块不规则的受光斑 + 一层细麻点，压在渐变上。
+           纯渐变读起来像塑料卡；食物表面是不匀的——有焦的地方、有油亮的地方。 */
+        background:
+          /* ⚠️ 这里不再放纹理。上一版在这儿写了两组通用发丝线，
+             结果 30 张牌只差颜色、纹理一模一样——她说"这不对，我要的是对应食物的质感"。
+             纹理按食物的做法分了六族，见下面的 .tx-*。 */
+          radial-gradient(28% 20% at 62% 30%, rgba(255,255,255,.10), transparent 70%),
+          radial-gradient(22% 15% at 34% 62%, rgba(0,0,0,.16), transparent 72%),
+          radial-gradient(18% 13% at 74% 66%, rgba(255,255,255,.07), transparent 74%),
+          radial-gradient(84% 62% at 26% 14%, var(--lit), transparent 60%),
+          radial-gradient(56% 40% at 84% 90%, var(--lit), transparent 68%),
+          linear-gradient(166deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.30) 62%, rgba(0,0,0,.54) 100%),
+          var(--deep);
+        box-shadow:
+          0 2rpx 0 rgba(255,255,255,.16) inset,
+          0 0 0 1px rgba(244,237,227,.14),
+          0 34rpx 54rpx -22rpx rgba(0,0,0,.86),
+          0 8rpx 18rpx -8rpx rgba(0,0,0,.6);
+        transform:rotateX(5deg) translateZ(0);
+        animation:cardin .62s cubic-bezier(.2,.7,.3,1) both; }
+/* 进屏是"发牌"：从下方带一点旋转落定 */
+@keyframes cardin{
+  0%{ opacity:0; transform:rotateX(16deg) rotate(-4deg) translateY(56rpx) scale(.94) }
+  100%{ opacity:1; transform:rotateX(5deg) rotate(0) translateY(0) scale(1) } }
+/* ── 牌面质感，按食物的做法分六族 ──────────────────────────────
+   做法决定表面：烙过的有焦痕、蒸过的有褶、汤是涟漪、米是粒、
+   凉的挂水珠、糕是层。族的划分在 data/daily.js 的 cardTexFam，
+   食物名 → 族名进 .pcard 的 class（tx-sear / tx-steam / …）。
+   全部走渐变不用 canvas：牌有发牌动画，canvas 要等 selectorQuery
+   拿到节点才画，会在动画之后闪一下。
+   共同约束：alpha 全压在 .34 以下、线宽 1–2px。她要的是"简练的线条"，
+   不是把牌面画满——牌面正中还得放得下品名和那段描述。 */
+.pgrain{ position:absolute; left:0; top:0; right:0; bottom:0; }
+
+/* 烙、煎、烤：不匀的焦痕 + 焦斑。
+   ⚠️ 走错过一版：横线叠一组近垂直的"断线"想把它切成段，结果两组直接织成
+      一张网格 —— 网格读作纱窗，比连续的横线更糟。
+   正确的办法是**只用横向**，但三组的周期互质（11/17/29）、角度各差几度：
+   三组叠起来的疏密自己漂移，看起来就是烙得不匀，而不是等距的线。
+   规则感来自"只有一个周期"，不来自"是直线"。 */
+.tx-sear .pgrain{ opacity:.66;
+  background-image:
+    radial-gradient(34% 24% at 24% 32%, rgba(0,0,0,.36), transparent 72%),
+    radial-gradient(26% 18% at 76% 64%, rgba(0,0,0,.30), transparent 74%),
+    radial-gradient(20% 13% at 54% 86%, rgba(255,255,255,.11), transparent 76%),
+    repeating-linear-gradient(3deg,  rgba(0,0,0,.22) 0 2px, transparent 2px 11px),
+    repeating-linear-gradient(7deg,  rgba(0,0,0,.14) 0 1px, transparent 1px 17px),
+    repeating-linear-gradient(-4deg, rgba(255,255,255,.07) 0 1px, transparent 1px 29px); }
+
+/* 蒸：褶从顶上一圈圈收进去，再压一层水光。
+   椭圆的 repeating-radial 圆心放在牌面上缘外，弧线就是包子顶那种收口。 */
+.tx-steam .pgrain{ opacity:.72;
+  background-image:
+    repeating-radial-gradient(ellipse 128% 88% at 50% -12%,
+      transparent 0 9px, rgba(255,255,255,.085) 9px 10px, transparent 10px 23px),
+    radial-gradient(70% 34% at 46% 6%, rgba(255,255,255,.13), transparent 74%),
+    radial-gradient(40% 22% at 66% 78%, rgba(0,0,0,.16), transparent 76%); }
+
+/* 汤、浆、粥：两组不同周期的同心圈。周期 15px 与 23px，
+   交叠处自己乱掉——单独一组读起来像靶子。 */
+.tx-soup .pgrain{ opacity:.68;
+  background-image:
+    repeating-radial-gradient(circle at 43% 57%,
+      transparent 0 14px, rgba(255,255,255,.075) 14px 15px, transparent 15px 30px),
+    repeating-radial-gradient(circle at 62% 38%,
+      transparent 0 22px, rgba(255,255,255,.05) 22px 23px, transparent 23px 46px),
+    radial-gradient(56% 30% at 32% 18%, rgba(255,255,255,.11), transparent 72%); }
+
+/* 粒：三种疏密的点阵。周期 5/9/14 互质，看不出是网格 */
+.tx-grain .pgrain{ opacity:.66;
+  background-image:
+    radial-gradient(rgba(255,255,255,.16) 1.1px, transparent 1.2px),
+    radial-gradient(rgba(0,0,0,.22) 0.9px, transparent 1px),
+    radial-gradient(rgba(255,255,255,.09) 1.5px, transparent 1.6px);
+  background-size:5px 5px, 9px 9px, 14px 14px;
+  background-position:0 0, 2px 3px, 5px 1px; }
+
+/* 冰、凉：几颗水珠，每颗左上一点高光（那一点才是"水"，不然就是麻点）+ 一层霜 */
+.tx-chill .pgrain{ opacity:.8;
+  background-image:
+    radial-gradient(circle 9px at 26% 22%, rgba(255,255,255,.20), rgba(255,255,255,.04) 62%, transparent 72%),
+    radial-gradient(circle 6px at 70% 30%, rgba(255,255,255,.22), transparent 74%),
+    radial-gradient(circle 12px at 62% 70%, rgba(255,255,255,.15), rgba(255,255,255,.03) 60%, transparent 72%),
+    radial-gradient(circle 5px at 34% 78%, rgba(255,255,255,.20), transparent 76%),
+    radial-gradient(circle 7px at 82% 56%, rgba(255,255,255,.14), transparent 74%),
+    radial-gradient(rgba(255,255,255,.07) 0.7px, transparent 0.8px);
+  background-size:auto, auto, auto, auto, auto, 6px 6px; }
+
+/* 糕、软：等距的横向层。两组错开半个周期，暗线在亮线下面，读作切面 */
+.tx-soft .pgrain{ opacity:.6;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.055) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(0deg, transparent 0 13px, rgba(0,0,0,.13) 13px 14px, transparent 14px 26px),
+    radial-gradient(50% 30% at 30% 24%, rgba(255,255,255,.08), transparent 74%); }
+/* 斜高光：牌面在光下会有一道 */
+/* 斜高光改成慢慢扫过去的一道油光。静止的高光读作印刷品上的一道白，
+   会动的才读作"这个表面是湿的／有油"。7.2 秒一轮，峰值 alpha 只有 .13——
+   要的是余光里察觉到它动过，不是一道扫光特效。 */
+.pgloss{ position:absolute; left:-30%; top:-20%; width:90%; height:150%;
+  transform:rotate(19deg);
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.10) 46%, transparent);
+  animation:sheen 7.2s 1.1s cubic-bezier(.5,0,.5,1) infinite; }
+@keyframes sheen{
+  0%,  8% { transform:rotate(19deg) translateX(-46%); opacity:.35 }
+  46%     { opacity:1 }
+  92%,100%{ transform:rotate(19deg) translateX(118%); opacity:.35 }
+}
+/* 牌角标。右下那个是倒的 */
+.pcorner{ position:absolute; font-family:var(--hand); font-size:26rpx;
+          color:rgba(244,237,227,.72); letter-spacing:.06em; }
+.pcorner.tl{ left:26rpx; top:22rpx; }
+.pday{ display:block; text-align:center; font-size:25rpx; letter-spacing:.14em;
+       color:var(--paper3); margin-bottom:6rpx; }
+.pcorner.br{ right:26rpx; bottom:22rpx; transform:rotate(180deg); }
+/* 牌面正中 */
+.pmid{ position:absolute; left:44rpx; right:44rpx; top:50%; transform:translateY(-50%);
+       display:flex; flex-direction:column; align-items:center; text-align:center; }
+.pname{ font-family:var(--hand); font-size:64rpx; font-weight:400; color:var(--paper);
+        letter-spacing:.08em; line-height:1.3;
+        text-shadow:0 2rpx 12rpx rgba(0,0,0,.5); }
+.prule{ width:76rpx; height:1px; margin:20rpx 0 18rpx;
+        background:rgba(244,237,227,.34); }
+.pdesc{ display:block; font-family:var(--hand); font-size:34rpx; line-height:1.9;
+        letter-spacing:.03em;
+        color:rgba(244,237,227,.94); text-align:justify;
+        text-shadow:0 1rpx 8rpx rgba(0,0,0,.44); }
+
+/* ── 书架 ──────────────────────────────────────────────────
+   牌立在板上，一层三张。今天那张微微抽出来一点。
+   板是一道有厚度的横线加它下面的影——不画木纹，那会变成拟物。 */
+.shelf{ margin:24rpx 0 0; }
+.srow{ display:flex; align-items:flex-end; gap:16rpx; padding:0 6rpx; }
+.spine{ flex:1; height:190rpx; border-radius:8rpx 8rpx 3rpx 3rpx;
+        position:relative; overflow:hidden; box-sizing:border-box;
+        padding:14rpx 12rpx 12rpx;
+        display:flex; flex-direction:column; justify-content:flex-end;
+        background:
+          radial-gradient(24% 18% at 66% 40%, rgba(255,255,255,.08), transparent 72%),
+          radial-gradient(20% 14% at 30% 70%, rgba(0,0,0,.14), transparent 74%),
+          linear-gradient(94deg, rgba(0,0,0,.34) 0 6rpx, transparent 6rpx 14rpx),
+          radial-gradient(72% 40% at 30% 12%, var(--lit), transparent 70%),
+          linear-gradient(168deg, rgba(0,0,0,.10), rgba(0,0,0,.46) 100%),
+          var(--deep);
+        box-shadow:0 1px 0 rgba(255,255,255,.10) inset,
+                   0 0 0 1px rgba(244,237,227,.09),
+                   0 10rpx 16rpx -8rpx rgba(0,0,0,.7);
+        opacity:.62; filter:saturate(.7);
+        transition:opacity .2s ease, transform .2s ease, filter .2s ease; }
+/* 记过词的那天颜色是活的；没记的那天牌还在架上，只是暗着 */
+.spine.on{ opacity:1; filter:none; }
+/* 今天那张抽出来一点 */
+.spine.out{ transform:translateY(-14rpx); height:206rpx;
+            box-shadow:0 1px 0 rgba(255,255,255,.14) inset,
+                       0 0 0 1px rgba(201,160,99,.42),
+                       0 16rpx 22rpx -10rpx rgba(0,0,0,.78); }
+/* 21→24rpx：10.5px 低于你定的 13.5px 标签下限，而这行是牌脊上的日期，
+   它是"这是哪一天"的唯一线索，不是装饰。书脊宽 207rpx，24rpx 的「8 15」放得下。
+   （.sl-n 那个 1-6 的序号留在 21rpx —— 纸条上的行号，淡是有意的。） */
+.sd{ font-size:24rpx; color:rgba(244,237,227,.62); letter-spacing:.06em; }
+.sf{ font-family:var(--hand); font-size:27rpx; color:var(--paper); line-height:1.3;
+     margin-top:2rpx; }
+/* 隔板 */
+.sboard{ height:10rpx; margin:0 0 26rpx; border-radius:2rpx;
+         background:linear-gradient(180deg, #3A3026 0%, #241C15 60%, #1A150F 100%);
+         box-shadow:0 8rpx 14rpx -6rpx rgba(0,0,0,.8),
+                    0 1px 0 rgba(244,237,227,.10) inset; }
+
+/* ── 星空 ──────────────────────────────────────────────────
+   一颗是一晚。三档亮度，位置种子化（同一晚永远在同一处，
+   否则每次进来星图都变，就不像"这些天"了）。
+   不连线、不排名、不写总数——那都会变成打分。 */
+.sky{ position:relative; height:640rpx; margin:22rpx 0 0; border-radius:18rpx;
+      overflow:hidden; border:1px solid var(--hair2);
+      /* 原来是纯暗棕黑，她说"黑得僵硬"。真的夜空有三层：
+         高处偏冷的蓝紫、中间一层雾、靠地平线一点暖——那是城市的光。 */
+      background:
+        radial-gradient(64% 44% at 74% 10%, rgba(126,146,196,.13), transparent 70%),
+        radial-gradient(96% 56% at 22% 42%, rgba(96,114,166,.08), transparent 74%),
+        radial-gradient(130% 60% at 50% 112%, rgba(201,160,99,.13), transparent 64%),
+        linear-gradient(178deg, #141827 0%, #101322 44%, #0C0D14 78%, #0A0A0E 100%); }
+/* 触区。星点最大 13rpx，直接绑 tap 是点不到的（触区下限 44px ≈ 88rpx）。
+   72rpx 是在"点得到"和"两颗星的触区不重叠"之间的折中：
+   skyLayout 保证相邻两颗至少隔 0.32 格，最密的时候格宽约 170rpx。 */
+.starhit{ position:absolute; width:72rpx; height:72rpx; margin:-36rpx 0 0 -36rpx;
+          display:flex; align-items:center; justify-content:center; }
+.star{ width:10rpx; height:10rpx; border-radius:50%;
+       background:var(--paper);
+       animation:twinkle 5.5s ease-in-out infinite;
+       transition:box-shadow .3s ease, transform .3s cubic-bezier(.2,.8,.3,1); }
+.star.d0{ opacity:.24; width:7rpx; height:7rpx; box-shadow:0 0 6rpx rgba(244,237,227,.24); }
+.star.d1{ opacity:.55; box-shadow:0 0 10rpx rgba(244,237,227,.42); }
+.star.d2{ opacity:.95; width:13rpx; height:13rpx;
+          box-shadow:0 0 18rpx rgba(244,237,227,.75), 0 0 34rpx rgba(201,160,99,.28); }
+/* 选中的那一颗：只加一圈光，不改大小档位——大小是那一晚的亮度，不能被"选中"覆盖 */
+.star.on{ transform:scale(1.5);
+          box-shadow:0 0 22rpx rgba(244,237,227,.9), 0 0 46rpx rgba(201,160,99,.4); }
+/* nth-child 挪到触区上：.star 现在是 .starhit 的独生子，挂在它身上永远只命中 3n+1 */
+.starhit:nth-child(3n)   .star{ animation-delay:1.8s }
+.starhit:nth-child(3n+1) .star{ animation-delay:3.4s }
+@keyframes twinkle{ 0%,100%{ filter:brightness(1) } 50%{ filter:brightness(1.5) } }
+/* 读出那一晚。原来是屏底列最近三晚（.skyfoot）——那是个列表不是星空，
+   而且只有三条，别的星星点了没反应。现在只留一行，跟着手指走。 */
+.skyread{ min-height:76rpx; margin:20rpx 0 0; text-align:center;
+          font-size:30rpx; letter-spacing:.06em; color:var(--paper3); }
+.sk-l{ font-family:var(--hand); font-size:38rpx; color:var(--paper); }
+.skyread .none{ font-size:26rpx; }
+
+/* ── 睡眠三档 ────────────────────────────────────────────── */
+.spick{ display:flex; gap:14rpx; margin:22rpx 0 0; }
+.sp-b{ flex:1; min-height:104rpx; display:flex; align-items:center; justify-content:center;
+       border:1px solid var(--hair); border-radius:14rpx; background:linear-gradient(168deg,#26201A,#1D1813);
+       font-family:var(--disp); font-size:32rpx; color:var(--paper); text-align:center;
+       transition:opacity .16s ease, transform .16s ease, border-color .2s ease; }
+.sp-b.on{ border-color:rgba(201,160,99,.5); background:linear-gradient(165deg,#2E251C,#231D16); }
+
+
+/* 开关。轨道 + 圆点，不用系统 switch——系统那个的绿色压不掉，
+   而 PRD 说不用绿色做奖励色。开态用青玉，和「在场人数」同一个色。 */
+.swrow{ display:flex; align-items:center; gap:16rpx; padding:20rpx 0;
+        border-bottom:1px solid var(--hair2);
+        transition:opacity .16s ease, transform .16s ease; }
+.swk{ font-size:32rpx; color:var(--paper); flex:none; }
+.swh{ font-size:26rpx; color:var(--paper3); flex:1; text-align:right; }
+.swt{ flex:none; width:74rpx; height:42rpx; border-radius:21rpx;
+      background:rgba(244,237,227,.09); border:1px solid var(--hair);
+      position:relative; transition:background .22s ease, border-color .22s ease; }
+.swt.on{ background:rgba(140,193,170,.26); border-color:rgba(140,193,170,.55); }
+.swd{ position:absolute; left:4rpx; top:3rpx; width:32rpx; height:32rpx; border-radius:50%;
+      background:var(--paper3);
+      transition:transform .24s cubic-bezier(.34,.06,.2,1), background .22s ease; }
+.swt.on .swd{ transform:translateX(30rpx); background:var(--jade); }
+
+/* 警示块。PRD：唯一允许用警示色的地方是躯体安全那类信息。
+   用整圈 1px 边框 + 极淡底色，不用彩色左边框——那是模板味的做法。 */
+.s-warn{ margin:18rpx 0 0; padding:18rpx 24rpx 20rpx; border-radius:14rpx;
+         border:1px solid rgba(203,126,98,.40); background:rgba(203,126,98,.055); }
+.s-warn .wt{ display:block; font-size:26rpx; letter-spacing:.16em;
+             color:var(--clay); margin-bottom:8rpx; }
+.s-warn .wb{ display:block; font-size:30rpx; line-height:1.68; color:var(--paper); }
+
+/* 长说明收起态。和 .s-q 一样是一行可点的，但更轻——它是可选的旁注不是入口 */
+.swrap{ display:block; }
+.sbtn{ display:inline-flex; align-items:center; gap:6rpx; margin:18rpx 0 0;
+       font-size:26rpx; letter-spacing:.1em; color:var(--paper3);
+       padding:10rpx 20rpx 10rpx 0; transition:opacity .16s ease, transform .16s ease; }
+/* 「为什么」展开是原地长出来，不是换屏，所以留着上浮淡入不跟着换向 */
+@keyframes openin{ from{ opacity:0; transform:translateY(10rpx) } to{ opacity:1; transform:none } }
+.s-s.open{ animation:openin .3s cubic-bezier(.22,.61,.36,1) both; }
+
+/* 折叠入口。收起态是首屏的最后一行，字比正文小、比标签大——它是入口不是标题 */
+.foldwrap{ margin-top:16rpx; }
+.morebtn{ display:flex; align-items:center; justify-content:space-between;
+          font-size:28rpx; letter-spacing:.14em; color:var(--paper3);
+          padding:16rpx 4rpx; border-top:1px solid var(--hair2);
+          transition:opacity .16s ease, transform .16s ease; }
+.mchev{ transform:rotate(90deg); transition:transform .22s cubic-bezier(.22,.61,.36,1); }
+.mchev.up{ transform:rotate(-90deg); }
+
+/* ── 情绪瓶子：瓶座上一出现数量就变成计次，所以写「八月」 ────────
+   几何堆叠用 px 算，这里也用 px，两边必须同一把尺子 */
+.machine{ margin:32rpx 0 8rpx; display:flex; flex-direction:column; align-items:center; }
+/* 玻璃罐。上一版是个正圆——正圆读作球体，不是罐子。
+   罐子的三个必要条件：肩、口、平底。
+   形状靠不对称的 border-radius：上方圆角小（瓶肩），下方是半圆（罐底）；
+   罐口另起一层压在上沿。布局代码不用改，圆形堆叠仍然落在这个形状里面。 */
+.glass{ position:relative; width:250px; height:250px;
+  border-radius:40% 40% 50% 50% / 32% 32% 50% 50%;
+  overflow:hidden;
+  background:
+    radial-gradient(44% 30% at 30% 16%, rgba(244,237,227,.09), transparent 66%),
+    /* 罐底那片光从 .11 提到 .22 并放大：珠子现在自己发光，
+       光积在罐底才说得通 —— 参考图里最亮的地方就是这里，不是罐口。 */
+    radial-gradient(58% 34% at 50% 94%, rgba(201,160,99,.22), transparent 78%),
+    radial-gradient(120% 100% at 50% 4%, #2C251D 0%, #17130F 56%, #0C0A08 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(244,237,227,.11),
+    inset 0 0 26px rgba(0,0,0,.52),
+    inset 0 8px 16px -6px rgba(244,237,227,.06),
+    0 26px 46px -22px rgba(0,0,0,.9),
+    /* 外溢的光。一只装着发光物的罐子会照亮它周围一圈，
+       没有这个它就还是"暗背景上的一只罐子"。 */
+    0 0 64px -10px rgba(201,160,99,.20); }
+
+/* 罐口。上一版是一块深色横条，读作木塞。玻璃翻边的读法是：
+   同罐身一个色系、上下各一道亮线（翻边的两个转折面）、两端略暗（弧度）。 */
+.neck{ width:150px; height:13px; margin:0 auto -6px; position:relative; z-index:4;
+  border-radius:7px 7px 2px 2px;
+  background:linear-gradient(180deg,
+    rgba(244,237,227,.16) 0%, rgba(244,237,227,.04) 22%,
+    #221C16 55%, #1A1511 100%),
+    linear-gradient(90deg, rgba(0,0,0,.5) 0%, transparent 14%, transparent 86%, rgba(0,0,0,.5) 100%);
+  box-shadow:inset 0 1px 0 rgba(244,237,227,.26),
+             inset 0 -1px 0 rgba(0,0,0,.55),
+             0 2px 6px -2px rgba(0,0,0,.65); }
+
+/* 玻璃本身：两道竖直侧壁反光 + 顶部透光 + 一圈厚度暗角。盖在球上面，不接手势。
+   侧壁那两道竖线是"这是玻璃"最省的信号——圆形的高光块只能读成塑料。 */
+.gloss{ position:absolute; left:0; top:0; right:0; bottom:0;
+  border-radius:40% 40% 50% 50% / 32% 32% 50% 50%;
+  pointer-events:none; z-index:3;
+  background:
+    /* 磨砂。参考图那只罐子是雾面的，里面的东西看得见轮廓但被柔化，
+       所以光晕比形状更显眼。
+       ⚠️ 上一版在这儿加了一层 3px 的点阵当颗粒 —— 等距点阵读作纱窗，
+          牌面质感那六族的注释里已经写过一次这个坑（"网格读作纱窗，
+          比连续的横线更糟"），我又踩了一遍。磨砂不靠颗粒，靠雾的不匀：
+          三片位置不同、大小不同的淡雾叠起来，浓淡自己漂移。
+       不用 backdrop-filter:blur：小程序真机上它对 canvas 兄弟节点不稳，
+       而且一模糊珠子就认不出是哪天了（点珠子看那天是个功能，不只是装饰）。 */
+    radial-gradient(62% 46% at 28% 22%, rgba(244,237,227,.055), transparent 72%),
+    radial-gradient(52% 38% at 74% 58%, rgba(244,237,227,.04), transparent 74%),
+    radial-gradient(70% 30% at 46% 92%, rgba(244,237,227,.035), transparent 76%),
+    linear-gradient(180deg, rgba(244,237,227,.05) 0%, rgba(244,237,227,.015) 46%, rgba(244,237,227,.045) 100%),
+    linear-gradient(90deg, transparent 5%, rgba(244,237,227,.11) 11%, rgba(244,237,227,.02) 17%, transparent 22%),
+    linear-gradient(90deg, transparent 80%, rgba(244,237,227,.06) 88%, transparent 94%),
+    radial-gradient(38% 20% at 32% 9%, rgba(244,237,227,.13), transparent 72%);
+  box-shadow: inset 0 0 22px rgba(0,0,0,.32); }
+
+/* 珠子画在 canvas 里，铺满罐子。玻璃层（.gloss）盖在它上面。
+   删掉的是上一版的 .ball 与那五组关键帧（dfall / dsquash / droll /
+   bumphit / bumpsettle）加上 .glass.hit：那套是"播一条事先算好的轨迹"，
+   而重力方向每帧都可能变（跟着手机晃），轨迹算不出来。
+   现在每帧的位置由 data/jar.js 的 step() 解，画法在同一个文件的 sprite()。 */
+.jarcv{ position:absolute; left:0; top:0; width:100%; height:100%; z-index:2; }
+
+/* 纸标签。上一版是金色渐变底座，那读作奖杯；一张米白的纸标签读作
+   自家封的果酱罐——温度是从这种材质来的，不是从更多光效来的。 */
+/* 纸标签压暗一档。珠子现在自己发光了，而这块米色牌原来是 L≈0.60 —— 
+   全屏最亮的东西是罐子外面的一张纸，罐内的光反而成了配角。
+   一只装着发光物的罐子，视觉中心必须在罐内。
+   压到 L≈0.28：还是纸，只是这张纸在暗处、被罐子的光照着，不自己发亮。
+   字跟着加深，对比度 5.06:1 —— 25rpx 是 12.5px 小字，要过 4.5:1。 */
+.base{ width:118px; margin:-4px auto 0; padding:5px 0 6px; position:relative; z-index:4;
+  border-radius:2px;
+  background:linear-gradient(176deg, #A89E8C 0%, #9A9080 62%, #8D8271 100%);
+  box-shadow:0 3px 7px -3px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.20);
+  display:flex; align-items:center; justify-content:center; }
+.base text{ font-family:var(--hand); font-size:25rpx; font-weight:500; color:#2A2018;
+            letter-spacing:.14em; }
+.readout{ min-height:80rpx; margin:26rpx 0 0; text-align:center;
+          font-family:var(--disp); font-size:32rpx; line-height:1.7; color:var(--paper2); }
+.readout .none{ color:var(--paper3); font-size:26rpx; }
+.rd-day{ font-size:25rpx; letter-spacing:.14em; color:var(--paper3); }
+/* 主题词是这一屏唯一的大字。楷体：它是那一天的名字，不是一条数据 */
+.rd-theme{ font-family:var(--hand); font-size:60rpx; line-height:1.45; margin-top:2rpx; }
+.rd-non{ font-family:var(--body); font-size:30rpx; color:var(--paper3); }
+.rd-open{ display:inline-block; margin-top:12rpx; padding:8rpx 6rpx 10rpx;
+          font-size:27rpx; letter-spacing:.12em; color:var(--paper2);
+          border-bottom:1px solid var(--hair); }
+
+/* ── 展开看看：一阵云雾，雾散了纸条在下面 ──────────────────────
+   雾不用 filter:blur —— 那在旧安卓 WebView 上要么不生效要么整块掉帧。
+   三团 radial-gradient 本身就是软边，各自的大小和飘散方向不同，
+   叠起来就不像"一个圆在放大"。 */
+.slipwrap{ position:relative; margin:20rpx 0 6rpx; }
+.fog{ position:absolute; left:-6%; right:-6%; top:-26rpx; bottom:-26rpx;
+      pointer-events:none; z-index:2; overflow:hidden; }
+.pf{ position:absolute; border-radius:50%;
+     background:radial-gradient(circle at 50% 50%,
+       rgba(244,237,227,.46) 0%, rgba(244,237,227,.16) 42%, rgba(244,237,227,0) 72%);
+     animation-name:fogout; animation-fill-mode:both;
+     animation-timing-function:cubic-bezier(.22,.62,.3,1); }
+.pf1{ left:2%;  top:6%;  width:62%; height:86%; animation-duration:.94s; }
+.pf2{ left:34%; top:-4%; width:58%; height:96%; animation-duration:1.08s; animation-delay:.05s; }
+.pf3{ left:16%; top:22%; width:70%; height:74%; animation-duration:.86s; animation-delay:.11s; }
+@keyframes fogout{
+  0%   { opacity:0;   transform:scale(.62) translateY(16rpx) }
+  24%  { opacity:.92; transform:scale(1)   translateY(0) }
+  100% { opacity:0;   transform:scale(1.55) translateY(-40rpx) }
+}
+/* 纸条。米白纸 + 楷体 + 一点点歪——歪是"随手撕下来的"唯一信号，
+   正着放就变回一张卡片了。压在雾底下，雾散的同时浮上来。 */
+.slip{ position:relative; z-index:1; padding:26rpx 32rpx 30rpx;
+  background:linear-gradient(176deg, #EFE6D6 0%, #E5DAC7 60%, #DBCFB8 100%);
+  border-radius:3rpx;
+  box-shadow:0 16rpx 28rpx -14rpx rgba(0,0,0,.72), inset 0 1px 0 rgba(255,255,255,.5);
+  animation:slipin .82s .2s cubic-bezier(.2,.7,.3,1) both; }
+@keyframes slipin{
+  0%   { opacity:0; transform:rotate(-1.4deg) translateY(30rpx) scale(.965) }
+  100% { opacity:1; transform:rotate(-.7deg)  translateY(0)     scale(1) }
+}
+/* 六行 = 六格。空的那几行也在，虚线照旧 —— 空格不是失分 */
+.sl-row{ display:flex; align-items:center; min-height:56rpx;
+         border-bottom:1px dashed rgba(74,59,40,.18); }
+.sl-n{ width:30rpx; font-family:var(--mono); font-size:21rpx; color:rgba(74,59,40,.42); }
+.sl-dot{ width:20rpx; height:20rpx; border-radius:50%; margin-right:16rpx;
+         background:rgba(74,59,40,.10);
+         box-shadow:inset 0 1px 2px rgba(0,0,0,.22), 0 1px 0 rgba(255,255,255,.4); }
+.sl-w{ font-family:var(--hand); font-size:34rpx; letter-spacing:.05em; color:#3B2F21; }
+.sl-row.off .sl-dot{ box-shadow:inset 0 0 0 1px rgba(74,59,40,.16); background:transparent; }
+.sl-sum{ margin-top:20rpx; padding-top:18rpx; border-top:1px solid rgba(74,59,40,.24);
+  font-family:var(--hand); font-size:32rpx; line-height:1.82; color:#4A3B28;
+  text-align:justify; }
+
+/* view 没有 :hover，点击反馈用 hover-class。
+   transition 必须写在基类上：hover-class 是按下时追加、松手就移除，
+   写在 .tap 里松手那一下类已经没了，回弹会是硬切。 */
+.s-q, .s-b, .navbtn, .cells, .word, .player, .pickbtn, .footbtn, .s-s.open{
+  transition: opacity .16s ease, transform .16s ease; }
+.tap{ opacity:.62; transform:scale(.978); }
+
+/* 换屏：进去从右边来，退出来从左边来。
+   上一版前进和后退播的是同一段上浮淡入（ina 和 inb 逐字节相同，两套只为让
+   同名 animation 在 class 不变时能重播）——于是 36 屏挤在一个 page 里，
+   唯一能说明"我是进去了还是退出来了"的线索是不存在的。
+   横向是手机上唯一不用学的层级语法：右边是更深处，左边是来的地方。
+   位移只有 24rpx——这是夜里的手机，要的是余光里知道方向，不是滑动特效。
+   四套 keyframes = 方向 2 × 奇偶 2，奇偶仍然是让它每屏重放的最省办法。 */
+@keyframes sf0{ from{ opacity:0; transform:translateX(24rpx) } to{ opacity:1; transform:none } }
+@keyframes sf1{ from{ opacity:0; transform:translateX(24rpx) } to{ opacity:1; transform:none } }
+@keyframes sb0{ from{ opacity:0; transform:translateX(-24rpx) } to{ opacity:1; transform:none } }
+@keyframes sb1{ from{ opacity:0; transform:translateX(-24rpx) } to{ opacity:1; transform:none } }
+.f0{ animation:sf0 .34s cubic-bezier(.22,.61,.36,1) both; }
+.f1{ animation:sf1 .34s cubic-bezier(.22,.61,.36,1) both; }
+.b0{ animation:sb0 .34s cubic-bezier(.22,.61,.36,1) both; }
+.b1{ animation:sb1 .34s cubic-bezier(.22,.61,.36,1) both; }
+/* 原地重画（.s0/.s1）故意什么都不写：屏号没变就不该有位移。
+   留着这两个类名是为了 wxml 那一处插值不必分支。 */
+.chev{ color:var(--paper3); font-size:30rpx; flex:none; }
+
+/* ── 松紧（冥想屏）：用力一下再松开。一轮七秒。
+   松开的那一段占三分之二——渐进放松的作用全在"松开之后的那几秒"，
+   所以动画时间也该给它。
+   形状用圆角方、动作是收紧，和呼吸圆的胀缩区分开：
+   一个是气在进出，一个是肌肉在放手。 ─────────────────────── */
+.relax{ position:relative; width:246px; height:246px; display:flex;
+        align-items:center; justify-content:center; margin:36rpx auto 20rpx; }
+.relax .rx-out, .relax .rx-mid, .relax .rx-core{
+  position:absolute; border-radius:34px;
+  animation:tighten 7s cubic-bezier(.34,.06,.2,1) infinite; }
+.relax .rx-out{ width:214px; height:214px;
+  background:radial-gradient(58% 58% at 42% 36%, rgba(201,160,99,.11), rgba(201,160,99,0) 72%); }
+.relax .rx-mid{ width:150px; height:150px; border-radius:26px;
+  border:1px solid rgba(201,160,99,.30); animation-delay:.12s; }
+.relax .rx-core{ width:96px; height:96px; border-radius:20px;
+  background:linear-gradient(158deg, rgba(224,191,140,.34), rgba(201,160,99,.12) 62%, rgba(201,160,99,0));
+  box-shadow:0 0 38px -8px rgba(201,160,99,.26); animation-delay:.06s; }
+@keyframes tighten{
+  0%   { transform:scale(1);   opacity:.66 }
+  20%  { transform:scale(.86); opacity:1 }    /* 用力，一点四秒 */
+  34%  { transform:scale(.86); opacity:1 }    /* 停一拍 */
+  86%  { transform:scale(1);   opacity:.66 }  /* 松开，四点六秒——最长的一段 */
+  100% { transform:scale(1);   opacity:.66 }
+}
+.rx-cue{ position:relative; z-index:2; font-size:26rpx; letter-spacing:.3em;
+         color:var(--brass); }
+.rx-cue text{ animation:rxcue 7s linear infinite; }
+.rx-cue .loose{ animation-name:rxloose; }
+@keyframes rxcue{ 0%{opacity:0} 6%{opacity:.9} 30%{opacity:.9} 40%{opacity:0} 100%{opacity:0} }
+@keyframes rxloose{ 0%{opacity:0} 42%{opacity:0} 50%{opacity:.9} 88%{opacity:.9} 100%{opacity:0} }
+
+/* ── 呼吸：吸四拍、停一拍、呼六拍。一轮十一秒。
+   呼比吸长——那是降低生理唤起的那一半，不是装饰。
+   尺寸用 px：圆形和瓶子一样，两边必须同一把尺子。 ─────────────── */
+.breath{ position:relative; width:246px; height:246px; display:flex;
+         align-items:center; justify-content:center; margin:36rpx auto 20rpx; }
+.breath .core, .breath .ring, .breath .halo{
+  position:absolute; border-radius:50%;
+  animation:inout 11s cubic-bezier(.42,0,.58,1) infinite; }
+.breath .halo{ width:246px; height:246px; filter:blur(2px);
+  background:radial-gradient(circle, rgba(140,193,170,.16) 0%, rgba(140,193,170,0) 68%); }
+.breath .ring{ width:172px; height:172px; border:1px solid rgba(140,193,170,.34); }
+.breath .core{ width:130px; height:130px;
+  background:radial-gradient(circle at 38% 32%, rgba(180,222,205,.42), rgba(120,172,152,.16) 52%, rgba(120,172,152,0) 78%);
+  box-shadow:0 0 46px -6px rgba(140,193,170,.30); }
+@keyframes inout{
+  0%   { transform:scale(.80); opacity:.62 }
+  36%  { transform:scale(1.10); opacity:1 }    /* 吸到顶，四拍 */
+  45%  { transform:scale(1.10); opacity:1 }    /* 停一拍 */
+  100% { transform:scale(.80); opacity:.62 }   /* 呼六拍 */
+}
+/* 一圈圈荡开的涟漪，每 3.6 秒一次 */
+.ripple{ position:absolute; width:172px; height:172px; border-radius:50%;
+         border:1px solid rgba(140,193,170,.22); animation:out 11s ease-out infinite; }
+.ripple.r2{ animation-delay:3.6s }
+.ripple.r3{ animation-delay:7.2s }
+@keyframes out{
+  0%{ transform:scale(.82); opacity:0 }
+  18%{ opacity:.5 }
+  100%{ transform:scale(1.46); opacity:0 }
+}
+/* 吸 / 呼 两个字交替淡入，和缩放同一节拍 */
+.cue{ position:absolute; inset:0; }
+.cue text{ position:absolute; left:0; right:0; top:0; bottom:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--disp); font-size:38rpx; letter-spacing:.34em;
+  color:var(--jade); animation:cue 11s linear infinite; }
+.cue .out{ animation-name:cueout }
+@keyframes cue{ 0%{opacity:0} 8%{opacity:.9} 34%{opacity:.9} 44%{opacity:0} 100%{opacity:0} }
+@keyframes cueout{ 0%{opacity:0} 48%{opacity:0} 56%{opacity:.9} 92%{opacity:.9} 100%{opacity:0} }
+
+/* 在场指示：一个 4.5 秒一次的青玉小点。「正在吃」那屏用的是这个，不是潮汐 */
+.pulse{ display:inline-block; width:12rpx; height:12rpx; border-radius:50%;
+        background:var(--jade); box-shadow:0 0 20rpx var(--jade);
+        animation:pulse 4.5s ease-in-out infinite; margin-right:12rpx; }
+@keyframes pulse{ 0%,100%{opacity:.5; transform:scale(1)} 50%{opacity:1; transform:scale(1.3)} }
+
+/* ── 滋味卡：设计画布把「今天的滋味 / 品名 / 描述 / 开口」连材质条包成一张卡 ── */
+.tcard{ border:1px solid var(--hair); border-radius:14rpx; overflow:hidden; margin:24rpx 0 0; }
+.mat{ position:relative; height:236rpx; overflow:hidden; }
+.matcv{ display:block; width:100%; height:100%; }
+/* 首页那张卡带上当日这样食物的颜色和质感 —— 它是牌面的入口，
+   两处该是同一样东西。但它是入口不是牌：牌面全彩、纹理 opacity .6-.8、
+   有发牌动画和一道扫过去的油光；这里只留颜色和质感的暗示。
+   做法是 n2 当蒙版盖在食物色上，只放 14% 透出来 —— 直接用 --lit
+   会和「黄铜＝品名与主入口描边」抢视觉，而首页的规矩是品名最暖、用得最省。 */
+.tbody{ position:relative; overflow:hidden;
+        background:
+          linear-gradient(0deg, rgba(31,26,21,.86), rgba(31,26,21,.86)),
+          radial-gradient(76% 130% at 14% 0%, var(--lit), transparent 64%),
+          var(--deep);
+        padding:30rpx 38rpx 34rpx;
+        display:flex; flex-direction:column; gap:18rpx; }
+/* 纹理压到 .2 —— 牌面那六族的 opacity 是给 480×672 的牌面定的，
+   照搬到这张扁卡上会糊成一片脏。写在 .tx-* 之后才盖得住（特异性同为 0,2,0）。 */
+.tbody .pgrain{ opacity:.2; }
+/* 文字压在纹理之上 */
+.tbody > .s-ti, .tbody > .tline, .tbody > .tp, .tbody > .topen{
+  position:relative; z-index:1; }
+.tbody .s-ti{ margin:0; font-size:26rpx; }
+.tbody .s-food{ margin:0; }
+.tbody .tp{ margin:0; line-height:1.88; }
+.topen{ font-size:28rpx; color:var(--paper3); padding-top:4rpx; }
+
+/* 热气：只在白天出现——文案里写着「很烫」，那就让它烫。
+   ponytail: 原设计是三条 bezier + 高斯模糊，canvas 里要每帧重画；
+   这里用三条 CSS 动画的细条近似，形不同但"烫"在。要真曲线就改 canvas 逐帧。 */
+.steam{ position:absolute; left:0; right:0; top:0; bottom:0; }
+.sm{ position:absolute; bottom:36%; width:3rpx; height:56rpx; border-radius:3rpx;
+     background:linear-gradient(180deg, rgba(244,237,227,0), rgba(244,237,227,.40));
+     animation:steam 7.5s ease-out infinite; }
+.s1{ left:27% } .s2{ left:51%; animation-delay:2.4s } .s3{ left:74%; animation-delay:4.7s }
+@keyframes steam{
+  0%{ opacity:0; transform:translateY(12rpx) scaleX(1) }
+  22%{ opacity:.5 }
+  70%{ opacity:.22 }
+  100%{ opacity:0; transform:translateY(-52rpx) scaleX(1.6) }
+}
+
+/* ── 我写的滋味 ───────────────────────────────────────────
+   五个角度的填写、以前写过的几条、别人写的。
+   ⚠️ 这一段刻意没有：进度条、完成度、第几条、任何计数。
+      计数就是打卡，而这一层正要摆脱打卡。 */
+
+.asp{ margin:24rpx 0 0; }
+.asp-row{ display:flex; align-items:baseline; gap:20rpx; flex-wrap:wrap;
+          border-bottom:1px solid var(--hair2); padding:22rpx 0; }
+/* 角度名用衬线，和品名同族——它问的是食物，不是问她 */
+.asp-k{ font-family:var(--disp); font-size:32rpx; color:var(--paper);
+        flex:none; width:88rpx; }
+.asp-in{ flex:1; min-width:0; font-size:32rpx; line-height:1.6; color:var(--paper);
+         padding:4rpx 0; }
+.asp-ph{ color:var(--paper3); font-size:28rpx; }
+/* 那一句提示。缩进对齐输入框、字比正文小，不用红色不用图标——
+   它是一句说明，不是一次报错。 */
+.asp-say{ width:100%; padding-left:108rpx; font-size:26rpx; line-height:1.7;
+          color:var(--paper3); margin-top:10rpx; }
+.asp-ok{ margin:40rpx 0 0; text-align:center; font-size:30rpx; letter-spacing:.08em;
+         border:1px solid var(--hair2); border-radius:12rpx; padding:24rpx 0;
+         color:var(--paper2);
+         transition:border-color .2s ease, background .2s ease; }
+.asp-ok.tap{ border-color:rgba(201,160,99,.5); background:rgba(201,160,99,.07); }
+
+/* 以前写过的几条。日期在前、字小且暗——变化靠日期看出来，不靠标注。 */
+.past{ display:flex; align-items:baseline; gap:20rpx; padding:18rpx 0;
+       border-bottom:1px solid var(--hair2); }
+.past-at{ font-size:26rpx; color:var(--paper3); flex:none; width:140rpx; }
+.past-t{ font-size:30rpx; line-height:1.75; color:var(--paper2); flex:1; }
+
+/* 别人写的。和 .past 同一套排版——那是有意的：
+   别人的句子和她自己的句子在视觉上等价，没有谁更权威。 */
+.oth{ margin:20rpx 0 0; }
+.oth-row{ display:flex; align-items:baseline; gap:20rpx; padding:22rpx 0;
+          border-bottom:1px solid var(--hair2); }
+.oth-at{ font-size:26rpx; color:var(--paper3); flex:none; width:140rpx; }
+.oth-t{ font-size:30rpx; line-height:1.75; color:var(--paper2); flex:1; }
+
+/* ── 四个人 ──────────────────────────────────────────────
+   ⚠️ 这一段刻意没有：头像、排名、推荐标记、「最适合你的」、转圈、进度。
+      排名就是评价，而四个人是并列的。 */
+
+.mens{ margin:24rpx 0 0; }
+.men{ padding:26rpx 0; border-bottom:1px solid var(--hair2); }
+.men-h{ display:flex; align-items:baseline; gap:16rpx; }
+/* 名字用衬线、和品名同族——这四个是产品自己的声音，不是外挂的人物 */
+.men-n{ font-family:var(--disp); font-size:36rpx; color:var(--paper); }
+.men-g{ font-size:26rpx; color:var(--paper3); letter-spacing:.06em; }
+.men-i{ display:block; font-size:30rpx; line-height:1.75; color:var(--paper2);
+        margin-top:12rpx; }
+/* 他会怎么说。字更小更暗——她扫一眼就知道找谁，不用读完 */
+.men-l{ display:block; font-size:26rpx; line-height:1.8; color:var(--paper3);
+        margin-top:10rpx; text-align:justify; }
+
+/* 说点什么 */
+.mif{ margin:24rpx 0 0; }
+.mif-in{ width:100%; min-height:180rpx; font-size:32rpx; line-height:1.75;
+         color:var(--paper); padding:20rpx 0;
+         border-bottom:1px solid var(--hair2); }
+.mif-ph{ color:var(--paper3); font-size:30rpx; }
+
+/* ── 聊 ──────────────────────────────────────────────────
+   她说的靠右、无框；他们说的靠左带名字。
+   ⚠️ 不做气泡——气泡是聊天软件的语言，这里不是社交产品。
+      靠对齐和留白分辨谁在说，比两种颜色的气泡安静。 */
+.chat{ margin:8rpx 0 0; padding-bottom:180rpx; }
+.chat-to{ font-size:26rpx; color:var(--paper3); letter-spacing:.06em;
+          padding:12rpx 0 20rpx; }
+/* ⚠️ 四个人的话之间留够气。原来 34rpx，四段挤成一片文字砖——
+   那正是「同样大小的卡片堆叠」那个毛病（8-22 骂过的"太死板 AI"的头号来源）。
+   名字前面留 44rpx，段内行距压到 1.75，靠"段间大、段内小"把四段分开。 */
+.msg{ margin:0 0 8rpx; padding-top:44rpx; }
+.msg:first-child{ padding-top:8rpx; }
+.msg-w{ display:flex; align-items:baseline; gap:14rpx; margin-bottom:14rpx; }
+.msg-n{ font-family:var(--disp); font-size:32rpx; color:var(--paper); }
+.msg-g{ font-size:24rpx; color:var(--paper3); }
+/* ⚠️ 不 justify。两端对齐会把短句拉出难看的字距，
+   而这四段刻意长短不一——地面常常只有一句。 */
+.msg-t{ display:block; font-size:30rpx; line-height:1.75; color:var(--paper2); }
+/* 她说的：靠右、缩进、更亮——那是她的话，视觉上要一眼分得出 */
+.msg.mine{ padding-left:120rpx; padding-top:36rpx; }
+.msg.mine .msg-t{ color:var(--paper); text-align:right; font-size:31rpx; }
+
+/* 还在等谁。只有名字，没有「正在输入」也没有点点点——
+   那些都是在说「你等着」。 */
+.chat-wait{ font-size:26rpx; color:var(--paper3); letter-spacing:.1em;
+            padding:6rpx 0 20rpx; }
+
+.chat-pick{ margin:20rpx 0 0; padding-top:22rpx; border-top:1px solid var(--hair2); }
+.chat-pl{ font-size:26rpx; color:var(--paper3); }
+.chat-ps{ display:flex; gap:14rpx; margin-top:16rpx; flex-wrap:wrap; }
+.chat-p{ flex:1; min-width:140rpx; text-align:center; font-size:29rpx;
+         border:1px solid var(--hair2); border-radius:12rpx; padding:18rpx 8rpx;
+         color:var(--paper2); transition:border-color .2s ease, background .2s ease; }
+.chat-p.tap{ border-color:rgba(201,160,99,.5); background:rgba(201,160,99,.07); }
+
+/* 输入框吸底 */
+.chat-bar{ position:fixed; left:0; right:0; bottom:0; display:flex; gap:16rpx;
+           align-items:center; padding:22rpx 48rpx calc(28rpx + env(safe-area-inset-bottom));
+           background:var(--n1); border-top:1px solid var(--hair2); }
+.chat-in{ flex:1; min-width:0; font-size:31rpx; color:var(--paper); padding:14rpx 0; }
+.chat-send{ flex:none; font-size:30rpx; color:var(--paper2); padding:14rpx 26rpx;
+            border:1px solid var(--hair2); border-radius:12rpx; }
+.chat-send.tap{ border-color:rgba(201,160,99,.5); background:rgba(201,160,99,.07); }
+.chat-foot{ font-size:26rpx; color:var(--paper3); padding:26rpx 0 0; }
+/* 「在想」。⚠️ 不做点点点动画，不做骨架屏——
+   那些都在说「你等着」，而且动画本身也是抖。就一个词，静的。 */
+.msg-p{ font-size:28rpx; color:var(--paper3); letter-spacing:.2em; }
+
+
+/* ══════ 手账暗色（design-demos/hb.wxss 落地）══════ */
+/* ══════════════════════════════════════════════════════════════════
+   ⚠️ 字号和间距只能用下面这两套阶梯里的值，别再随手写「差不多」的数。
+
+   字号 10 档（相邻差 ≥19%）：19 24 30 38 48 58 69 88 115 138
+     19  等宽题头 / 角标        24  灰注 / 小字
+     30  正文 / 入口            38  选项 / 引文 / 小标题
+     48  主入口                 58  标题 / 牌面长食物名
+     69  食物名 6+ 字           88  食物名 4-5 字
+     115 食物名 3 字            138 食物名 2 字
+
+   间距 6 档（相邻差 ≥50%）：6 10 16 24 36 56
+     6 紧贴 · 10 组内 · 16 行间 · 24 组间 · 36 分区 · 56 大分区
+
+   为什么要这么严：这份文件写到第四轮时已经漂到 30 档字号、
+   24 对相邻差不到 15%——比它要替换的那份 index.wxss（20 档）还糟。
+   每件器物随手写个差不多的值，局部都合理，全局散架。
+   合并方向一律往小：缩小不撑破布局，放大会，而这产品有「一屏装下」硬约束。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════════
+   手账暗色 · 推到全部 86 屏
+
+   这个文件不进小程序。hb.mjs 渲染示意图时把它叠在 index.wxss 之后。
+   单位写 rpx，渲染时按 390/750 折成 px，和真机一致。
+
+   语言（定稿-手账暗色.html 里选定的那套）：
+     骨架  乙的手账页 —— 装订侧竖排日期、缩进当层次、手写下划线加手画箭头、
+           手绘横线（两端细中间粗）、色票是贴上去的
+     颜色  甲的暗色 #171310 + 两团氛围光；accent 黄铜、冷侧青玉、急救陶土
+           （靛蓝是纸上的颜色，放暗底会消失，所以换掉）
+     插画  出血只露一半 + 光晕 + 左缘淡出，不垫纸
+     食物名 按字数分档 138/115/88/69 rpx
+
+   这一版先把 10 种通用块（占全部块的 90%）做完，
+   31 件一次性器物在后面「器物」一节里逐件改，不套模板。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 一屏 ─────────────────────────────────────────────────────── */
+.page{
+  padding-left: 54rpx;          /* 给装订侧让位 */
+  padding-right: 4rpx;
+  position: relative;
+}
+/* 纯色底是廉价感最大的来源（F-明快 里写的）。两团氛围光，一暖一冷。
+   放在 .view 上而不是 .page 上，是为了让光盖满整屏含顶部留白。 */
+.view{ position: relative; }
+.view::before{
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(118% 42% at 80% -4%, rgba(201,160,99,.115), transparent 62%),
+    radial-gradient(94% 34% at 4% 104%,  rgba(47,72,88,.17),   transparent 66%);
+}
+.page{ z-index: 1; }
+
+/* ── 装订侧：竖排日期 + 一道黄铜线，是这本册子的装订边 ─────────── */
+.binder{
+  position: absolute; left: -54rpx; top: 0; bottom: 0; width: 62rpx; z-index: 3;
+  border-right: 1px solid rgba(201,160,99,.16);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 24rpx;
+}
+.binder-tx{  /* 不写箭头：竖排时 ← 会被自动旋转，方向不可控 */
+  writing-mode: vertical-rl;    /* ⚠️ 安卓 WXSS 待验 */
+  font-family: var(--mono);
+  font-size: 19rpx; letter-spacing: .22em; color: var(--paper3);
+}
+.binder-mk{
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 11rpx; height: 11rpx; border-radius: 50%;
+  background: var(--brass); box-shadow: 0 0 15rpx rgba(201,160,99,.6);
+}
+/* 返回键让给装订侧 —— 同一个信息不出现两次 */
+.nav{ display: none; }
+
+/* ── 字 ───────────────────────────────────────────────────────── */
+/* 标题降一档到 48rpx。理由是断行不是字号：这些标题多在 10-12 字，
+   58rpx 下一行放不下，中文按字断就会把词切开——「化验/单」「不吃的日/子」
+   「装作没看/见」。降一档能让绝大多数标题回到一行，一行就不存在断行问题。
+   48 和正文 30 仍差 60%，层次没丢。 */
+.s-h{
+  font-family: var(--disp); font-size: 48rpx; font-weight: 600;
+  line-height: 1.3; margin: 44rpx 0 14rpx;
+}
+.s-h2{ font-size: 38rpx; font-weight: 600; line-height: 1.4; margin: 50rpx 0 16rpx; }
+.s-p{ font-size: 30rpx; line-height: 1.9; color: var(--paper2); margin-top: 24rpx;
+      text-align: left; }
+.s-p.same{ margin-top: 16rpx; }        /* 连续正文是一组，组内要紧 */
+.s-s{ font-size: 24rpx; line-height: 1.8; color: var(--paper3); margin-top: 16rpx;
+      text-align: left; }
+.s-dim{ font-size: 24rpx; line-height: 1.8; color: var(--paper3); }
+/* 题头：等宽小字 + 大字距，是手账里写在栏目上方的那行 */
+.s-ti{
+  font-family: var(--mono); font-size: 19rpx; letter-spacing: .2em;
+  color: var(--paper3); margin: 32rpx 0 6rpx;
+}
+/* 引文用楷体，左边一道黄铜细线 —— 不是盒子 */
+.s-box{
+  background: none; border: none; border-radius: 0;
+  border-left: 3rpx solid var(--brass);
+  padding: 0 0 0 26rpx; margin-top: 24rpx;
+  font-family: var(--hand); font-size: 38rpx; line-height: 1.72;
+  color: var(--paper); letter-spacing: .04em;
+}
+.s-num, .online{
+  font-family: var(--mono); font-size: 24rpx; letter-spacing: .06em;
+  color: var(--brass); margin-top: 10rpx;
+}
+
+/* ── 手绘横线：两端细中间粗，像笔画过，不是 1px 直线 ──────────── */
+.s-hr{
+  border: none; height: 4rpx; border-radius: 4rpx; margin: 30rpx 0 0; width: 54%;
+  background: linear-gradient(90deg,
+    rgba(201,160,99,0) 0%, rgba(201,160,99,.24) 12%, rgba(201,160,99,.30) 52%,
+    rgba(201,160,99,.11) 86%, rgba(201,160,99,0) 100%);
+}
+
+/* ── 入口 = 手写下划线 + 手画箭头。没有 chevron，没有框 ────────── */
+.s-q{
+  display: inline-flex; align-items: baseline; gap: 16rpx;
+  align-self: flex-start; position: relative;
+  padding: 0 0 12rpx; margin-top: 24rpx; border: none; background: none;
+  font-size: 38rpx; color: var(--paper); text-align: left; min-height: 0;
+}
+.s-q::after{
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 4rpx; border-radius: 4rpx;
+  background: linear-gradient(90deg, rgba(201,160,99,.52) 0%,
+              rgba(201,160,99,.34) 64%, rgba(201,160,99,0) 100%);
+}
+/* 箭头替掉 chevron：手画的 →，不是系统的 › */
+.s-q .chev{ font-size: 30rpx; color: var(--brass); }
+.s-q .chev::before{ content: "→"; }
+.s-q .chev{ font-size: 0; }
+.s-q .chev::before{ font-size: 30rpx; }
+
+/* 主入口：一道黄铜马克笔涂过。不是按钮 */
+.s-b.big, .s-b.gatego{
+  display: inline-flex; align-self: flex-start; align-items: center;
+  border: none; border-radius: 0; background: none;
+  min-height: 0; padding: 4rpx 22rpx 16rpx 12rpx; margin: 24rpx 0 0 -12rpx;
+  font-family: var(--disp); font-size: 48rpx; font-weight: 600;
+  color: var(--paper); position: relative;
+}
+.s-b.big::before, .s-b.gatego::before{
+  content: ""; position: absolute; left: 0; right: 0; bottom: 8rpx; height: 29rpx;
+  z-index: 0; border-radius: 4rpx;
+  background: linear-gradient(90deg, rgba(201,160,99,.30),
+              rgba(201,160,99,.10) 78%, rgba(201,160,99,0));
+}
+.s-b.big::after, .s-b.gatego::after{
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 4rpx; border-radius: 4rpx;
+  background: linear-gradient(90deg, var(--brass), rgba(201,160,99,.28) 70%,
+              rgba(201,160,99,0));
+}
+
+/* 并列的选择：手账里一条一条写下来，前面一个小方块当项目符号。
+   缩进递进 —— 缩进本身就是层次，不需要框 */
+.s-b{
+  display: flex; align-items: baseline; gap: 23rpx;
+  align-self: flex-start; border: none; border-radius: 0; background: none;
+  min-height: 0; padding: 0; margin-top: 56rpx;   /* 组间：离上面那段远 */
+  font-family: var(--disp); font-size: 38rpx; font-weight: 500;
+  color: var(--paper); text-align: left; position: relative;
+}
+.s-b::before{
+  content: ""; width: 21rpx; height: 21rpx; flex: none; border-radius: 2rpx;
+  background: var(--brass); transform: translateY(-6rpx) rotate(-6deg);
+  box-shadow: 0 0 19rpx -6rpx var(--brass);
+}
+/* 三个岔口的缩进递进。
+   ⚠️ 不能用 :nth-of-type —— 它按标签算，而块与块之间插着 .vgap（也是 div），
+      计数会全乱。后续兄弟选择器只认 class，才数得对。 */
+/* ⚠️ 缩进递进只给「一步步往下走」的那一组用 —— mine 屏的三个岔口
+   （很想吃 → 正在吃 → 吃完了）。其余屏的并列项是平级的：
+   120 和 12356 是两个号码，缩进会读成「12356 是 120 的下一级」。 */
+.s-b.o1, .s-b.o2, .s-b.o3, .s-b.o4, .s-b.o5{ margin-top: 36rpx; }
+.s-mine .s-b.o1{ margin-left: 30rpx; }
+.s-mine .s-b.o2{ margin-left: 58rpx; }
+.s-b.o1::before{ background: var(--jade); box-shadow: 0 0 19rpx -6rpx var(--jade); }
+.s-b.o2::before{ background: var(--clay); box-shadow: 0 0 19rpx -6rpx var(--clay); }
+/* 危险动作那一支不参与配色轮换，永远是陶土 */
+.s-b.dg::before{ background: var(--clay); box-shadow: 0 0 19rpx -6rpx var(--clay); }
+.s-b.cl{ font-size: 38rpx; }
+
+/* ── 六格 → 六张贴上去的色票（乙的做法，暗底版） ───────────────── */
+.cells{ display: flex; gap: 17rpx; margin-top: 10rpx; }
+.cell{
+  flex: none; width: 50rpx; height: 65rpx; border-radius: 2rpx;
+  border: 1px solid rgba(233,223,209,.13); background: rgba(233,223,209,.02);
+}
+.cell.on{
+  border-color: transparent; background: var(--jade);
+  box-shadow: 0 4rpx 15rpx -6rpx rgba(0,0,0,.7), 0 0 23rpx -12rpx var(--jade);
+}
+.cell.on:nth-child(odd){ transform: rotate(-2.5deg); }
+.cell.on:nth-child(even){ transform: rotate(1.8deg); }
+.cell.next{ border-style: dashed; border-color: rgba(201,160,99,.5); }
+.cell.e{ border-style: solid; border-color: rgba(233,223,209,.09); }
+
+/* ── 食物名：按字数分档 ────────────────────────────────────────
+   30 个名字从 2 字到 8 字，单一字号服务不了两端；24/30 是 2-3 字，
+   所以主流用大号、少数降档。相邻档差 20-30%。 */
+.s-food{
+  font-family: var(--hand); font-size: 138rpx; line-height: 1.06;
+  letter-spacing: .05em; color: var(--paper); max-width: 62%;
+}
+/* balance 只给六字以上的用。三字的「羊肉汤」也会被它折成两行——
+   它追求各行等长，短名字反而被拆开。 */
+.s-food.n6, .s-food.n7, .s-food.n8, .s-food.n9{ text-wrap: balance; }
+.s-food.n3{ font-size: 115rpx; }
+.s-food.n4, .s-food.n5{ font-size: 88rpx; }
+.s-food.n6, .s-food.n7, .s-food.n8, .s-food.n9{ font-size: 69rpx; }
+
+/* ── 急救线永远贴底 ───────────────────────────────────────────── */
+.s-foot{
+  margin-top: auto; padding-top: 28rpx; border-top: 1px solid rgba(203,126,98,.2);
+}
+.footbtn{ font-size: 24rpx; color: var(--clay); }
+/* 内容少的屏要整体居中，不能全堆在顶上。
+   ⚠️ 每块后面都跟一个 .vgap，所以 :last-child 命中的是 vgap 而不是内容块，
+      给它 margin-bottom:auto 没用 —— 它的 flex:1 已经把余量吃光并推到顶部。
+      改用 justify-content：装订侧是绝对定位，不参与 flex，位置不受影响。 */
+.page{ justify-content: safe center; }
+
+
+/* ── 行：左键右值，中间一道极淡的引导 ──────────────────────────── */
+.s-row{
+  border-bottom: none; padding: 14rpx 0; gap: 24rpx;
+  border-bottom: 1px solid rgba(233,223,209,.055);
+}
+.rk{ font-size: 30rpx; color: var(--paper); }
+.rv{ font-size: 24rpx; color: var(--paper3); }
+
+/* ── vgap：让它认得出「一组」 ──────────────────────────────────
+   题头和它带的内容、标题和它管的那段，本来就该贴紧；
+   vgap 无差别塞 56rpx 会把这层关系撤销。 */
+.vgap.tight{ flex: 0 0 auto; max-height: 0; }
+
+/* ══════════════════════════════════════════════════════════════════
+   器物 · 逐件设计
+   31 件一次性块，各只出现一两次。它们不该被统一——统一它们没有意义，
+   它们本来就是每屏的高光。下面一件一件来。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 01 · 滋味卡（首页）───────────────────────────────────────
+   不是盒子，是「插画从右边缘出血 + 左边一个手写大字」。
+   插画放大只露一半、身后一团暖光、左缘淡出。深色主体的那些
+   （烤红薯／糖炒栗子／可乐）靠这团光把身后暗底提亮，不垫纸。 */
+.tcard{
+  background: none; border: none; border-radius: 0; padding: 0;
+  margin-top: 6rpx; position: relative; min-height: 300rpx;
+  display: flex; flex-direction: column; justify-content: flex-start;
+}
+.tcard .art{
+  /* background-image 要盒子有尺寸才画得出来。SVG viewBox 340×262，比例 1.298，
+     所以 520 × 400。光晕改用 drop-shadow：它贴着图形轮廓发光，比在矩形盒子后面
+     垫一团 radial-gradient 自然——那样会在插画四角露出光的直边。 */
+  height: 400rpx;
+  background-repeat: no-repeat; background-size: contain; background-position: center;
+  filter: drop-shadow(0 0 34rpx rgba(201,160,99,.40));
+  position: absolute; right: -178rpx; top: 4rpx; width: 520rpx; z-index: 0;
+  /* 左缘淡出：SVG 左下角那块几何配重会落在色票同一水平线上，读起来像多一张色票。
+     淡出正好化掉它，边缘融进暗底也比硬切好看——硬边是把插画当图片，
+     淡出是把它当被光照到的一部分。
+     ⚠️ mask-image 安卓 WXSS 待验，退路是盖一层与底同色的渐变。 */
+  mask-image: linear-gradient(96deg, transparent 2%, rgba(0,0,0,.55) 18%, #000 40%, #000 100%);
+  -webkit-mask-image: linear-gradient(96deg, transparent 2%, rgba(0,0,0,.55) 18%, #000 40%, #000 100%);
+}
+.tcard .artin{ position: relative; }
+.tcard .art svg{ display: block; width: 100%; height: auto; position: relative; z-index: 1;
+                 transform: scale(1.16); transform-origin: 34% 52%; }
+/* 岸上的灯：这团光要托的不只是米白的碗，还有深褐的烤红薯 */
+.tcard .artin::before{
+  content: ""; position: absolute; z-index: 0; left: -14%; right: 22%; top: 2%; bottom: -8%;
+  background: radial-gradient(52% 56% at 34% 50%,
+              rgba(201,160,99,.40) 0%, rgba(201,160,99,.19) 38%,
+              rgba(201,160,99,.06) 62%, transparent 80%);
+  filter: blur(6rpx);
+}
+.tcard .s-ti{ margin-top: 0; position: relative; z-index: 1; }
+.tcard .s-food{ position: relative; z-index: 1; margin-top: 6rpx; }
+/* 卡本身是入口，箭头交给食物名旁边那道下划线，不要 chevron */
+.tcard .chev{ display: none; }
+.tbody, .pgrain, .tline{ background: none; border: none; padding: 0; margin: 0; }
+
+
+/* ── 02 · 情绪瓶子（罐子）─────────────────────────────────────
+   这件器物本来就是对的——磨砂玻璃罐 + 彩色珠子，正是定稿写的
+   「C 的骨架 + B 的珠子」。逐件设计不等于逐件重画，已经成立的就别动。
+   只做一处：底下那个月份标签改成纸，和滋味卡的纸语言呼应。 */
+.base{
+  background: linear-gradient(168deg, #F4EDE3 0%, #EFE6D8 100%);
+  border-radius: 3rpx;                       /* 纸是直角，微圆只是磨损 */
+  transform: rotate(-1.2deg);                /* 手贴上去不会正 */
+  box-shadow: 0 1px 0 rgba(255,255,255,.22) inset,
+              0 10rpx 20rpx -10rpx rgba(0,0,0,.72);
+}
+.base text{ color: #2E2620; letter-spacing: .18em; }
+
+/* ── 03 · pick（想吃点什么样的）─────────────────────────────────
+   原来是五个圆角矩形按钮排成网格。它和「三个岔口」是同一类东西——
+   都是并列的选择，所以用同一套语言：小色块符号 + 一条一条写下来。
+   色块按温度给：热的陶土、凉的青玉、中间黄铜，说不上来是灰。 */
+.pick{ display: flex; flex-direction: column; align-items: flex-start; }
+.pickbtn{
+  display: flex; align-items: baseline; gap: 21rpx;
+  border: none; border-radius: 0; background: none; min-height: 0;
+  /* 原来是 flex:1 1 44%，两个一行排成网格。一条一条竖着写才是手账 */
+  flex: none; padding: 0; margin-top: 36rpx; width: auto;
+  justify-content: flex-start; text-align: left;
+  font-family: var(--disp); font-size: 38rpx; font-weight: 500; color: var(--paper);
+}
+.pickbtn::before{
+  content: ""; width: 19rpx; height: 19rpx; flex: none; border-radius: 2rpx;
+  background: var(--brass); transform: translateY(-5rpx) rotate(-6deg);
+  box-shadow: 0 0 17rpx -6rpx var(--brass);
+}
+/* 五项是平级的选择，全部对齐。缩进递进只给两三项用——
+   那表达的是「一步步往下走」，五个口味没有这层关系。 */
+.pickbtn.i1, .pickbtn.i2, .pickbtn.i3, .pickbtn.i4, .pickbtn.i5{ margin-top: 36rpx; }
+.pickbtn:nth-child(1)::before{ background: var(--clay); box-shadow: 0 0 17rpx -6rpx var(--clay); }
+.pickbtn:nth-child(2)::before{ background: var(--jade); box-shadow: 0 0 17rpx -6rpx var(--jade); }
+.pickbtn:nth-child(3)::before{ background: var(--brass); }
+.pickbtn:nth-child(4)::before{ background: #7FA86A; box-shadow: 0 0 17rpx -6rpx #7FA86A; }
+.pickbtn:nth-child(5)::before{ background: var(--paper3); box-shadow: none; }
+.pickbtn:nth-child(5){ color: var(--paper2); }
+.pickbtn.wide{ flex: none; width: auto; }
+
+/* ── 04 · foodband（这一支叫什么）────────────────────────────────
+   原来是一整条深色色带压在屏顶。改成和滋味卡同一个做法：
+   手写大字 + 那一支的颜色化成左边一道竖线，不占一整条。 */
+.fband{
+  background: none !important; border: none; border-radius: 0;
+  /* 原来是 168rpx 高的圆角色带 + overflow:hidden。只去掉背景会剩一个空框，
+     高度、圆角、裁切要一起去 */
+  height: auto; overflow: visible;
+  padding: 0 0 0 24rpx; margin-top: 6rpx; min-height: 0;
+  border-left: 5rpx solid var(--lit, var(--brass));
+  display: flex; align-items: center;
+}
+.fband .fgrain{ display: none; }
+.ftext{
+  font-family: var(--hand); font-size: 69rpx; letter-spacing: .05em;
+  color: var(--paper); line-height: 1.1;
+}
+
+/* ── 05 · 牌面（taste-card 屏）─────────────────────────────────
+   就是定稿里那张纸：暗底上贴一张米白纸，插画印在纸上。
+   这是那 30 张插画质感最好的舞台——米白纸底是这套色块拼贴的必要条件，
+   纯白会让颗粒读成噪点，深底让它彻底失效。
+
+   纸的角是 3rpx 微圆（真纸切出来是直角，微圆只是磨损），旋转 0.5 度，
+   有落在暗底的影。原来的四角标去掉了：两个角标会在右下重叠成一团，
+   而且纸卡不是扑克牌。 */
+.deck{ display: block; margin-top: 6rpx; }
+.pcard{
+  background: linear-gradient(168deg, #F4EDE3 0%, #EFE6D8 100%);
+  border: none; border-radius: 3rpx;
+  /* ⚠️ animation 必须一起关掉。基础层那条 `animation:cardin … both` 是「发牌」
+     动作，both 让它停在 100% 帧的 rotateX(5deg) 上 —— 动画产生的 transform
+     压过任何普通声明，所以只写 transform 是没用的：纸会一直带着 5 度仰角，
+     看上去比页面窄一圈还偏右。纸不发牌。 */
+  animation: none; transform: rotate(.5deg);
+  padding: 36rpx; width: auto; min-height: 0;
+  /* 纸的高度由内容定：描述最长和最短差一倍，写死高度会把字截在纸外 */
+  height: auto; aspect-ratio: auto; overflow: visible;
+  box-shadow: 0 1px 0 rgba(255,255,255,.18) inset,
+              0 26rpx 48rpx -22rpx rgba(0,0,0,.74), 0 5rpx 12rpx -5rpx rgba(0,0,0,.5);
+  display: block; position: relative;
+}
+/* 扑克牌那套零件全不要：四角标、高光、卡外的日期 */
+.pgrain, .pgloss, .pcorner, .pday{ display: none; }
+
+/* 顶上一行：左边色板条（这道菜 cardHue 的三档），右边日期 */
+.pcap{
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 6rpx;
+}
+.chips{ display: flex; flex-direction: column; gap: 6rpx; }
+.chip{ width: 24rpx; height: 24rpx; }
+.pno{ font-family: var(--mono); font-size: 19rpx; letter-spacing: .18em; color: #8F8571; }
+
+/* 插画印在纸上：不出血、不加光晕 —— 纸本身就够了。
+   ⚠️ 这里是干净色块，没有丝网印的颗粒。颗粒在设计稿里是 SVG 的 feTurbulence
+      滤镜，而 SVG 当 background-image 用时滤镜区域会渲染成一块矩形
+      （art-gen.mjs 里记了这个坑），只能整个摘掉。
+      拿 CSS 网点仿颗粒试过三版，规则网格一律读成布纹，比不加更糟。 */
+.pcard .art{
+  position: relative; right: auto; top: auto; margin: 0;
+  width: 100%; height: 435rpx;
+  background-repeat: no-repeat; background-size: contain; background-position: center;
+  filter: none; mask-image: none; -webkit-mask-image: none; transform: none;
+}
+.pcard .art svg{ transform: none; width: 100%; height: auto; display: block; }
+
+/* 名字：宋体。米白底上宋体是书卷气，深色底上大号宋体才是悬疑片字幕——
+   所以纸上宋体、暗底行楷不是不统一，是底不一样。
+   tokens.wxss 里 --disp/--body 都是苹方，没有衬线 token，而全站只有这一处
+   要衬线，就地写字族，不为一处去动设计画布。 */
+.pname{
+  font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  font-size: 58rpx; font-weight: 600; line-height: 1.25; letter-spacing: .06em;
+  color: #2E2418; text-align: center; display: block; margin-top: 4rpx;
+  text-shadow: none;              /* 基础层那条是给暗底用的，纸上是一团黑影 */
+}
+/* 手画横线：两端细中间起伏，不是一根直线 */
+.prule{
+  display: block; width: auto;    /* 基础层写死 76rpx，横线只剩一小截 */
+  height: 16rpx; margin: 24rpx 56rpx 26rpx; opacity: .55;
+  /* data URI 的转义照 .a-* 那批动物线稿的写法：< > " # 都转成 %XX，
+     空格保持原样。WXSS 对 url() 里的裸 < > 很敏感，别图省事直接贴 SVG。 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22240%22 height=%228%22%3E%3Cpath d=%22M2 5 C22 2, 40 6.4, 62 4 S104 1.8, 126 4.6 S168 6.8, 190 3.8 S226 2, 238 4.6%22 fill=%22none%22 stroke=%22%23A8996F%22 stroke-width=%221.2%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center; background-size: 100% 100%;
+}
+/* 描述：黑体。衬线配无衬线才是对比，两款宋体挨着是冲突 */
+.pdesc{
+  font-family: var(--body);
+  font-size: 30rpx; line-height: 2; letter-spacing: .008em;
+  color: #5A5142; text-align: justify; display: block;
+  text-shadow: none;
+}
+.pfoot{
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--mono); font-size: 19rpx; letter-spacing: .14em;
+  color: #8F8571; opacity: .72; margin-top: 36rpx;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   器物 · 第二批：选择器 / 列表 / 输入
+   这十件不是各自独立的东西，它们分别是「并列选择」「一条一条的记录」
+   「填空」这三种已经有语言的东西的变体。所以套现成语言，不新发明。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 06 · 睡眠选择 ────────────────────────────────────────────
+   和「三个岔口」「想吃点什么样的」是同一类：并列的选择。 */
+.spick{ display: flex; flex-direction: column; align-items: flex-start; }
+.sp-b{
+  display: flex; align-items: baseline; gap: 21rpx;
+  border: none; border-radius: 0; background: none; min-height: 0;
+  padding: 0; margin-top: 36rpx; width: auto;
+  font-family: var(--disp); font-size: 38rpx; font-weight: 500; color: var(--paper);
+}
+.sp-b::before{
+  content: ""; width: 19rpx; height: 19rpx; flex: none; border-radius: 2rpx;
+  background: var(--jade); transform: translateY(-5rpx) rotate(-6deg);
+  box-shadow: 0 0 17rpx -6rpx var(--jade);
+}
+.sp-b.i1, .sp-b.i2, .sp-b.i3, .sp-b.i4{ margin-left: 26rpx; margin-top: 36rpx; }
+.sl-w{ font-size: 38rpx; }
+
+/* ── 07 · 两条路 ──────────────────────────────────────────────
+   每条是「一句话 + 一行小注」。原来两个并排的卡片，改成上下两条，
+   缩进递进——和三个岔口一样，缩进就是层次。 */
+.twoway{ display: flex; flex-direction: column; align-items: flex-start; }
+.tw{
+  display: flex; flex-direction: column; align-items: flex-start;
+  border: none; border-radius: 0; background: none; padding: 0;
+  margin-top: 36rpx; width: auto; min-height: 0; position: relative;
+  padding-left: 40rpx;
+}
+.tw::before{
+  content: ""; position: absolute; left: 0; top: 12rpx;
+  width: 19rpx; height: 19rpx; border-radius: 2rpx;
+  background: var(--brass); transform: rotate(-6deg);
+  box-shadow: 0 0 17rpx -6rpx var(--brass);
+}
+.tw.i1{ margin-left: 28rpx; }
+.tw.i1::before{ background: var(--jade); box-shadow: 0 0 17rpx -6rpx var(--jade); }
+.twt{ font-family: var(--disp); font-size: 38rpx; font-weight: 500; color: var(--paper); }
+.twh{ font-size: 24rpx; color: var(--paper3); margin-top: 6rpx; line-height: 1.7; }
+.tw .chev{ display: none; }
+
+/* ── 08 · 词（选情绪那些）─────────────────────────────────────
+   这个不能套「一条一条」——它是一片词让人挑，本来就该是散开的。
+   保持标签形态，但改成手账里贴的小纸片：微旋转、有影、不是圆角胶囊。 */
+.words{ display: flex; flex-wrap: wrap; gap: 16rpx; margin-top: 16rpx; }
+.word{
+  border: 1px solid rgba(233,223,209,.14); border-radius: 2rpx;
+  background: rgba(233,223,209,.03); padding: 12rpx 22rpx;
+  font-size: 30rpx; color: var(--paper2); min-height: 0;
+}
+.word:nth-child(3n){ transform: rotate(-1.4deg); }
+.word:nth-child(3n+2){ transform: rotate(1.1deg); }
+.word.on{
+  border-color: transparent; background: var(--brass); color: #2E2620;
+  box-shadow: 0 4rpx 15rpx -6rpx rgba(0,0,0,.7);
+}
+
+/* ── 09 · 勾选 ────────────────────────────────────────────────
+   方框改成手绘的：一道不闭合的框，勾是黄铜的一笔。 */
+.checks{ display: flex; flex-direction: column; align-items: flex-start;
+         background: none; border: none; padding: 0; }
+.chk{
+  display: flex; align-items: flex-start; gap: 20rpx; margin-top: 36rpx;
+  background: none; border: none; padding: 0;
+}
+.cbox{
+  width: 30rpx; height: 30rpx; flex: none; border-radius: 2rpx;
+  border: 2rpx solid rgba(201,160,99,.42); background: none;
+  transform: rotate(-1.6deg); margin-top: 6rpx;
+}
+.cmark{ background: var(--brass); }
+.ctext{ font-size: 30rpx; line-height: 1.7; color: var(--paper); }
+
+/* ── 10 · 别人写的 / 以前说过的 ────────────────────────────────
+   一条一条的记录，是手账里翻回去看的旧页：日期用等宽小字，
+   内容跟在下面，左边一道极淡的竖线把它们串成一叠。 */
+.oth{ background: none; border: none; padding: 0; margin-top: 16rpx; }
+.oth-row{
+  display: flex; flex-direction: column; align-items: flex-start;
+  border: none; padding: 0 0 0 26rpx; margin-top: 36rpx; position: relative;
+}
+.oth-row::before{
+  content: ""; position: absolute; left: 0; top: 8rpx; bottom: 8rpx;
+  width: 3rpx; border-radius: 3rpx; background: rgba(201,160,99,.24);
+}
+.oth-at{ font-family: var(--mono); font-size: 19rpx; letter-spacing: .1em;
+         color: var(--paper3); }
+.oth-t{ font-size: 30rpx; line-height: 1.8; color: var(--paper2); margin-top: 6rpx; }
+
+/* ── 11 · 四个人 ──────────────────────────────────────────────
+   原来四张并排的卡片。改成四条：名字是手写体（人名该有笔迹），
+   身份用等宽小字缀在后面，介绍跟在下一行。不用框，靠距离分组。 */
+.mens{ display: flex; flex-direction: column; }
+.men{
+  background: none; border: none; border-radius: 0; padding: 0;
+  margin-top: 36rpx; display: flex; flex-direction: column; align-items: flex-start;
+}
+.men-h{ display: flex; align-items: baseline; gap: 16rpx; }
+.men-n{ font-family: var(--hand); font-size: 48rpx; letter-spacing: .05em;
+        color: var(--paper); }
+.men-g{ font-family: var(--mono); font-size: 19rpx; letter-spacing: .14em;
+        color: var(--brass); }
+.men-i{ font-size: 24rpx; line-height: 1.75; color: var(--paper3); margin-top: 6rpx; }
+.men-l{ font-size: 30rpx; line-height: 1.75; color: var(--paper2); margin-top: 10rpx;
+        padding-left: 22rpx; border-left: 3rpx solid rgba(201,160,99,.3); }
+
+/* ── 12 · 五个角度（写滋味）───────────────────────────────────
+   这是填空。手账里的填空就是一道横线，写在线上。
+   不要输入框的边框和圆角——那是表单，不是本子。 */
+.asp{ background: none; border: none; padding: 0; margin-top: 16rpx; }
+.asp-row{
+  display: flex; align-items: baseline; gap: 22rpx; padding: 0;
+  margin-top: 36rpx; border: none; position: relative;
+}
+.asp-k{
+  font-family: var(--hand); font-size: 38rpx; color: var(--paper);
+  flex: none; letter-spacing: .06em;
+}
+.asp-in{
+  flex: 1; border: none; background: none; border-radius: 0;
+  border-bottom: 2rpx solid rgba(201,160,99,.26);
+  padding: 0 0 10rpx; font-size: 24rpx; color: var(--paper2);
+}
+.asp-ph{ color: var(--paper3); }
+.asp-ok{
+  display: inline-flex; align-self: flex-start; margin-top: 36rpx;
+  border: none; border-radius: 0; background: none; min-height: 0;
+  padding: 4rpx 20rpx 14rpx 10rpx; margin-left: -10rpx;
+  font-family: var(--disp); font-size: 38rpx; font-weight: 600;
+  color: var(--paper); position: relative;
+}
+.asp-ok::before{
+  content: ""; position: absolute; left: 0; right: 0; bottom: 6rpx; height: 24rpx;
+  z-index: 0; border-radius: 4rpx;
+  background: linear-gradient(90deg, rgba(201,160,99,.30),
+              rgba(201,160,99,.10) 78%, rgba(201,160,99,0));
+}
+
+/* ── 13 · 写给他们 ────────────────────────────────────────────
+   同样是填空，只是格子大一点：一片横线，像信纸。 */
+.mif{ background: none; border: none; border-radius: 0; padding: 0; margin-top: 16rpx; }
+.mif-in{
+  border: none; border-radius: 0; background: none; padding: 0 0 14rpx;
+  border-bottom: 2rpx solid rgba(201,160,99,.26);
+  font-size: 30rpx; line-height: 2.4; color: var(--paper2); min-height: 150rpx;
+}
+.mif-ph{ color: var(--paper3); }
+
+/* ── 14 · 警示 / 那几条要当心的 ───────────────────────────────
+   陶土色 + 左边一道竖线。急救线用同一个颜色，语言一致。 */
+.s-warn{
+  background: none; border: none; border-radius: 0;
+  border-left: 4rpx solid rgba(203,126,98,.5);
+  padding: 0 0 0 26rpx; margin-top: 36rpx;
+}
+.wt{ font-size: 30rpx; line-height: 1.75; color: var(--clay); }
+.wb{ font-size: 24rpx; line-height: 1.75; color: var(--paper3); margin-top: 6rpx; }
+.s-warn .chev{ color: var(--clay); }
+.swrow{ display: flex; flex-direction: column; align-items: flex-start;
+        border: none; padding: 0; margin-top: 36rpx; }
+.swk{ font-family: var(--hand); font-size: 38rpx; color: var(--paper); }
+.swt{ font-size: 30rpx; line-height: 1.75; color: var(--paper2); margin-top: 6rpx; }
+.swh{ font-size: 24rpx; color: var(--paper3); margin-top: 6rpx; }
+
+/* ── 15 · 提醒 ────────────────────────────────────────────────
+   套主入口的语言：马克笔涂过的一行字。 */
+.s-b.remind{
+  display: inline-flex; align-self: flex-start; border: none; border-radius: 0;
+  background: none; min-height: 0; padding: 4rpx 20rpx 14rpx 10rpx;
+  margin: 30rpx 0 0 -10rpx; font-size: 38rpx; font-weight: 600; color: var(--paper);
+  position: relative;
+}
+.s-b.remind::before{
+  content: ""; position: absolute; left: 0; right: 0; bottom: 6rpx; height: 24rpx;
+  z-index: 0; border-radius: 4rpx;
+  background: linear-gradient(90deg, rgba(140,193,170,.26),
+              rgba(140,193,170,.09) 78%, rgba(140,193,170,0));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   器物 · 第三批：真器物（逐件，不套模板）
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 16 · 那场（播放器）───────────────────────────────────────
+   原来是一个播放器控件：▶ 加一行字。可这不是在放音乐，
+   是「20:30 有一场，十五分钟，一起坐着」——它是一个约。
+   所以改成手账里记下的那一行：手写体 + 一个黄铜小三角 + 一道时间线。 */
+.player{
+  background: none; border: none; border-radius: 0; padding: 0;
+  margin-top: 24rpx; display: flex; align-items: center; gap: 18rpx;
+  min-height: 0; position: relative;
+}
+.pl-ico{
+  font-size: 0; width: 0; height: 0; flex: none;
+  border-left: 20rpx solid var(--brass);
+  border-top: 13rpx solid transparent; border-bottom: 13rpx solid transparent;
+  filter: drop-shadow(0 0 12rpx rgba(201,160,99,.5));
+}
+.pl-t{
+  font-family: var(--hand); font-size: 38rpx; letter-spacing: .04em;
+  color: var(--paper); line-height: 1.6;
+}
+/* 一道时间线，从那个三角往右渐隐——十五分钟就这么长 */
+.player::after{
+  content: ""; position: absolute; left: 38rpx; right: 0; bottom: -6rpx; height: 3rpx;
+  border-radius: 3rpx;
+  background: linear-gradient(90deg, rgba(201,160,99,.4), rgba(201,160,99,0) 82%);
+}
+
+/* ── 17 · 对话窗 ──────────────────────────────────────────────
+   原来是聊天气泡。气泡是即时通讯的语言，而这四个人不是在跟她聊天——
+   她写下一句，四个人各说一段。那更像一页对谈的记录：
+   她的话用楷体（自己写的那句），他们的话用黑体、名字缀在前面。
+   都不用气泡，靠缩进和字体分。 */
+.chat{ display: flex; flex-direction: column; }
+.msg{
+  background: none; border: none; border-radius: 0; padding: 0;
+  margin-top: 36rpx; max-width: 100%; align-self: stretch;
+}
+.msg.mine{
+  align-self: stretch; padding-left: 26rpx;
+  border-left: 4rpx solid rgba(201,160,99,.42);
+}
+.msg.mine .msg-t{
+  font-family: var(--hand); font-size: 38rpx; line-height: 1.72;
+  color: var(--paper); letter-spacing: .04em; background: none; padding: 0;
+}
+.msg-w{ display: flex; align-items: baseline; gap: 14rpx; margin-bottom: 8rpx; }
+.msg-n{ font-family: var(--hand); font-size: 38rpx; color: var(--paper);
+        letter-spacing: .05em; }
+.msg-g{ font-family: var(--mono); font-size: 19rpx; letter-spacing: .14em;
+        color: var(--brass); }
+.msg-t{
+  background: none; border: none; border-radius: 0; padding: 0;
+  font-size: 30rpx; line-height: 1.85; color: var(--paper2);
+}
+.chat-pick{ margin-top: 36rpx; }
+.chat-pl{ font-family: var(--mono); font-size: 19rpx; letter-spacing: .2em;
+          color: var(--paper3); }
+.chat-ps{ display: flex; flex-wrap: wrap; gap: 16rpx; margin-top: 16rpx; }
+.chat-p{
+  border: 1px solid rgba(233,223,209,.14); border-radius: 2rpx;
+  background: rgba(233,223,209,.03); padding: 10rpx 20rpx;
+  font-family: var(--hand); font-size: 30rpx; color: var(--paper2);
+}
+.chat-p:nth-child(even){ transform: rotate(1.2deg); }
+.chat-p:nth-child(odd){ transform: rotate(-1deg); }
+.chat-foot{ font-size: 24rpx; color: var(--paper3); margin-top: 36rpx; }
+
+/* ── 18 · 三张卡（有三件事）───────────────────────────────────
+   原来三张并排的小卡片，一行放不下就挤。它们是三条并列的说明，
+   和「两条路」是同一个东西，所以用同一套：小色块 + 标题 + 正文，
+   一条一条往下排，缩进递进。 */
+.c3{ display: flex; flex-direction: column; }
+.c3card{
+  background: none; border: none; border-radius: 0; padding: 0 0 0 40rpx;
+  margin-top: 36rpx; width: auto; position: relative;
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.c3dot{
+  position: absolute; left: 0; top: 12rpx;
+  width: 19rpx; height: 19rpx; border-radius: 2rpx; background: var(--brass);
+  transform: rotate(-6deg); box-shadow: 0 0 17rpx -6rpx var(--brass);
+}
+.c3card.i1, .c3card.i2{ margin-left: 24rpx; }
+.c3card.i1 .c3dot{ background: var(--jade); box-shadow: 0 0 17rpx -6rpx var(--jade); }
+.c3card.i2{ margin-left: 46rpx; }
+.c3card.i2 .c3dot{ background: var(--clay); box-shadow: 0 0 17rpx -6rpx var(--clay); }
+.c3t{ font-family: var(--disp); font-size: 38rpx; font-weight: 600; color: var(--paper); }
+.c3p{ font-size: 24rpx; line-height: 1.8; color: var(--paper3); margin-top: 6rpx; }
+
+/* ── 19 · 星空 ────────────────────────────────────────────────
+   星星本身是对的——最亮那档已经带黄铜光晕，和「岸上的灯」一套。
+   问题只在那个深蓝的方框：它浮在暖褐色的页面上，是两个世界。
+   而且夜空不该有边界——罐子有边界是对的（它是实体器物），
+   但这一页本身就是夜，不需要在夜里再贴一张夜空图。
+
+   所以去掉框，让星星散在页面自己的暗底上，深处压一点暖光。 */
+.sky{
+  background: radial-gradient(120% 70% at 50% 12%, rgba(201,160,99,.055), transparent 66%);
+  border: none; border-radius: 0; overflow: visible;
+  height: 600rpx; margin-top: 36rpx;
+}
+.skyread{ text-align: left; margin-top: 36rpx; color: var(--paper3); }
+.skyread .none{ font-size: 24rpx; }
+
+/* ── 20 · 卡片墙 ──────────────────────────────────────────────
+   一天一张，翻回去看。原来是相册式的圆角卡片配底座架子。
+   在手账里这是一叠贴纸贴在一页上：纸角是直的、每张歪一点、
+   没有架子——它们是贴上去的，不是摆在格子里的。 */
+/* ⚠️ 改这一节时看清楚 .shelf / .spine / .sboard 是三样东西：
+   .shelf 是整墙（容器）、.spine 是一张牌、.sboard 是牌下面那道架子板。
+   上一版把「贴纸」那套样式写到了 .sboard（架子板）上，还把 .shelf 整个
+   display:none —— 结果「这些天的滋味」那屏只剩一个标题，墙没了。
+   要去掉的是架子（.sboard），要变成贴纸的是牌（.spine）。
+
+   墙上这些就是牌面那张纸的小号：同一张米白纸、左上角同一颗色块、
+   同一套宋体名字。原来它们是六块带渐变的深色色板，和点进去看到的
+   那张纸是两样东西——一堵墙和它自己的内页应该是同一种材料。 */
+.shelf{ display: block; }
+.sboard{ display: none; }               /* 贴纸是贴上去的，不摆在架子上 */
+.spine{
+  /* 一行三张。⚠️ gap 值 18rpx 写死在这个计算里了，改 gap 必须同时改这里，
+     否则三张加间隙超过 100%、换行变两行（.bcard 踩过一模一样的坑）。 */
+  flex: 0 0 calc((100% - 36rpx) / 3);
+  height: 176rpx; padding: 16rpx 14rpx 14rpx;
+  border-radius: 3rpx;                  /* 纸角是直的，3rpx 只是磨损 */
+  background: linear-gradient(168deg, #F4EDE3 0%, #EFE6D8 100%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset,
+              0 10rpx 20rpx -10rpx rgba(0,0,0,.72);
+  /* 没记的那天纸淡一点。原来是 saturate(.7) 压色——纸没有色可压，改用透明度 */
+  opacity: .58; filter: none;
+}
+.spine.on{ opacity: 1; }
+/* 左上角那道菜的颜色，和牌面顶上的色板条是同一件事 */
+.spine::before{
+  content: ""; position: absolute; left: 14rpx; top: 14rpx;
+  width: 20rpx; height: 20rpx; background: var(--lit);
+}
+.sd{ font-family: var(--mono); font-size: 19rpx; letter-spacing: .1em; color: #8F8571; }
+.sf{ font-family: "Songti SC", "Noto Serif CJK SC", serif;
+     font-size: 28rpx; font-weight: 600; letter-spacing: .04em;
+     color: #2E2418; margin-top: 2rpx; }
+/* 每张歪一点。三张一行，所以按行内位置给，不按全墙序号 */
+.spine:nth-child(1){ transform: rotate(-1.5deg); }
+.spine:nth-child(2){ transform: rotate(1.1deg); }
+.spine:nth-child(3){ transform: rotate(-.6deg); }
+/* 今天那张抽出来一点。transform 要连着自己的歪角一起写，否则会把上面那条顶掉；
+   box-shadow 也要重写——基础层的 .spine.out 是 (0,2,0)，压得过我这条 (0,1,0)，
+   不写就会把深色牌那圈黄铜描边带回到纸上。 */
+.spine.out{
+  transform: translateY(-14rpx) rotate(-1.5deg); height: 190rpx;
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset,
+              0 0 0 1px rgba(201,160,99,.45),
+              0 16rpx 26rpx -12rpx rgba(0,0,0,.8);
+}
+.srow{ gap: 18rpx; margin-bottom: 22rpx; align-items: flex-start; }
+
+/* ══════════════════════════════════════════════════════════════════
+   器物 · 第四批：整屏气氛（她给了四张参考图）
+   这几件和前面不同：它们不是「一个块长什么样」，是「一整屏是什么」。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 22 · 昨晚睡得怎么样：整屏星空 + 角上冒出一角信纸 ────────────
+   前面 stars 那屏是「看这些天的夜里」，是一张图；这一屏是「昨晚怎么样」，
+   是在夜里问一句话——所以夜占满整屏，问话落在一张纸上，从左下角斜着冒出来。
+
+   星点用平铺的 radial-gradient：一个渐变配 background-size 就能铺满整屏，
+   比手写十几个定点密得多。四层不同疏密和亮度叠出深浅。 */
+.view.s-sleep::before{
+  /* ⚠️ 平铺星点的规律感来自 tile 太小，不来自点太多。
+     上一版四层的 tile 是 130/190/96/240rpx —— 最密那层一屏要铺出 100 多个点，
+     行列一眼就数得出来，她的原话「这个星河是不是有点过于规律了」。
+
+     两条一起用：
+     1 tile 放大到一屏只露几个到几十个。单独一层稀疏点阵读不出行列。
+     2 各层尺寸取互质的奇数（337/419、251/313、197/271、149/211、113/167），
+       没有公因数，叠加后的公共周期是几十万 rpx —— 屏幕上永远看不到一次重复。
+     再按「大而亮的少、小而暗的多」分档，真实夜空就是这个分布。
+     另外三颗单独的亮星走 no-repeat：整屏唯一不参与任何点阵的东西。
+
+     ⚠️ 每颗星必须有一个**实心的核**：写 `rgba(…) 0%, rgba(…) 46%, transparent 100%`，
+     不要写 `rgba(…), transparent 60%`。后者从圆心就开始淡，满亮度的只有正中一个点，
+     而这里的半径只有 1-3rpx（≈0.5-1.5pt），一淡就被抗锯齿抹平——
+     Chrome 预览按 CSS 像素算还看得见，真机上整片星空直接消失（她：「星星在哪」）。 */
+  background-image:
+    /* 三颗亮星，各自带一点晕，不平铺 */
+    radial-gradient(4.4rpx 4.4rpx at 22% 13%, rgba(255,250,238,1) 0%, rgba(255,250,238,1) 42%, rgba(255,248,232,.2) 66%, transparent 100%),
+    radial-gradient(3.8rpx 3.8rpx at 78% 31%, rgba(255,250,238,.94) 0%, rgba(255,250,238,.94) 42%, rgba(255,248,232,.16) 66%, transparent 100%),
+    radial-gradient(4rpx   4rpx   at 61% 8%,  rgba(255,250,238,.9) 0%, rgba(255,250,238,.9) 42%, rgba(201,160,99,.18) 66%, transparent 100%),
+    /* 五层互质点阵，从疏到密、从亮到暗 */
+    radial-gradient(3rpx   3rpx   at 37% 61%, rgba(255,248,232,.95) 0%, rgba(255,248,232,.95) 46%, transparent 100%),
+    radial-gradient(2.6rpx 2.6rpx at 71% 23%, rgba(255,248,232,.8) 0%, rgba(255,248,232,.8) 46%, transparent 100%),
+    radial-gradient(2.2rpx 2.2rpx at 19% 84%, rgba(244,237,227,.66) 0%, rgba(244,237,227,.66) 46%, transparent 100%),
+    radial-gradient(2rpx   2rpx   at 83% 47%, rgba(244,237,227,.52) 0%, rgba(244,237,227,.52) 46%, transparent 100%),
+    radial-gradient(1.8rpx 1.8rpx at 53% 71%, rgba(244,237,227,.4) 0%, rgba(244,237,227,.4) 46%, transparent 100%),
+    /* 夜的冷底 + 左下角一点暖光 */
+    radial-gradient(140% 56% at 50% -12%, rgba(26,32,46,.55), transparent 72%),
+    radial-gradient(120% 40% at 18% 102%, rgba(201,160,99,.16), transparent 70%);
+  background-size:
+    100% 100%, 100% 100%, 100% 100%,
+    337rpx 419rpx, 251rpx 313rpx, 197rpx 271rpx, 149rpx 211rpx, 113rpx 167rpx,
+    100% 100%, 100% 100%;
+  background-repeat:
+    no-repeat, no-repeat, no-repeat,
+    repeat, repeat, repeat, repeat, repeat,
+    no-repeat, no-repeat;
+}
+/* 内容压到下半屏，上半屏留给夜。
+   ⚠️ 试过在左下角垫一张斜着冒出来的信纸接住选项，被否了——太突兀。
+      整屏是夜就整屏是夜，字直接落在夜里，不要再贴一层东西。 */
+.s-sleep .page{ justify-content: flex-end; padding-bottom: 110rpx; }
+.s-sleep .s-h{ margin-top: 0; text-shadow: 0 2rpx 18rpx rgba(0,0,0,.6); }
+.s-sleep .binder{ border-right-color: rgba(201,160,99,.2); }
+
+/* ── 23 · 正念 / 冥想：把屏让给那件事 ─────────────────────────
+   原来一屏十个块，引导词一条条排下来像说明书。
+   这两屏的主角是「跟着做」，不是「读完」——所以引导词退成小字，
+   人数放右上角（它本来就是 text-align:right，只把字号和颜色收一档）。 */
+.s-mind .s-p, .s-medit .s-p{ font-size: 24rpx; color: var(--paper3); margin-top: 10rpx; }
+.s-mind .s-p:first-of-type, .s-medit .s-p:first-of-type{ margin-top: 16rpx; }
+.s-mind .online, .s-medit .online{
+  text-align: right; font-size: 19rpx; color: var(--paper3); margin-top: 0;
+  letter-spacing: .12em;
+}
+.s-mind .online::before, .s-medit .online::before{
+  content: "●"; color: var(--jade); font-size: 19rpx; margin-right: 10rpx;
+  vertical-align: 2rpx;
+}
+.s-mind .player, .s-medit .player{ margin-top: 36rpx; }
+.s-mind .pl-t, .s-medit .pl-t{ font-size: 38rpx; }
+
+/* ── 24 · 呼吸圆 / 放松圆 ─────────────────────────────────────
+   一个圈，中间一个字。圈是黄铜的细线，光从圈里透出来。
+   不用实心球——实心是个物件，空心才是「一口气」。 */
+.breath, .relax{ margin: 60rpx auto; }
+.halo, .rx-out{
+  background: radial-gradient(circle at 50% 50%,
+              rgba(201,160,99,.22) 0%, rgba(201,160,99,.08) 44%, transparent 72%);
+}
+.ring{
+  border: 1px solid rgba(201,160,99,.55); background: none;
+  box-shadow: 0 0 60rpx -20rpx rgba(201,160,99,.5) inset;
+}
+.core, .rx-core{
+  background: radial-gradient(circle at 50% 46%,
+              rgba(201,160,99,.16) 0%, transparent 70%);
+}
+.ripple{ border-color: rgba(201,160,99,.18); }
+.cue text, .rx-cue text{
+  font-family: var(--disp); font-size: 38rpx; font-weight: 400;
+  color: var(--paper); letter-spacing: .2em;
+}
+
+/* ── 25 · 潮水：粒子水墨 ──────────────────────────────────────
+   文案写的是「饿的感觉会像潮水一样涨起来」。
+   水墨的样子不是一块蓝色，是无数细点在边缘聚起来——墨在水里散开时，
+   浓的地方点子密，淡的地方点子稀。
+
+   ⚠️ 粒子必须用平铺（background-size + repeat）。第一版写了十二个定点
+      radial-gradient，结果整屏只有十二个点，等于没有。星空那屏踩过同一个坑。 */
+.s-empty .page{ position: relative; }
+.s-empty .page::before{
+  content: ""; position: absolute; z-index: 0; pointer-events: none;
+  left: -54rpx; right: -8rpx; bottom: 0; height: 560rpx;
+  /* 粒子要亮才看得见 —— 在 #171310 上，青绿的点几乎等于没有。
+     改成暖白（墨点在水里其实是留白），只在最密的一层带一点青。 */
+  background-image:
+    radial-gradient(2.4rpx 2.4rpx at 26% 40%, rgba(240,232,218,.62), transparent 60%),
+    radial-gradient(1.9rpx 1.9rpx at 68% 72%, rgba(233,223,209,.5),  transparent 60%),
+    radial-gradient(1.5rpx 1.5rpx at 44% 18%, rgba(255,248,232,.42), transparent 60%),
+    radial-gradient(2.8rpx 2.8rpx at 82% 30%, rgba(160,200,182,.38), transparent 60%),
+    radial-gradient(1.2rpx 1.2rpx at 12% 66%, rgba(233,223,209,.34), transparent 60%),
+    linear-gradient(180deg, transparent 0%, rgba(47,72,88,.07) 52%, rgba(47,72,88,.17) 100%);
+  background-size: 58rpx 50rpx, 86rpx 74rpx, 42rpx 46rpx, 124rpx 104rpx, 34rpx 38rpx, 100% 100%;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat;
+  /* 越往上越淡：墨的边缘散开 */
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.35) 26%, #000 68%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.35) 26%, #000 68%);
+}
+/* 水线：中间亮两头隐，那是灯照到的一段 */
+.s-empty .page::after{
+  content: ""; position: absolute; z-index: 0; pointer-events: none;
+  left: -54rpx; right: -8rpx; bottom: 400rpx; height: 110rpx;
+  border-radius: 50% 50% 0 0 / 110rpx 110rpx 0 0;
+  border-top: 1px solid rgba(140,193,170,.34);
+  mask-image: linear-gradient(90deg, transparent 4%, #000 26%, #000 74%, transparent 96%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 4%, #000 26%, #000 74%, transparent 96%);
+}
+
+
+/* ── 26 · 情绪瓶子：线稿玻璃 ──────────────────────────────────
+   参考图那个瓶子是线稿的：细线勾轮廓、大面积透明、肩上一道横向高光。
+   现在这个是实心磨砂罐——玻璃厚、内壁有渐变，珠子像沉在浓汤里。
+
+   只改玻璃的样式，不动珠子：珠子跑的是 jar.js 的 PBD 物理（重力、碰撞、
+   跟着手机晃），画在 canvas 上。玻璃是 CSS，两者互不干涉。
+
+   ⚠️ 形状比例也没动。.glass 现在 250×250、canvas 也是正方形，
+      改成参考图那种竖长瓶身会把 canvas 拉伸、珠子变椭圆，
+      而且 jar.js 把罐子当半径 R 的圆做碰撞约束，形状一改约束就对不上。
+      要竖长瓶得同时动 canvas 尺寸和物理约束，那是另一件事。 */
+.glass{
+  /* 几乎全透：只留一点极淡的底，让珠子后面不是纯黑 */
+  background:
+    radial-gradient(58% 34% at 50% 96%, rgba(201,160,99,.10), transparent 72%),
+    radial-gradient(70% 50% at 50% 40%, rgba(244,237,227,.018), transparent 78%);
+  border: 1px solid rgba(244,237,227,.26);
+  box-shadow: 0 0 40rpx -14rpx rgba(201,160,99,.22),
+              inset 0 0 30rpx -10rpx rgba(244,237,227,.10);
+}
+/* 肩上那道横向高光——玻璃的厚度全靠它交代，不靠内壁渐变 */
+.gloss{
+  background:
+    linear-gradient(180deg, transparent 6%, rgba(244,237,227,.16) 11%,
+                    rgba(244,237,227,.22) 13%, rgba(244,237,227,.05) 16%, transparent 22%),
+    /* 左侧一道竖向反光，让它读作圆柱不是平面 */
+    linear-gradient(90deg, rgba(244,237,227,.07) 0%, transparent 16%),
+    radial-gradient(40% 24% at 26% 20%, rgba(244,237,227,.06), transparent 70%);
+}
+/* 瓶口：一条细线勾出来的横向长圆，不是实心塞子 */
+.neck{
+  background: linear-gradient(180deg, rgba(244,237,227,.14) 0%,
+              rgba(244,237,227,.04) 40%, transparent 100%);
+  border: 1px solid rgba(244,237,227,.24);
+  border-bottom: none;
+  border-radius: 9px 9px 3px 3px;
+  box-shadow: inset 0 1px 0 rgba(244,237,227,.18);
+}
+
+/* ── 26b · 瓶形：竖长瓶身，珠子只占瓶底 ───────────────────────
+   参考图是竖长的圆角矩形瓶，现在是 250×250 的扁圆罐。
+
+   巧的地方在于不用动物理：让 .glass 变竖长，但 canvas 只占瓶底那块
+   正方形——珠子仍在 jar.js 原来的圆约束里跑（重力、碰撞、跟着手机晃
+   都不变），视觉上就是「珠子堆在瓶底」。瓶子上半截本来就该是空的。
+
+   这样 canvas 不被拉伸（珠子不会变椭圆），jar.js 一行没改。 */
+.glass{
+  width: 210px; height: 288px;
+  /* 圆角矩形瓶：肩略收，底更圆 */
+  border-radius: 26px 26px 34px 34px / 30px 30px 40px 40px;
+}
+.gloss{ border-radius: 26px 26px 34px 34px / 30px 30px 40px 40px; }
+/* canvas 落到瓶底，保持正方形不被拉伸 */
+.jarcv{
+  top: auto; bottom: 0; left: 0;
+  width: 210px; height: 210px;
+}
+/* 瓶口跟着瓶身收窄 */
+.neck{ width: 108px; height: 15px; margin-bottom: -7px; border-radius: 7px 7px 3px 3px; }
+
+/* ── 27 · 七张反应卡（照护者端）─────────────────────────────
+   按三档判断这件是**基本成立**的：线稿动物和线稿玻璃瓶本来就是同一套语言，
+   ideal 那两张用暖光区分，「不给人贴标签，只给反应命名」的意图也清楚。
+   所以微调不重做——只把圆角框换成纸角、背景改极淡的细线，
+   让它和卡片墙、月份标签用同一套纸语言。 */
+.bcard{
+  border-radius: 3rpx;
+  background: rgba(233,223,209,.028);
+  border: 1px solid rgba(233,223,209,.10);
+  box-shadow: none;
+}
+.bcard.ideal{
+  background: rgba(201,160,99,.07);
+  border-color: rgba(201,160,99,.3);
+  box-shadow: 0 0 24rpx -12rpx rgba(201,160,99,.4);
+}
+/* 每张歪一点点——七张都转会乱，所以只给隔一张转，幅度也压到 1 度以内 */
+.bcard:nth-child(3n+1){ transform: rotate(-.8deg); }
+.bcard:nth-child(3n){ transform: rotate(.6deg); }
+/* 动物提亮一档：.42 在暗底上偏淡，线都快断了 */
+.bart{ opacity: .58; }
+.bcard.ideal .bart{ opacity: .72; }
+/* ⚠️ gap 不能动：.bcard 的宽度是 flex:0 0 calc((100% - 14rpx)/2)，
+   把 14rpx 这个 gap 值写死在计算里了。改成 16rpx 会让两张卡加间隙超过 100%，
+   换行变成一列，七张卡高度翻倍、超屏 140px。 */
+
+/* ══════════════════════════════════════════════════════════════════
+   排版收尾：她逐屏挑出来的六处
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ① 选项下方那块深色 —— 是原按钮的 box-shadow 没清干净。
+   背景和边框我都覆盖了，唯独忘了阴影，它在暗底上就显示成一个色块。 */
+.s-b, .s-b.big, .s-b.cl, .s-b.dg, .s-b.flat, .s-b.gatego, .s-b.remind,
+.pickbtn, .sp-b, .tw, .c3card, .fband{ box-shadow: none; }
+/* .fband 是后补进来的，同一个病：它原来是一条 168rpx 高的圆角色带，
+   靠 box-shadow:inset 0 0 0 1px 描了一圈内框。改成「手写大字 + 左边一道竖线」
+   时背景、边框、圆角、高度都覆盖了，唯独漏了这条 inset 阴影 ——
+   色带没了框还在，就是「热乎乎的」那四个字外面那个方框。 */
+
+/* ② 「睡够了」选中之后那个方框 —— 同一类特异性问题：
+   .sp-b.on 是 (0,2,0)，比通用的 .sp-b (0,1,0) 更具体，把原按钮的
+   background 渐变整个带回来了，在暗底上就显示成一块比周围亮的矩形。
+   选中当然要有标记，但不该是一个框：色块换成黄铜，字提到全亮，
+   没选中的退一档 —— 和「三个岔口」「想吃点什么样的」用的是同一套语言。 */
+.sp-b{ color: var(--paper2); }
+.sp-b.on{ background: none; border: none; color: var(--paper); }
+.sp-b.on::before{ background: var(--brass); box-shadow: 0 0 17rpx -6rpx var(--brass); }
+
+/* ② 「120 急救」下面那些两栏文字会撕开 —— .s-row 是左右分栏
+   （.rv 还 max-width:54% 右对齐），两边都长就各自换行，读起来错位。
+   改成上下：键在上、注在下，一条一条读得顺。 */
+.s-row{
+  display: flex; flex-direction: column; align-items: flex-start;
+  justify-content: flex-start; gap: 6rpx;
+  border-bottom: 1px solid rgba(233,223,209,.055); padding: 16rpx 0;
+}
+.rk{ font-size: 30rpx; color: var(--paper); line-height: 1.6; }
+.rv{
+  font-size: 24rpx; color: var(--paper3); line-height: 1.7;
+  text-align: left; max-width: 100%; flex: none;
+}
+
+/* ③ 「3 月 / 12 日」竖着断成两行 —— .oth-at 被写死 width:140rpx。
+   日期是一小段不该断的字，给它 nowrap。 */
+.oth-at{ width: auto; white-space: nowrap; }
+
+/* ④ 标题的断行 —— ⚠️ 不要用 text-wrap: balance。
+   balance 的目标是让各行长度相等，它不看词义。英文有空格、断点天然在词边界；
+   中文没有空格，浏览器按字断，balance 为了配平会在语义单元中间提前断行——
+   「或者 ta 房间里囤着吃的」被切成「或者 ta 房间 / 里囤着吃的」，读起来是断的。
+   为了消灭「末行孤字」这个小毛病，引入了「词中断行」这个大毛病，不划算。
+   标题回到默认断行：填满一行才换，断点在行尾，读者习惯。 */
+
+/* ⑤ 段落之间空得太开 —— .vgap 是可伸缩间隔，上限 56rpx，
+   内容中等的屏会撑到接近满格，读起来一段一段断开。
+   上限压到 36rpx：还留着自适应，但不会撑出空行。 */
+.vgap{ max-height: 36rpx; }
+
+/* ⑥ 「这些天的夜里」也改成整屏星空，和「昨晚睡得怎么样」一套。
+   星星本身留着——那是数据（一条睡眠记录一颗星，亮度是那一晚的样子），
+   比背景星更大更亮，分得开。 */
+.view.s-stars::before{
+  background-image:
+    radial-gradient(1.7rpx 1.7rpx at 30% 24%, rgba(255,248,232,.9), transparent 60%),
+    radial-gradient(1.3rpx 1.3rpx at 70% 62%, rgba(255,248,232,.55), transparent 60%),
+    radial-gradient(1rpx 1rpx   at 45% 80%, rgba(244,237,227,.4), transparent 60%),
+    radial-gradient(1rpx 1rpx   at 85% 18%, rgba(244,237,227,.32), transparent 60%),
+    radial-gradient(140% 56% at 50% -12%, rgba(26,32,46,.55), transparent 72%),
+    radial-gradient(120% 40% at 18% 102%, rgba(201,160,99,.16), transparent 70%);
+  background-size: 130rpx 150rpx, 190rpx 170rpx, 96rpx 118rpx, 240rpx 210rpx, 100% 100%, 100% 100%;
+  background-repeat: repeat, repeat, repeat, repeat, no-repeat, no-repeat;
+}
+/* 星空区去掉自己的底：整屏已经是夜了，不用在夜里再画一块夜 */
+.s-stars .sky{ background: none; height: 560rpx; }
+.s-stars .s-h{ text-shadow: 0 2rpx 18rpx rgba(0,0,0,.6); }
+.s-stars .binder{ border-right-color: rgba(201,160,99,.2); }
+
+/* ── 末行孤字 ────────────────────────────────────────────────
+   检测出 39 处末行只剩一两个字（一行就一个「子」或者「起来。」）。
+
+   text-wrap 有两个值，各管一件事，我之前只用对了一半：
+     balance  让各行长度尽量相等 —— 适合 2-4 行的标题
+     pretty   专门优化最后一行、避免孤字 —— 适合长正文
+   标题给了 balance，正文一处没给，所以 33 处正文的孤字全没动。
+
+   ⚠️ text-wrap 是新特性，小程序 WebView 的支持度要真机验。
+      不支持时降级成现在的样子，不会更糟。 */
+.s-p, .s-box, .s-s, .s-dim, .men-i, .men-l, .c3p, .c3t, .pdesc, .oth-t,
+.msg-t, .twh, .twt, .ctext, .rk, .rv, .swt, .swh, .wt, .wb, .skyread{
+  text-wrap: pretty;
+}
+/* 反应卡的名字八个字挤在两列窄卡里，末行只剩一个字。
+   这种短标签用 balance 更合适——它会配平成 4+4，不会留孤字。 */
+/* 短标签同理，也不用 balance。反应卡那八个字的名字宁可末行一个字，
+   也好过在词中间断开。 */
+
+
+/* ── 反应卡的名字：降一档 ─────────────────────────────────────
+   「看见了但装作没看见」九个字在两列窄卡里放不下，末行只剩一个「见」。
+   这里不能用 <br>——.bt 走的是 <text> 组件，不解析 HTML，
+   <br> 会原样显示成字符（h/p/box 那些走 rich-text 才行）。
+   所以降一档到 24rpx，同时把「鸵鸟」那行标注降到 19rpx 保住层次。 */
+.bt{ font-size: 24rpx; line-height: 1.5; }
+.ba{ font-size: 19rpx; }
+
+
+/* care-red 那屏加了断行之后多出一行、超 10px。
+   它是急救清单，七条 .s-row 改成上下结构后本来就比原来高，
+   把行的上下 padding 收一档就够了 —— 不动字号，不动断行。 */
+.s-care-red .s-row{ padding: 10rpx 0; }
+
+/* ── 28 · 「这些天的夜里」：标题挪到下方文案上方 ────────────────
+   整屏是星空，字都聚在下面一块——和「昨晚睡得怎么样」一样的处理。
+   用 flex order 把星空排到最前，不用改结构。 */
+.s-stars .page{ justify-content: flex-end; padding-bottom: 110rpx; }
+.s-stars .sky{ order: -1; margin-top: 0; }
+.s-stars .s-h{ margin-top: 0; }
+
+/* ── 29 · 四个人：「他会怎么说」默认收起 ──────────────────────
+   四段长文两百多字，一屏读不完。主线是「选一个人说话」，
+   名字 + 身份 + 一句介绍已经够分辨；详情收起来，点名字展开。 */
+.men-l.fold{ display: none; }
+.men-more{
+  display: inline-flex; align-items: baseline; gap: 10rpx;
+  font-family: var(--mono); font-size: 19rpx; letter-spacing: .14em;
+  color: var(--paper3); margin-top: 10rpx; position: relative;
+  padding-bottom: 8rpx;
+}
+.men-more::after{
+  content: "＋"; font-family: var(--sans); font-size: 22rpx; color: var(--brass);
+  margin-left: 4rpx;
+}
+
+/* ── 变体规则的特异性兜底 ─────────────────────────────────────
+   .s-entry .s-b / .s-b.dg / .s-b.cl 都是 (0,2,0)，比通用的 .s-b (0,1,0) 更具体，
+   会把原按钮的 min-height、padding、background 带回来——于是 entry 屏的选项
+   下面挂着一块深色底，dg 那支还多缩进 30rpx。
+   凡是改了通用块的样式，同特异性的变体都要一起覆盖。 */
+.s-entry .s-b, .s-b.dg, .s-b.cl, .s-b.flat{
+  min-height: 0; padding: 0; background: none; border: none; border-radius: 0;
+  justify-content: flex-start; text-align: left;
+}
+.s-entry .s-b{ margin-top: 56rpx; }
+.s-entry .s-b.o1, .s-entry .s-b.o2{ margin-top: 36rpx; }
+
+/* ── 滋味卡的入口指示 ────────────────────────────────────────
+   之前把 .tcard .chev 直接 display:none 了，结果这张卡看不出可以点——
+   而它是进「今天这张滋味卡」和卡片墙的唯一入口。
+   改成和其他入口一样的手画箭头，别藏起来。 */
+.tcard .chev{ display: inline-block; font-size: 0; color: var(--brass); margin-left: 14rpx; }
+.tcard .chev::before{ content: "\2192"; font-size: 32rpx; }
+
+/* ── 插画的裁切与左缘淡出 ─────────────────────────────────────
+   ① .tcard 和 .tbody 原来都是 overflow:hidden，出血的插画被切成一块硬边矩形。
+   ② mask-image 在 WXSS 里没生效（这是落地前列的待验项之一，现在有答案了）。
+      退路就用当初写好的那个：在插画左缘盖一层与底同色的渐变。
+      background 认渐变，一定能过。 */
+.tcard, .tbody{ overflow: visible; }
+.tcard{ border: none; }
+.tcard .art{
+  mask-image: none; -webkit-mask-image: none;
+  position: absolute; right: -120rpx; top: -10rpx;
+  width: 460rpx; height: 354rpx;
+}
+.tcard .art::before{
+  content: ""; position: absolute; left: 0; top: -20rpx; bottom: -20rpx; width: 52%;
+  z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg,
+    #171310 0%, rgba(23,19,16,.94) 26%, rgba(23,19,16,.6) 62%, rgba(23,19,16,0) 100%);
+}
+
+/* 碗后面那块矩形：.tx-steam .pgrain 这类纹理规则是 (0,2,0)，
+   比我写的 .pgrain (0,1,0) 更具体，background:none 盖不住它，
+   而 .pgrain 是绝对定位铺满整张卡的。
+   改用 display:none —— 原规则里没有 display 这个属性，特异性再高也压不回来。 */
+.pgrain, .pgloss{ display: none; }
+
+/* 碗后面那块矩形是 .mat —— 旧版「一碗蒸蛋」的餐垫 canvas（drawMat 画的）。
+   手账暗色里插画自己就是主角，不需要再垫一张餐垫，而且它在暗底上
+   就是一块边界清晰的浅色矩形。 */
+.mat, .steam{ display: none; }
+
+/* 去掉插画左缘的渐变遮罩 —— 它用纯 #171310，而这一带有氛围光比它亮，
+   于是遮罩本身成了一块边界清晰的暗斑，比它要藏的东西显眼得多。
+   而且根本不需要：SVG 本身就是透明背景，插画的边缘是碗的轮廓不是矩形。
+   左下角那个几何配重块改用 background-position 推出可视区。 */
+.tcard .art::before{ display: none; }
+.tcard .art{
+  background-position: right center;
+  right: -150rpx; width: 500rpx; height: 385rpx;
+}
+
+/* ── 潮水删掉 ─────────────────────────────────────────────────
+   预览里它是「粒子从下往上渐稀」，靠 mask-image 做顶部淡出。
+   WXSS 不支持 mask-image（插画那儿刚栽过同一个坑），淡出失效，
+   粒子就在一个矩形范围里均匀铺开，成了一块硬边的蓝灰色板子。
+
+   不留半成品：要在小程序里做出粒子水墨，得改成多层元素叠加
+   （粒子层 + 一层从底色渐变到透明的盖板），那是另做一件事。
+   现在先干净地拿掉。 */
+.s-empty .page::before, .s-empty .page::after{ display: none; }
+
+/* 屏幕中间那条横线：氛围光原来挂在 .view::before{inset:0} 上，
+   而 .view 只有内容那么高——内容不满屏时光就在底部齐刷刷断掉。
+   改成 fixed 贴视口，光铺满整屏；而且氛围光本来就该固定不动，
+   它是屋里的光，不跟着内容滚。 */
+.view::before{
+  /* ⚠️ 不要在这里写 inset:auto —— inset 是 top/right/bottom/left 的简写，
+     写在四条边后面会把它们全重置成 auto，这层就成了 0×0：
+     两团氛围光和「昨晚睡得怎么样」那屏的整片星河一起没了。
+     position 改 fixed 就够，inset:0 是从上面那条继承下来的，对 fixed 一样成立。 */
+  position: fixed; left: 0; right: 0; top: 0; bottom: 0;
+}

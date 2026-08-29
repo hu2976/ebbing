@@ -1,0 +1,164 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>退潮 · 路演 deck · 甲 断言—证据</title>
+<style>
+/* ── 方向甲：断言—证据（Michael Alley Assertion-Evidence + Tufte 数据墨水比）
+   规则：① 标题是一句整话，不是名词短语 ② 标题下独占一张图当证据
+        ③ 零 bullet ④ 标注直接嵌进图里，不做图例
+   为什么白底：退潮的产品是深色的，理由是「凌晨三点白屏是物理性的刺痛」。
+   deck 用纸白，产品截图的暗就成了整场唯一的暗——反差本身在替产品说话。 */
+:root{
+  --paper:#FBFAF8; --rule:#DED8CE; --ink:#1A1714; --ink2:#4A4238; --ink3:#8B8175;
+  --clay:#A8452C;                     /* 唯一强调色，砖红。退潮陶土 #CB7E62 的印刷态 */
+  --serif:"Songti SC","Source Han Serif SC","Noto Serif CJK SC",serif;
+  --sans:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory}
+.deck::-webkit-scrollbar{width:0}
+.slide{min-height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;
+  justify-content:center;padding:9vh 9vw;position:relative}
+.slide>*{width:100%;max-width:1180px;margin:0 auto}
+
+/* 顶栏：一道细线 + 编号。Tufte 的规矩是 chrome 越少越好 */
+.bar{position:fixed;top:0;left:0;right:0;z-index:9;display:flex;align-items:baseline;gap:14px;
+  padding:16px 9vw;font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--ink3);
+  background:linear-gradient(var(--paper) 62%,transparent)}
+.bar b{color:var(--ink);font-weight:600;letter-spacing:.24em}
+.bar .pg{margin-left:auto}
+
+/* 整句 action-title。衬线，克制的字重，靠字号和行距建立层级 */
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(28px,3.6vw,50px);
+   line-height:1.32;letter-spacing:.01em;max-width:22em}
+h1 em{font-style:normal;color:var(--clay)}
+.sub{margin-top:18px;font-size:clamp(15px,1.35vw,19px);line-height:1.85;color:var(--ink2);max-width:44em}
+.src{margin-top:clamp(26px,5vh,56px);padding-top:22px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+     color:var(--ink3);line-height:1.9;border-top:1px solid var(--rule)}
+.src b{color:var(--ink2);font-weight:600}
+
+.fig{margin-top:clamp(24px,4vh,46px)}
+.fig svg{display:block;width:100%;height:auto;overflow:visible}
+/* 图里的文字统一在这里定，SVG 内不再逐个写 font-family */
+.fig text{font-family:var(--sans);fill:var(--ink2)}
+.fig .t-lab{font-size:13.5px}
+.fig .t-num{font-family:var(--mono);font-size:12px;fill:var(--ink3);letter-spacing:.06em}
+.fig .t-note{font-size:13px;fill:var(--clay)}
+.fig .t-big{font-family:var(--mono);font-size:15px;fill:var(--ink);font-weight:600}
+
+.slide.a .rv{animation:up .6s both cubic-bezier(.2,.7,.3,1)}
+.slide.a .rv:nth-child(2){animation-delay:.08s}
+.slide.a .rv:nth-child(3){animation-delay:.16s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* 折线一笔画出来。Tufte 允许的唯一“动效”：它在复述数据的方向 */
+.slide.a .draw{animation:draw 1.8s .3s both cubic-bezier(.3,.6,.3,1)}
+@keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+@media print{.bar{display:none}.deck{height:auto;overflow:visible}.slide{min-height:auto;page-break-after:always}}
+</style>
+
+<div class="bar"><b>退潮</b><span>EBBING</span><span class="pg">断言—证据 · 01–02</span></div>
+
+<div class="deck">
+
+<!-- ══ 开场：图就是钩子。不写“痛点”两个字，让四条 lane 自己说 ══ -->
+<section class="slide a" id="s1">
+  <h1 class="rv">凌晨三点，她能打开的东西里，<br><em>只有一个不需要她开口。</em></h1>
+  <p class="sub rv">热线是开着的——但打过去，就有一个人知道了。<br>
+    而越是看起来没问题的人，越付不起“被知道”这个代价。</p>
+
+  <div class="fig rv">
+    <svg viewBox="0 0 1180 272" role="img" aria-label="四种求助途径在一天 24 小时里的可用窗口">
+      <!-- 时间轴 -->
+      <line x1="150" y1="246" x2="1130" y2="246" stroke="#DED8CE" stroke-width="1"/>
+      <g class="t-num">
+        <text x="150" y="264" text-anchor="middle">00</text>
+        <text x="313" y="264" text-anchor="middle">04</text>
+        <text x="477" y="264" text-anchor="middle">08</text>
+        <text x="640" y="264" text-anchor="middle">12</text>
+        <text x="803" y="264" text-anchor="middle">16</text>
+        <text x="967" y="264" text-anchor="middle">20</text>
+        <text x="1130" y="264" text-anchor="middle">24</text>
+      </g>
+      <!-- 03:00 那条竖线：整张图的锚 -->
+      <line x1="272" y1="20" x2="272" y2="246" stroke="#A8452C" stroke-width="1" stroke-dasharray="3 4"/>
+      <text class="t-note" x="272" y="13" text-anchor="middle">03:00</text>
+
+      <!-- lane 1 咨询师 -->
+      <text class="t-lab" x="132" y="49" text-anchor="end">咨询师</text>
+      <line x1="150" y1="44" x2="1130" y2="44" stroke="#EFEAE2" stroke-width="7" stroke-linecap="round"/>
+      <line x1="518" y1="44" x2="885" y2="44" stroke="#8B8175" stroke-width="7" stroke-linecap="round"/>
+      <text class="t-num" x="897" y="48">工作日 10–19 时</text>
+
+      <!-- lane 2 热线：全天开着，但要开口。注释放到色条下面，不压在上面 -->
+      <text class="t-lab" x="132" y="101" text-anchor="end">热线</text>
+      <line x1="150" y1="96" x2="1130" y2="96" stroke="#8B8175" stroke-width="7" stroke-linecap="round"/>
+      <text class="t-note" x="150" y="120">全天开着。代价是打过去，就有一个人知道了</text>
+
+      <!-- lane 3 跟人说 -->
+      <text class="t-lab" x="132" y="158" text-anchor="end">跟人说</text>
+      <line x1="150" y1="153" x2="1130" y2="153" stroke="#EFEAE2" stroke-width="7" stroke-linecap="round"/>
+      <line x1="477" y1="153" x2="967" y2="153" stroke="#8B8175" stroke-width="7" stroke-linecap="round"/>
+      <text class="t-num" x="979" y="157">要被记住</text>
+
+      <!-- lane 4 热量 App：整条亮，且是唯一在 03:00 上的 -->
+      <text class="t-lab" x="132" y="215" text-anchor="end" style="fill:#1A1714;font-weight:600">热量 App</text>
+      <line x1="150" y1="210" x2="1130" y2="210" stroke="#A8452C" stroke-width="9" stroke-linecap="round"
+            class="draw" pathLength="1" stroke-dasharray="1" style="--len:1"/>
+      <circle cx="272" cy="210" r="6.5" fill="#FBFAF8" stroke="#A8452C" stroke-width="2.5"/>
+      <text class="t-big" x="1130" y="191" text-anchor="end">24 小时 · 不需要开口 · 没有人知道</text>
+    </svg>
+  </div>
+
+  <p class="src rv"><b>而它只会让事情更糟。</b>　105 名确诊者中约 75% 在用热量 App，其中 <b>73%</b> 认为它加重了自己的病。
+    Levinson et al. 2017　·　横断面与自我报告，只能讲关联与主观归因，不讲因果</p>
+</section>
+
+<!-- ══ 内容页：留存 ══ -->
+<section class="slide a" id="s2">
+  <h1 class="rv">有效的方案已经存在，<em>没人用完它。</em></h1>
+  <p class="sub rv">所以我们要解的不是有效性，是留存。这决定了退潮后面每一个设计选择。</p>
+
+  <div class="fig rv">
+    <svg viewBox="0 0 1180 268" role="img" aria-label="Linardon 2024 RCT 六周留存衰减与行业基线对比">
+      <!-- 纵轴刻度：只留两条，去网格线 -->
+      <g class="t-num">
+        <text x="118" y="34" text-anchor="end">100%</text>
+        <text x="118" y="196" text-anchor="end">0</text>
+      </g>
+      <line x1="132" y1="28" x2="132" y2="190" stroke="#DED8CE" stroke-width="1"/>
+      <line x1="132" y1="190" x2="1080" y2="190" stroke="#DED8CE" stroke-width="1"/>
+      <g class="t-num">
+        <text x="132" y="210" text-anchor="middle">第 0 周</text>
+        <text x="606" y="210" text-anchor="middle">第 3 周</text>
+        <text x="1080" y="210" text-anchor="middle">第 6 周</text>
+      </g>
+
+      <!-- 行业基线：5.5 天就掉光了。画成一段极短的陡降，让它自己说明问题 -->
+      <path d="M132 28 C150 92, 168 168, 194 188" fill="none" stroke="#C9C2B7" stroke-width="2.5"
+            stroke-linecap="round" class="draw" pathLength="1" stroke-dasharray="1" style="--len:1"/>
+      <text class="t-num" x="206" y="182">心理健康 App 平均留存 5.5 天</text>
+
+      <!-- Linardon 干预组：6 周掉到 52% -->
+      <path d="M132 28 C320 52, 560 78, 1080 112" fill="none" stroke="#A8452C" stroke-width="3.5"
+            stroke-linecap="round" class="draw" pathLength="1" stroke-dasharray="1" style="--len:1"/>
+      <circle cx="1080" cy="112" r="5.5" fill="#A8452C"/>
+      <text class="t-big" x="1068" y="98" text-anchor="end">6 周还在的 52%</text>
+      <text class="t-note" x="1068" y="132" text-anchor="end">脱落 48%　·　仅 1/3 走完最后一个模块</text>
+
+      <!-- 疗效标注：贴在曲线起点，说明“有效”这件事没有争议 -->
+      <text class="t-num" x="146" y="72">n=576 RCT　暴食发作发生率比 0.69　d = −0.68　—— 有效性没有争议</text>
+    </svg>
+  </div>
+
+  <p class="src rv"><b>Linardon et al. 2024</b>「Resilience: eDBT」RCT，n=576，全程无专业指导　·
+    局限：等待组对照可能放大效应量，样本以白人为主　·
+    <b>Zainal et al. 2025</b> 117 试验／1,698 效应量／279,791 人：脱落更低的试验有提醒、有人的接触，<b>且无游戏化</b></p>
+</section>
+
+</div>
+<script>
+/* .slide.a 触发入场：只给进入视口的那一屏加，避免所有动画在加载时一次性跑完 */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('a',e.isIntersecting)})},{threshold:.35});
+document.querySelectorAll('.slide').forEach(function(s){s.classList.remove('a');io.observe(s)});
+</script>

@@ -1,0 +1,1238 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>退潮数据底册</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap">
+<style>
+:root{
+  --ground:#F6F5F2; --surface:#FFFFFF; --surface2:#EFEEE9;
+  --ink:#131815; --ink2:#565E58; --ink3:#8B948D;
+  --line:rgba(19,24,21,.11); --line2:rgba(19,24,21,.055);
+  --cool:#357C64; --coolbg:rgba(53,124,100,.075);
+  --warm:#9A6D34; --warmbg:rgba(154,109,52,.075);
+  --alert:#AF4F3A; --alertbg:rgba(175,79,58,.075);
+  --serif:"Noto Serif SC","Songti SC","Source Han Serif SC",Georgia,serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C100E; --surface:#141915; --surface2:#1B211C;
+    --ink:#ECF0EA; --ink2:#9AA69F; --ink3:#6A756D;
+    --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.05);
+    --cool:#7FBDA9; --coolbg:rgba(127,189,169,.09);
+    --warm:#D3AD7E; --warmbg:rgba(211,173,126,.09);
+    --alert:#D68470; --alertbg:rgba(214,132,112,.09);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C100E; --surface:#141915; --surface2:#1B211C;
+  --ink:#ECF0EA; --ink2:#9AA69F; --ink3:#6A756D;
+  --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.05);
+  --cool:#7FBDA9; --coolbg:rgba(127,189,169,.09);
+  --warm:#D3AD7E; --warmbg:rgba(211,173,126,.09);
+  --alert:#D68470; --alertbg:rgba(214,132,112,.09);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:16.5px;line-height:1.78;-webkit-font-smoothing:antialiased}
+.wrap{max-width:64rem;margin:0 auto;padding:4rem 1.5rem 7rem;display:flex;flex-direction:column;gap:3.6rem}
+.col{max-width:38rem}
+header{display:flex;flex-direction:column;gap:1.1rem;padding-bottom:2.2rem;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.22;
+  margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lede{font-size:1.08rem;color:var(--ink2);margin:0;max-width:35rem}
+.meta{font-family:var(--mono);font-size:.74rem;color:var(--ink3);display:flex;gap:1.4rem;flex-wrap:wrap}
+.verdict{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:1.6rem 1.7rem;
+  display:flex;flex-direction:column;gap:.9rem}
+.verdict h2{margin:0;font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);font-weight:400}
+.verdict p{margin:0;font-size:1.02rem;max-width:44rem}
+.verdict strong{color:var(--cool)}
+section{display:flex;flex-direction:column;gap:1.4rem}
+h2{font-family:var(--serif);font-weight:700;font-size:1.6rem;margin:0;letter-spacing:-.005em;
+  text-wrap:balance;display:flex;align-items:baseline;gap:.7rem}
+h2 .num{font-family:var(--mono);font-size:.8rem;font-weight:400;color:var(--ink3);letter-spacing:.05em}
+h3{font-family:var(--sans);font-weight:600;font-size:1.06rem;margin:0}
+p{margin:0}
+ul{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:.45rem}
+li::marker{color:var(--ink3)}
+a{color:var(--cool);text-decoration:none;border-bottom:1px solid var(--line)}
+a:hover{border-bottom-color:currentColor}
+a:focus-visible{outline:2px solid var(--cool);outline-offset:2px}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:2px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:50rem;font-size:.9rem}
+th,td{text-align:left;padding:.72rem .95rem;border-bottom:1px solid var(--line2);vertical-align:top}
+thead th{font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink3);font-weight:400;background:var(--surface2);border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:none}
+td.s{font-family:var(--mono);font-size:.78rem;white-space:nowrap;color:var(--cool)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+td small{display:block;color:var(--ink3);font-size:.78rem;line-height:1.5}
+.tag{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;
+  padding:.14rem .45rem;border:1px solid var(--line);border-radius:2px;color:var(--ink2);white-space:nowrap}
+.tag.c{color:var(--cool);border-color:var(--cool);background:var(--coolbg)}
+.tag.w{color:var(--warm);border-color:var(--warm);background:var(--warmbg)}
+.tag.a{color:var(--alert);border-color:var(--alert);background:var(--alertbg)}
+.item{border-top:1px solid var(--line);padding-top:1.3rem;display:flex;flex-direction:column;gap:.7rem}
+.item .hd{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.item .rn{font-family:var(--mono);font-size:.78rem;color:var(--ink3);flex:none}
+.item .tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-left:auto}
+.item p{max-width:41rem}
+.item .do{background:var(--coolbg);border-left:2px solid var(--cool);padding:.7rem .95rem;
+  font-size:.94rem;max-width:41rem}
+.item .do b{color:var(--cool)}
+.item .src{font-family:var(--mono);font-size:.72rem;color:var(--ink3);line-height:1.55;max-width:41rem}
+.grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:1.1rem 1.25rem;
+  display:flex;flex-direction:column;gap:.5rem}
+.card .claim{font-weight:600;font-size:.97rem}
+.card .src{font-family:var(--mono);font-size:.72rem;color:var(--ink3);line-height:1.55}
+.card .use{font-size:.89rem;color:var(--ink2)}
+.fix{border:1px solid var(--alert);background:var(--alertbg);border-radius:2px;padding:1.2rem 1.35rem;
+  display:flex;flex-direction:column;gap:.6rem}
+.fix .h{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--alert)}
+.fix p{max-width:42rem;font-size:.96rem}
+.q{border:1px solid var(--warm);background:var(--warmbg);border-radius:2px;padding:1.2rem 1.35rem;
+  display:flex;flex-direction:column;gap:.55rem}
+.q .h{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--warm)}
+.q p{max-width:42rem;font-size:.96rem}
+del{color:var(--ink3);text-decoration-thickness:1px}
+ins{text-decoration:none;border-bottom:2px solid var(--cool)}
+blockquote{margin:0;padding:.2rem 0 .2rem 1rem;border-left:2px solid var(--line);color:var(--ink2);
+  font-size:.95rem;max-width:41rem}
+.copy{font-family:var(--serif);font-size:1.02rem;background:var(--surface2);padding:.8rem 1rem;
+  border-radius:2px;max-width:41rem;line-height:1.75}
+footer{border-top:1px solid var(--line);padding-top:1.6rem;font-size:.85rem;color:var(--ink3);max-width:44rem}
+@media (max-width:640px){.wrap{padding:2.5rem 1.1rem 5rem;gap:2.8rem}body{font-size:16px}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">数据蒸馏 · 2026-08-20 · 接《退潮竞品地形》</div>
+  <h1>能直接写进产品的那些数字</h1>
+  <p class="lede">从竞品与临床文献里爬出来的可用数据：逐屏的数值修正、按真实风险时段重排的小组表、一条把你整个机制假设变成实验证据的研究，以及三个我替你想不了、必须你定的取舍。</p>
+  <div class="meta"><span>逐屏对照原型 v2026-08-19</span><span>标注了每条的证据强度</span></div>
+</header>
+
+<div class="verdict">
+  <h2>本轮最重要的一条</h2>
+  <p>Adams &amp; Leary 的甜甜圈实验：让高限制型进食者先吃一个"禁忌食物"，然后<strong>只给一句简短的自我关怀陈述</strong>。结果——通常会在破戒后过食的那批人，<strong>没有出现失调性进食，在随后的品尝测试里吃得显著更少，内疚也显著更低</strong>。起作用的是研究助理说的<strong>一句话</strong>。<br>这就是你整个产品的机制证据。你不需要 AI 生成个性化回应，一句预先写好的话本身就有因果证据。你亲历的那句「你的人生才刚刚开始，只有你能定义自己」，在实验室里是同一个操作。</p>
+</div>
+
+<section>
+  <h2><span class="num">01</span>躯体层：逐屏的数值与措辞</h2>
+  <div class="col"><p>你 PRD 待办里点名要落实的那几条，这轮全部有出处了。下面按屏排，<span class="tag a">改</span> 是我认为有事实偏差的，<span class="tag c">可加</span> 是有出处但你还没写的。</p></div>
+
+  <div class="fix">
+    <div class="h">改 · s-vom 漱口那句</div>
+    <p>现在：「清水或<b>小苏打水</b>漱一下，半小时到一小时后再刷」<br>
+    文献原话是：清除后用<strong>氟化物漱口水和水</strong>漱口，并且<strong>温柔地水平刷牙</strong>；不要在每次发作后 30 分钟内刷牙。<br>
+    <del>小苏打水</del> <ins>含氟漱口水或清水</ins>——碳酸氢钠中和胃酸在化学上说得通，但我两轮检索都没在进食障碍患者教育指引里找到它；含氟漱口水是有出处的那一个，而且对牙釉质多一层保护。「半小时到一小时」比文献的 30 分钟保守、无害，可以留。<br>
+    <span class="tag c">可加</span>「刷的时候横着轻轻刷」——文献专门提了刷牙方式，这是一句成本为零的增量。</p>
+    <p class="src">Cleveland Clinic Journal of Medicine 2021;88(6):333 贪食症并发症综述；ACUTE《Effects of Purging on Oral Health》。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">新增</span><h3>清除路径缺一屏：「停下来的头几天会肿」</h3>
+      <div class="tags"><span class="tag c">临床综述</span><span class="tag a">建议新增</span></div></div>
+    <p>你 s-during 里只有一句「水会自己退，你不用看着它」。但停止清除之后的水肿有明确的时间结构，而这个水肿是清除者复发的最大单一引信——人在镜子里看到自己肿了，第一反应就是回去吐。</p>
+    <p>数字：慢性脱水导致<strong>假性 Bartter 综合征</strong>，停止清除时快速形成明显水肿；文献记载水肿（尤其腮腺肿大）<strong>通常在停止清除后 3–4 天出现</strong>；临床上用螺内酯处理的疗程<strong>一般持续 2–4 周</strong>后逐步减量——也就是说这阵水肿的病程量级是<strong>两到四周</strong>，不是永久。另外文献明确<strong>避免积极补液</strong>（生理盐水按 50 mL/小时的低速），这正好是你「水一小口一小口」的依据。</p>
+    <div class="do"><b>建议文案：</b>
+      <div class="copy">停下来之后，身体会先肿几天。<br>一般第三四天最明显，两到四周会退。<br>这不是胖了，是身体在把水放回去。<br>这几天不用去看那个数字——它给的不是消息。</div>
+      放在 s-after 的「有过（清除）」分支之后，与 s-vom 并列。</div>
+    <p class="src">CCJM 2021;88(6):333；StatPearls《Bulimia Nervosa》。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">可加</span><h3>s-three 的第一条可以给出量级</h3>
+      <div class="tags"><span class="tag c">代谢研究</span><span class="tag">只改文案</span></div></div>
+    <p>你现在写「碳水会带着水一起存下来，加上食物本身的重量」——方向对，但可以给一个让人能自己算的数字：<strong>1 克糖原会带住 3.21 ± 0.57 克水</strong>。也就是说多吃 300 克碳水，大约会留住 900 克水，将近一公斤，而这一公斤里没有一克是脂肪。营养康复研究把这种早期体重上升描述为「回到更充分水化的状态」，是正常现象。</p>
+    <div class="do"><b>建议文案：</b><div class="copy">一克糖原会带住三克水。<br>昨天多吃的那些，大部分现在以水的形式留在身体里。<br>秤上多出来的一两斤，一克脂肪都没有。</div></div>
+    <p class="src">《Early weight gain and glycogen-obligated water during nutritional rehabilitation》PMID 6811511（1 g 糖原 = 3.21 ± 0.57 g 水）。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">确认</span><h3>s-sos 那几条我逐条核了，全部站得住</h3>
+      <div class="tags"><span class="tag c">已核实</span></div></div>
+    <div class="scroll"><table>
+      <thead><tr><th>你写的</th><th>临床对应</th><th>核实结果</th></tr></thead>
+      <tbody>
+        <tr><td>心里发慌、心跳乱、胸口闷<small>「可能是钾少了引起的心律问题」</small></td><td>低钾致 QT 延长、Torsades de pointes</td><td class="s">准确。且文献称<b>电解质与代谢紊乱是贪食症发病与死亡最常见的原因</b>，排在第一条是对的。</td></tr>
+        <tr><td>胸口剧痛，脖子或胸口按上去像踩雪一样响<small>「要立刻去急诊」</small></td><td>皮下气肿 / crepitation → Boerhaave 综合征（食管全层穿孔）</td><td class="s">准确，而且更该强调：Mackler 三联（呕吐+胸痛+皮下气肿）<b>只在约 50% 的病例里齐全</b>——不能等三条都出现。</td></tr>
+        <tr><td>肚子胀得很硬、很痛、吐不出来<small>「别再吃、别再喝水，直接去医院」</small></td><td>急性胃扩张 → 缺血坏死 → 穿孔</td><td class="s">准确。初始处理是<b>鼻胃管减压</b>，出现坏死或穿孔征象需立即手术——所以「别再吃、别再喝水」不只是安慰，是为可能的减压/手术做准备。文献里有一例是 24 小时禁食后暴食的 17 岁患者。</td></tr>
+        <tr><td>吐出来带血</td><td>Mallory-Weiss 撕裂</td><td class="s">可加精度：文献描述为<b>血丝或咖啡色呕吐物</b>。「咖啡色」这个说法很多人不知道要当回事。</td></tr>
+        <tr><td>到了可以直接说：想查电解质和心电图</td><td>—</td><td class="s">完全正确，这两项就是文献要求的组合。</td></tr>
+      </tbody>
+    </table></div>
+    <p class="src">CCJM 2021;88(6):333；StatPearls《Boerhaave Syndrome》NBK430808；急性胃扩张病例报告 PMID 27134932、Cureus PMC9771086。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">可加</span><h3>s-med 的闸门有了正式阈值，而你的问法比它更安全</h3>
+      <div class="tags"><span class="tag c">NICE / ASPEN</span><span class="tag">只改 PRD</span></div></div>
+    <p>再喂养综合征的高风险判定（NICE，满足任一条即为高风险）：<strong>BMI &lt; 16；3–6 个月内体重下降 &gt; 15%；进食减少或禁食 &gt; 10 天；再喂养前血钾、磷或镁偏低。</strong>ASPEN 2020 又加了体格检查项（皮下脂肪与肌肉丢失）。诊断分级是磷/钾/镁任一下降 10–20% 为轻、20–30% 为中、&gt;30% 或出现器官功能障碍/硫胺素缺乏为重，<strong>发生在恢复热量后的 5 天内</strong>。</p>
+    <p>你 s-gate 问的三件事（最近两周有过几乎不吃的日子 / 很长时间没正常吃三餐 / 有人担心过我的身体）<strong>比 NICE 宽松</strong>——NICE 要 10 天以上，你两周里有过就算。这个方向是对的：用户端筛查宁可多筛出，漏检的代价不对称。但 PRD 里要写明这是<strong>有意的过度筛查</strong>，否则评委会当成不精确。</p>
+    <div class="do"><b>两个零成本增量：</b>一是就诊话术里加一味——「想查电解质<b>和维生素 B1</b>」，硫胺素缺乏是 ASPEN 明确列入重度判定的一项，而它常被漏。二是给出危险期长度：<b>「危险的是重新开始吃的头五天」</b>，有明确时间窗的警告比笼统的警告更容易被执行。</div>
+    <p class="src">NICE 高风险标准；ASPEN Consensus Recommendations for Refeeding Syndrome, <i>Nutr Clin Pract</i> 2020, doi 10.1002/ncp.10474。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">02</span>把小组排在风险之前，而不是之后</h2>
+  <div class="col"><p>这是这轮第二有用的一批数据。暴食的时段分布在 EMA 研究里是被精确测出来的，而你现在的三场时间有两场排晚了。</p></div>
+  <div class="grid">
+    <div class="card"><div class="claim">风险峰值</div><p class="use">风险最高在<strong>下午 5:30 前后</strong>，另有 <strong>12:30</strong> 和 <strong>23:00</strong> 两个峰。另一项 EMA 研究给的是午后（约 13:00）与 <strong>19:00–21:00</strong>。峰值<strong>紧随午餐和晚餐之后出现，早餐后没有峰</strong>。</p><p class="src">PubMed 37212510（BED 时段与星期分布）；PMC2996234（暴食-清除的星期与时段效应）。</p></div>
+    <div class="card"><div class="claim">全天递增</div><p class="use">失控性进食的严重程度<strong>在一天中持续上升，晚间达到峰值</strong>（evening diurnal shift），这是一个可被治疗改变的量。</p><p class="src"><i>Psychological Medicine</i>，PMC11391862。</p></div>
+    <div class="card"><div class="claim">前置窗口是四小时</div><p class="use">全局负性情绪与<strong>内疚在暴食前的四小时内显著上升</strong>，在之后的四小时内下降。内疚在发作那一刻显著高于悲伤、敌意与恐惧。</p><p class="src">Berg et al. 2015, <i>Int J Eat Disord</i>, doi 10.1002/eat.22401。</p></div>
+    <div class="card"><div class="claim">工作日高于周末</div><p class="use">暴食发作<strong>在工作日比周末更常见</strong>。</p><p class="src">PubMed 37212510。</p></div>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">改</span><h3>三场的时间</h3>
+      <div class="tags"><span class="tag c">EMA 实测</span><span class="tag w">改常量即可</span></div></div>
+    <div class="scroll"><table>
+      <thead><tr><th>你现在</th><th>建议</th><th>为什么</th></tr></thead>
+      <tbody>
+        <tr><td class="num">17:50 · 饭前那场 · 5 分钟</td><td class="num">17:00</td><td>风险峰值在 17:30 左右，17:50 已经在峰值之上了。提前到峰值前半小时，五分钟刚好收在峰口。</td></tr>
+        <tr><td class="num">21:30 · 15 分钟</td><td class="num">20:30</td><td>另一项 EMA 给出的晚间高危段是 19:00–21:00，21:30 已经过了大半。</td></tr>
+        <tr><td class="num">23:30 · 夜里那场 · 10 分钟</td><td class="num">22:30</td><td>第三个峰在 23:00 前后，23:30 同样是追在后面。</td></tr>
+        <tr><td class="num">每天同一套</td><td class="num">周末减为两场</td><td>周末风险显著低于工作日。少排一场不是省事，是让「这一场是为这个时段排的」这句话成立。</td></tr>
+      </tbody>
+    </table></div>
+    <div class="do"><b>路演一句话：</b>三场的时间不是随便定的，是按 EMA 研究里暴食风险的三个峰往前推的——<b>我们不在你已经开始的时候敲门，我们在它涨起来之前半小时到。</b></div>
+  </div>
+
+  <div class="q">
+    <div class="h">我上一轮那条建议有个漏洞，得先更正</div>
+    <p>我上一份文档的第 05 条建议你把小组排期<strong>个体化</strong>（按各人的睡眠/空格/时段推出来）。这条和你产品里唯一的社交成分冲突：<strong>如果每个人的场次时间都不一样，「此刻有多少人在」就不存在了</strong>——而在场人数是你全部社交性的载体，也是你唯一的后端。<br>
+    修正版：<strong>固定三场（按上面的时间），但为每个人标出「你最该来的那一场」。</strong>个体化落在推荐上，不落在排期上。人数保住了，个体化也保住了，而且这个版本更省——不用改小组逻辑，只在首页加一行推荐。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">03</span>三条会改变设计的机制证据</h2>
+
+  <div class="item">
+    <div class="hd"><span class="rn">01</span><h3>一句预先写好的话是有因果证据的干预</h3>
+      <div class="tags"><span class="tag c">实验室 RCT</span><span class="tag">路演核心</span></div></div>
+    <p>Adams &amp; Leary 让被试先吃下甜甜圈（对严格限制型进食者而言的「禁忌食物」，用来诱发内疚），然后随机给一半人<strong>一句自我关怀陈述</strong>。结果：高限制型进食者通常在破戒后会过食，<strong>而拿到那句话的人没有出现失调性进食，在后续品尝测试中吃得显著更少，内疚也显著更低</strong>。变量只有一句话。</p>
+    <p>这条支撑你产品里三个此前只能靠直觉辩护的决定：<strong>为什么文案可以预先写死（一句固定的话已经足够）；为什么不需要 AI 生成（起效的是内容不是个性化）；为什么 s-letter 让用户自己写那句话是升级而不是偷懒（她自己的话比陌生人的话更有分量）。</strong></p>
+    <div class="do"><b>产品动作：</b>s-during 现在那几句（「一次不会定下什么」「吃着就行」）就是自我关怀陈述，但它们现在的地位是「文案」。把它在 PRD 里正名为<b>产品的主要活性成分</b>，并配这个实验。另外 eBEfree 已经把自我关怀做进 App 并跑了 RCT——说明这条路径在数字化上也被验证过，不是只在实验室。</div>
+    <p class="src">Adams &amp; Leary《Promoting Self-Compassionate Attitudes Toward Eating Among Restrictive and Guilty Eaters》；eBEfree RCT, PMC12232357。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">02</span><h3>「过去了」这句话，对有清除行为的人不成立</h3>
+      <div class="tags"><span class="tag c">EMA</span><span class="tag a">要分岔</span></div></div>
+    <p>单纯暴食：负性情绪与内疚在发作前四小时上升、发作后四小时<strong>下降</strong>。<br>
+    暴食-呕吐循环：愤怒/挫败在整个循环里大致持平，但<strong>内疚与羞耻在暴食后立即大幅上升，并在之后持续偏高</strong>。</p>
+    <p>你 s-passed 现在说「过去了……它每次都会退，这次也退了」。对单纯暴食路径，这句话和数据一致。<strong>对清除路径，事后那一段恰恰是内疚最高的时候</strong>——这句话会落空，落空的安慰比没有安慰更糟。</p>
+    <div class="do"><b>建议：</b>s-passed 按路径分岔。清除路径不要说「过去了」，说的是内疚本身会持续这件事——
+      <div class="copy">这会儿最难受的不是身体。<br>吐完之后那阵羞耻会往上走，不会立刻退。<br>它会待一阵子。待着就待着，不用把它算成证据。</div>
+      这个分岔你已经有基础设施：s-after 已经在问「有过 / 没有」。</div>
+    <p class="src">Berg et al. 2015, doi 10.1002/eat.22401；暴食-呕吐循环中的内疚/羞耻轨迹见 EMA 综述 PMC7780347。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">03</span><h3>你在做的事在 DBT 里有正式名字：辩证戒断</h3>
+      <div class="tags"><span class="tag c">手册概念</span><span class="tag">只改 PRD</span></div></div>
+    <p>Safer / Telch / Chen 手册的核心概念之一是 <strong>dialectical abstinence（辩证戒断）</strong>：一边是百分之百不再暴食的承诺，一边是万一发生了就从中学习而不是自我惩罚——在两者之间取中道。手册的技能是三个模块（正念、情绪调节、痛苦耐受）加一个专门定制的 <strong>mindful eating</strong>；标准形式是 20 次门诊会谈。</p>
+    <p>你的 s-during（「一次不会定下什么」）和 s-passed（「不用记下来，也不用算进什么」）就是辩证戒断的患者语言版，而且写得比手册的原话好。给它一个正式名字有两个用处：路演时它从「文案」变成「有出处的机制」；同时也说明你为什么不做连续天数——<strong>连续天数是戒断的一半，把另一半（万一发生了不惩罚）直接删掉了</strong>。</p>
+    <div class="do"><b>顺带划清一条边界：</b>标准 DBT-ED 是 20 次会谈，你的小组是每天 15 分钟。PRD 里要明说你做的是<b>技能提示，不是技能训练疗程</b>——否则最容易被专业评委问倒。另有一条可引用：DBT 改善情绪失调的效果<b>主要体现在暴食障碍与贪食症上</b>（系统综述 PMC8470932），正好是你选的那一侧。</div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04</span>照护者端能加的东西</h2>
+  <div class="col"><p>你的 s-worry 是「把你看见的动作，翻译成它可能的意思」。这轮爬到两个可以直接进翻译器的观察项，和一条会改用户画像的数据。</p></div>
+  <div class="grid">
+    <div class="card">
+      <div class="claim">手背指关节上的老茧</div>
+      <p class="use">临床上叫 <strong>Russell 征</strong>，是自诱发呕吐的特有体征（手指反复摩擦牙齿造成）。这是照护者真的能看见、且几乎不会误判的一个。<br><b>翻译：</b>不要问「你是不是吐了」。这个体征的意思是这件事已经持续了一段时间，不是一次两次。</p>
+      <p class="src">CCJM 2021;88(6):333。</p>
+    </div>
+    <div class="card">
+      <div class="claim">「ta 好像胖了 / 脸肿了」</div>
+      <p class="use">停止清除后 3–4 天出现的水肿与腮腺肿大，最容易被身边人读成「胖了」——而这句话正是把人推回去吐的那句。<br><b>翻译：</b>这个肿是身体在恢复的证据，不是失败的证据。这几天说任何关于外形的话，风险都比平时高。</p>
+      <p class="src">同上。</p>
+    </div>
+    <div class="card">
+      <div class="claim">用户画像要改</div>
+      <p class="use">《中国暴食障碍诊疗专家共识》（2024，中华医学会心身医学分会进食障碍协作学组等，15 名精神科与循证专家 + 2 名内科专家）：<strong>约 60% 患者为女性</strong>——也就是<strong>四成是男性</strong>；<strong>起病较晚，多数在 30–40 岁首次出现症状</strong>。<br>你的原型通篇用「你」，没有性别预设，这是对的，别改。但 PRD 里的用户画像不要写成年轻女大学生，也不要在女性赛事里把相关性建立在性别上——按真实使用者写。</p>
+      <p class="src">《中国全科医学》2024, doi 10.12114/j.issn.1007-9572.2024.0030。</p>
+    </div>
+    <div class="card">
+      <div class="claim">「不敢说」那一支的核心句</div>
+      <p class="use">上一份文档提过要补三张卡。这轮的数据给了它一个更硬的理由：内疚与羞耻在清除之后<strong>持续偏高</strong>，也就是说沉默期里对方并不是没事，是正在最难受的时候独自待着。<br><b>核心句：</b>沉默不会让它停下来，只会让它更省事。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span>要你定的三件事</h2>
+  <div class="col"><p>这三件我给不了答案，因为它们不是事实问题，是产品立场问题。但每一件都有数据可依。</p></div>
+
+  <div class="q">
+    <div class="h">决策 一 · 要不要告诉用户冲动会持续多久</div>
+    <p>你 s-during 现在明确「这一页不计时」，s-skill 说「它会自己退」但不给时长。<br>
+    数据：冲动<strong>多数在 10–30 分钟内达峰并过去，典型说法是 20–30 分钟消退</strong>（注意：这批来源是治疗中心与科普，不是一手研究，证据强度弱于本文档其他数字）。而竞品 UrgeFree 用 2 分钟流程、URGR 用 10 分钟锁定，<strong>两个都短于冲动的实际时长</strong>——它们其实是在流程结束时把人放回了波峰上。<br>
+    取舍：给时长（「一般二十来分钟会退」）会让等待变得可数，人知道要等多久才等得下去；但也引入了一个可以「失败」的期限——二十分钟没退的人会觉得自己坏掉了。<br>
+    <strong>我的倾向：给，但给成范围而不是倒计时</strong>——「它一般在二三十分钟里退下去，有时候更久」，不显示秒表。这样既拿到可数性，又不制造期限。</p>
+  </div>
+
+  <div class="q">
+    <div class="h">决策 二 · 六格要不要区分工作日与周末</div>
+    <p>数据支持区分（工作日暴食显著更多）。但你的六格现在的美德是<strong>它每天长得一样</strong>——不需要理解、不需要设置。加了工作日/周末两套，就多了一层要解释的东西。<br>
+    <strong>我的倾向：六格不动，只动小组场次。</strong>六格是习惯载体，越无脑越好；小组是稀缺资源，值得按风险分配。</p>
+  </div>
+
+  <div class="q">
+    <div class="h">决策 三 · 躯体层要不要在首页升到第一位</div>
+    <p>上一份文档我说过它该是你的第一句话。但产品结构上有冲突：首页现在第一行是「正在吃 / 现在很想吃 / 已经吃完了」，这三个是急性期入口——用户来的时候多半就是这三种状态之一，把「身体不舒服」提到最前会让最常见的路径变长一步。<br>
+    <strong>我的倾向：路演里躯体层是第一句，产品里保持现在的顺序。</strong>这两件事不必一致——差异化说给评委，动线留给用户。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">06</span>证据强度分级</h2>
+  <div class="col"><p>路演时说法要跟着强度走。这一节就是防止你把一条科普讲成一条 RCT。</p></div>
+  <div class="scroll"><table>
+    <thead><tr><th>结论</th><th>强度</th><th>路演可以怎么说</th></tr></thead>
+    <tbody>
+      <tr><td>一句自我关怀陈述阻断破戒后过食</td><td class="s">实验室随机对照</td><td>「有实验证明，变量只有一句话」</td></tr>
+      <tr><td>提醒与人的在场降低脱落、游戏化不降低</td><td class="s">meta 分析 117 试验</td><td>「117 项试验的 meta 分析显示」</td></tr>
+      <tr><td>规律进食依从度与更低暴食频率相关；早期改变者缓解约两倍</td><td class="s">临床研究 + CBT-E 机制</td><td>「CBT-E 的核心机制，且早期改变可预测预后」</td></tr>
+      <tr><td>暴食风险的三个时段峰值、前置四小时窗口</td><td class="s">EMA 实测</td><td>「EMA 研究测出来的风险峰值」</td></tr>
+      <tr><td>停止清除后 3–4 天水肿、2–4 周病程；催吐后 30 分钟内勿刷牙；低钾为首位死因</td><td class="s">临床综述与指南</td><td>「临床综述里明确成文的患者教育要点」</td></tr>
+      <tr><td>1 g 糖原结合 3.21 g 水</td><td class="s">代谢研究</td><td>可以直接报数字</td></tr>
+      <tr><td>再喂养高风险四条阈值、5 天危险窗</td><td class="s">NICE / ASPEN 指南</td><td>「按 NICE 和 ASPEN 的标准」</td></tr>
+      <tr><td>LLM 对 ED 查询仅 44.7% 安全</td><td class="s">2026 系统评估</td><td>可以直接报，注明是开源模型</td></tr>
+      <tr><td>睡眠不足次日更易暴食</td><td class="s">横断面 + 一项实验</td><td>「关联证据，机制是抑制控制下降」——不要说「会导致」</td></tr>
+      <tr><td>冲动 20–30 分钟消退</td><td class="s">科普与治疗中心</td><td>「临床上通常说」——不要说「研究表明」</td></tr>
+      <tr><td>TIP 里排除剧烈运动</td><td class="s">仍无手册原文</td><td>「DBT 用于进食障碍时通常改编掉这一项」——不要说「手册规定」</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="num">07</span>还剩两条我拿不到的</h2>
+  <div class="col">
+    <ul>
+      <li><strong>Safer / Telch / Chen 手册里 TIP 的具体改编。</strong>两轮检索都只拿到二手转述与出版页。这条<strong>只能翻纸质书</strong>，搜索解决不了。已确认的是：该手册确实包含专门定制的 mindful eating，也确实以 dialectical abstinence 为核心概念之一。</li>
+      <li><strong>睡眠与次日暴食的效应量。</strong>关联是清楚的，机制（部分睡眠剥夺后暴食者的抑制控制下降）有一项实验支持，但我没找到能给出「睡不够 X 小时，次日风险升高 Y 倍」的 EMA 研究。你 s-sleep 那句「这跟自控力无关」按现有证据可以更准确地讲成——<strong>睡不够会真的削弱抑制控制，所以第二天更难扛不是你意志的问题</strong>。这个说法有出处，且比「无关」更有力。</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">08</span>「一口水」那个练习叫什么</h2>
+  <div class="col"><p>你描述的那个方法——含一口水，感受它是凉的还是甜的，然后想到风、想到山；或者把自己想象成一只鸟——<strong>不是一种疗法，是三种技术叠在一起</strong>。三个都有正式名字，而其中一个有一项效应量大得反常的 RCT。</p></div>
+
+  <div class="scroll"><table>
+    <thead><tr><th>你做的动作</th><th>正式名称</th><th>出自</th></tr></thead>
+    <tbody>
+      <tr><td>含一口水，注意它凉、甜、温度、在嘴里的位置</td><td><b>自我安抚·五感</b>（Self-Soothe with the Five Senses）＋<b>One thing in the moment</b></td><td class="s">DBT 痛苦耐受模块；后者是 IMPROVE the moment 七项里的 O</td></tr>
+      <tr><td>用全部感官对付一个极小的东西</td><td><b>葡萄干练习</b>（raisin exercise）的结构</td><td class="s">正念减压传统里的经典单口练习</td></tr>
+      <tr><td>想到风、想到山；把自己想象成一只鸟</td><td><b>引导想象</b>（guided imagery）＝ IMPROVE 里的 <b>I = Imagery</b>；在贪食症研究里叫 <b>唤起性记忆</b>（evocative memory）</td><td class="s">DBT；Esplen 的贪食症意象疗法</td></tr>
+      <tr><td>整件事要达到的东西</td><td><b>自我安抚</b>（self-soothing / self-comforting）</td><td class="s">见下</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="verdict" style="margin-top:.6rem">
+    <h2>这套东西在贪食症上跑过 RCT，结果是这样的</h2>
+    <p>Esplen 等人 1998 年在 <i>Psychological Medicine</i> 发表的随机对照试验：<strong>6 周个体引导想象治疗</strong> vs 对照组，50 名符合 DSM-III-R 贪食症标准的患者完成研究。结果——<strong>暴食平均减少 74%，呕吐平均减少 73%</strong>；进食、节食与体重态度改善；并且在<strong>孤独感与自我安抚能力</strong>两项心理测量上改善。<br>
+    这个治疗的设计目标写在摘要第一句：<strong>enhance self-comforting</strong>——提高自我安慰的能力。理论前提是：<strong>冲动行为源于独处时无法自我安慰的能力缺陷。</strong></p>
+    <p class="src" style="font-family:var(--mono);font-size:.72rem;color:var(--ink3)">Esplen MJ, Garfinkel PE, Olmsted M, Gallop RM, Kennedy S. A randomized controlled trial of guided imagery in bulimia nervosa. <i>Psychol Med.</i> 1998;28(6):1347–1357. doi:10.1017/S0033291798007405</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">链条</span><h3>而这条链的中间那一环，正好是你产品的场景</h3>
+      <div class="tags"><span class="tag c">三项独立研究</span></div></div>
+    <p>三条证据接成了一条：</p>
+    <ul>
+      <li><strong>Esplen 2000</strong>（同一批 50 名贪食症患者）：自我安抚接受度越低 ↔ 唤起性记忆能力越低；两者都越低 ↔ 孤独体验越强。也就是说，<strong>「想到风、想到山」这个能力本身是可测量的，而且它和暴食是连着的</strong>。</li>
+      <li><strong>Southward et al. 2013</strong>（n=107 治疗寻求中的 BN/BED 患者）：情绪失调 → 暴食病理，<strong>由孤独中介</strong>（95% CI 0.03–0.09）；反向路径不成立（情绪失调不中介孤独 → 病理，95% CI −0.01–0.01）。作者结论：<strong>针对孤独可能有效治疗 BN/BED 的情绪层面</strong>。</li>
+      <li>你的产品场景本来就是独处：凌晨三点、一个人、s-look 里那句「晚上十点之后、一个人的时候，这些词比较密」。</li>
+    </ul>
+    <div class="do"><b>这条链改变了你小组的定位。</b>零发言、无昵称、屏幕上不出现别人的定时小组，此前只能辩护成「隐私优先下退而求其次的社交」。现在它有了别的说法：<b>孤独是这条因果链上的中介变量，而且方向已经测出来了——小组不是社交的替代品，是直接打在中介变量上。</b>「同时有多少人在」这一个数字，是在不暴露任何人的前提下对孤独下的手。</div>
+    <p class="src">Esplen, Garfinkel &amp; Gallop 2000, <i>Int J Eat Disord</i> 27(1):96；Southward et al. 2013, <i>Eat Weight Disord</i>, doi 10.1007/s40519-013-0083-2。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">关键</span><h3>你用「一口水」而不是食物，正好是那条待办的答案</h3>
+      <div class="tags"><span class="tag c">解决了 PRD 待办</span></div></div>
+    <p>你 PRD 待办里挂着一条：<strong>五感自我安抚的「味觉项」在进食障碍里怎么改编</strong>。这条一直没解，因为原始技能就是「吃点好吃的来安抚自己」——在暴食侧这等于直接强化那条路。</p>
+    <p>同时正念进食那一侧也有明确警告：<strong>严重进食障碍（厌食或贪食）患者做食物聚焦的正念练习可能困难或反效果，对身体觉察与进食的聚焦会加剧强迫思维与强迫行为。</strong>葡萄干练习不能原样搬进急性期。</p>
+    <p><strong>而「一口水」把这两个问题一起解了</strong>：保留味觉与口腔触觉这个通道（凉、温、甜、位置），去掉食物、去掉热量、去掉破戒风险。我两轮检索都没看到有人明确写出这个改编——它是你自己的东西。</p>
+    <div class="do"><b>路演可以这么讲：</b>DBT 的五感自我安抚里有一项是味觉，而味觉在暴食侧是禁区。我们没有删掉它，我们把它换成了一口水——通道留着，风险拿掉。</div>
+    <p class="src">五感自我安抚的 ED 改编方向（回避食物通道）见多家治疗中心指引，<span class="tag">共识非手册</span>；正念进食对重症 ED 的警告同上。</p>
+  </div>
+
+  <div class="item">
+    <div class="hd"><span class="rn">产品</span><h3>怎么加：给结构，不给意象</h3>
+      <div class="tags"><span class="tag c">Esplen 机制</span><span class="tag w">48h 内 · 一屏</span></div></div>
+    <p>最容易做错的一步是把「想象成一只小鸟」写进文案。Esplen 的机制是<strong>唤起性记忆</strong>——起效的是<strong>她自己的</strong>记忆被唤起，不是我们指定的那只鸟。指定内容会把一个自我安抚练习变成一条指令，而指令在这个人群里天然引起对抗。</p>
+    <p>这和你 s-letter 已经在用的原则是同一条：<strong>产品给结构，内容由她填</strong>。而且 Esplen 是 6 周疗程、反复练同一个意象——说明这东西<strong>要先在平时练熟，才能在急性期调得出来</strong>。所以它不能只活在急性期那三屏里。</p>
+    <div class="do"><b>建议新增一屏（id 建议 s-sip，你的 s-taste 已被过渡屏占用）：</b>
+      <div class="copy">一口水。<br>不用喝完，含一下就行。<br><br>凉的，还是温的。<br>有点甜，还是没味道。<br>还在嘴里，还是已经下去了。<br><br>——<br><br>它让你想到什么地方。<br>不用是好地方。想到什么算什么。<br><br>［让用户写下来 · 存在本机］</div>
+      第二次进这一屏时，直接把她上次写的那个地方显示出来——<b>这就是把 6 周疗程压缩成一个可复用的按钮</b>：第一次建立意象，之后每次调用它。</div>
+  </div>
+
+  <div class="q">
+    <div class="h">放哪一屏 · 有一个风险要避开</div>
+    <p>感官聚焦这件事在冲动的峰值上做，对一部分人会<strong>放大</strong>对口腔刺激的渴望——这就是正念进食那条警告的机制。所以位置要挑：</p>
+    <ul>
+      <li><span class="tag c">推荐</span><b>s-passed / s-quiet（冲动退下去之后、以及「现在什么都不想回答」那一屏）</b>：这时候唤起性意象是纯粹的自我安抚，没有刺激叠加的问题。</li>
+      <li><span class="tag c">推荐</span><b>晚上那场小组的 15 分钟内容</b>：DBT 三个模块里的痛苦耐受那一块，这个练习正好是它。而且小组是「平时练」的天然位置——练熟了急性期才调得动。</li>
+      <li><span class="tag c">推荐</span><b>s-notyet（我还没打算改变）</b>：这个练习完全不涉及吃、不要求任何决定、不记次数。对不打算改变的人，它是唯一一个可以现在就做的东西。</li>
+      <li><span class="tag a">谨慎</span><b>s-urge / s-skill（冲动正在涨的时候）</b>：可以放，但要放在「换一个」的备选里，不要做首选卡；并且文案不要引导注意口腔——那一屏的重心应该直接跳到意象那一步（「它让你想到什么地方」），把感官那一步留给非急性期。</li>
+    </ul>
+  </div>
+</section>
+      <section id="epi2026">
+        <div class="sec-label">Evidence · 08-26 新增</div>
+        <h2>流行病学：死亡 · 低龄 · 治疗缺口</h2>
+        <p class="lede">为项目文档第 01 节核的一批数据。<strong>每条都核到原始文献</strong>，并标出三个流传极广但站不住的说法。</p>
+
+        <div class="mech">
+          <div class="mt">⚠️ 三个不能用的说法</div>
+          <p><strong>①「进食障碍是死亡率最高的精神疾病」——没有原始文献支持。</strong>最接近的是 Chesney 2014 <i>World Psychiatry</i>，而该文排序里 AN（SMR 5.9）低于阿片类使用障碍（14.7）与苯丙胺（6.2）。<em>写「之一」。</em></p>
+          <p><strong>②「每年 10,200 人死于厌食症」——讹传。</strong>10,200 是 Deloitte 2020 报告里<strong>美国</strong>、<strong>全部</strong>进食障碍的建模推算（区间 5,500–22,000）。派生的「每 52 分钟死一人」同源。</p>
+          <p><strong>③「BED 高于 AN 与 BN 之和」——只在 DSM-IV 下成立。</strong>Hudson 2007 女性 3.5% 大于 0.9%+1.5%，成立；Udo &amp; Grilo 2018（DSM-5）0.85% 小于 0.80%+0.28%，不成立。<em>引用必须标注版本。</em></p>
+        </div>
+
+        <h3>死亡</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">AN 全因 SMR</div><div class="spec-v"><strong>5.86</strong>（Arcelus 等 2011, <i>Arch Gen Psychiatry</i>，36 项研究 meta）；2026 更新为 5.06（Lai 等, <i>Int J Eat Disord</i>）</div></div>
+          <div class="spec-row"><div class="spec-k">AN 自杀 SMR</div><div class="spec-v"><strong>31.0</strong>（Preti 等 2011；Chesney 2014 同）。BN 自杀 SMR 7.5</div></div>
+          <div class="spec-row"><div class="spec-k">死因构成</div><div class="spec-v">自杀 21% · 心脏并发症 19% · 肺炎 9.1%。<strong>死者中每 5 人有 1 人死于自杀</strong></div></div>
+          <div class="spec-row"><div class="spec-k">全球年死亡数</div><div class="spec-v"><strong>没有可靠来源。</strong>GBD 把 AN 的多数死亡重新归因到直接死因，不提供可引用的全球年死亡数。别去凑这个数</div></div>
+        </div>
+
+        <h3>低龄</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">发病高峰</div><div class="spec-v"><strong>15.5 岁</strong>，中位 18 岁；15.8% 在 14 岁前，<strong>48.1% 在 18 岁前</strong>，82.4% 在 25 岁前（Solmi 等 2022, <i>Mol Psychiatry</i>，192 研究 708,561 人）</div></div>
+          <div class="spec-row"><div class="spec-k">仍在下降</div><div class="spec-v">1985–2008 连续就诊的 1666 例 AN 与 793 例 BN，起病年龄随出生年份显著降低（Favaro 等 2009）。<span style="color:var(--ink3)">单中心门诊样本有转诊偏倚，但方向与临床观察一致</span></div></div>
+          <div class="spec-row"><div class="spec-k">疫情后</div><div class="spec-v">加拿大 6 家儿童医院：新发 AN 月均 24.5→40.6 例（<strong>+66%</strong>），月均住院 7.5→20.0 例（<strong>+167%</strong>）（Agostino 等 2021, <i>JAMA Netw Open</i>）</div></div>
+          <div class="spec-row"><div class="spec-k">中国疫情后</div><div class="spec-v"><strong>无可引用统计。</strong>只有媒体报道与医院访谈的定性描述</div></div>
+        </div>
+
+        <h3>患病与趋势</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">DSM-IV 终生（女/男）</div><div class="spec-v">AN 0.9%/0.3% · BN 1.5%/0.5% · <strong>BED 3.5%/2.0%</strong>（Hudson 2007, NCS-R, n=9282）</div></div>
+          <div class="spec-row"><div class="spec-k">DSM-5 终生（全人群）</div><div class="spec-v">AN 0.80% · BN 0.28% · BED 0.85%（Udo &amp; Grilo 2018, NESARC-III, n=36,306）</div></div>
+          <div class="spec-row"><div class="spec-k">全球时点患病率</div><div class="spec-v"><strong>3.5%（2000–2006）→ 7.8%（2013–2018）</strong>（Galmiche 等 2019, <i>Am J Clin Nutr</i>）——本领域引用最多的「翻倍」证据</div></div>
+          <div class="spec-row"><div class="spec-k">官方统计的缺口</div><div class="spec-v">GBD 2019 只纳入 AN 与 BN。补上 BED 与 OSFED 后<strong>额外多出 4190 万病例</strong>，贡献 370 万 DALY（Santomauro 等 2021, <i>Lancet Psychiatry</i>）</div></div>
+          <div class="spec-row"><div class="spec-k">性别（DSM-5）</div><div class="spec-v">AN 约 12:1 · BN 约 5.8:1 · <strong>BED 约 3:1</strong>——BED 性别比更均衡，两版数据方向一致</div></div>
+        </div>
+
+        <h3>治疗缺口</h3>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">求助率</div><div class="spec-v">社区中符合诊断者<strong>仅 23.2%</strong>寻求过针对进食障碍的治疗；同时 30–73% 为「减肥」求医（Hart 等 2011, <i>Clin Psychol Rev</i>）</div></div>
+          <div class="spec-row"><div class="spec-k">十年后</div><div class="spec-v"><strong>基本没变</strong>：32% 曾因进食障碍向专业人员求治（Ali 等 2025, <i>Int J Eat Disord</i>，n=37,423）</div></div>
+          <div class="spec-row"><div class="spec-k">未治疗病程</div><div class="spec-v">AN <strong>29.9 个月</strong> · BN <strong>53.0 个月</strong> · BED <strong>67.4 个月</strong>（Austin 等 2021, <i>Eur Eat Disord Rev</i>）。<em>引月数比引「年」更准确</em></div></div>
+          <div class="spec-row"><div class="spec-k">「80% 从未接受治疗」</div><div class="spec-v">是 23.2% 反推后的四舍五入，可用但<strong>直接引 Hart 原数更稳</strong>。「76–86% 未被正确诊断转诊」核不到原始文献，<strong>不要用</strong></div></div>
+        </div>
+
+        <h3>中国</h3>
+        <div class="mech">
+          <div class="mt">最值钱的一条：两个数字差 200 倍</div>
+          <p><strong>全国面访诊断</strong>：进食障碍加权终生患病率 <strong>0.1%</strong>，六大类障碍中最低（Huang 等 2019, <i>Lancet Psychiatry</i>，31 省 32,552 名成人）。</p>
+          <p><strong>全国青少年筛查</strong>：阳性率 <strong>21.18%</strong>，女生 27.28%、男生 15.99%（Bao 等 2025, <i>BMC Medicine</i>，CAMPS，41,406 名 10–19 岁，SCOFF 量表）。</p>
+          <p>⚠️ <strong>SCOFF 阳性只代表疑似风险，不是临床诊断</strong>——绝不能写成「21% 的中国青少年患有进食障碍」。加临床显著性标准后降至 11.33%。</p>
+          <p><em>但这个 200 倍的裂口本身就是论点</em>：不是哪一方错了，是口径差异，同时强烈提示中国的临床识别率极低。</p>
+        </div>
+        <div class="spec">
+          <div class="spec-row"><div class="spec-k">GBD 中国</div><div class="spec-v">2019 年龄标化患病率 AN 38.08/10 万 · BN 75.21/10 万（<strong>约 2 倍</strong>），合计超 150 万人。AN 高峰 15–19 岁，BN 高峰 30–34 岁（Li 等 2021, <i>Front Psychiatry</i>）。<span style="color:var(--ink3)">建模值非实测</span></div></div>
+          <div class="spec-row"><div class="spec-k">诊疗资源</div><div class="spec-v"><strong>全国第一个进食障碍诊治中心 2017 年 9 月才在上海市精神卫生中心挂牌</strong>。《中国进食障碍防治指南》2015；《中国神经性厌食症诊疗专家共识》2024（中国全科医学 27(5):509-520）</div></div>
+          <div class="spec-row"><div class="spec-k">治疗缺口</div><div class="spec-v"><strong>中国没有任何一项相关统计</strong>。<em>检索无果本身即是可用的论点</em>，比借用美国数据冒充中国现状安全得多</div></div>
+          <div class="spec-row"><div class="spec-k">不要用</div><div class="spec-v">「中国大学生进食障碍率 38%」——零散横断面自评调查，核不到可靠原文</div></div>
+        </div>
+      </section>
+
+
+<footer>
+  本册所有数字都标了出处，标「科普」「二手转述」的请按第 06 节的说法降级使用。<br>
+  与《退潮竞品地形》配套：那一份讲别人怎么解题，这一份讲他们的数据你怎么用。第 02 节修正了那一份里第 05 条建议的一个漏洞。
+</footer>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     可批注层 · Annotator
+     用法：整段粘贴到文档 HTML 的最末尾即可，无需其他改动。
+     依赖：无。CSP 安全（纯内联，无外部资源）。
+     行为：选中正文文字 → 浮出「批注」→ 写批注 → 高亮并存入 localStorage
+           右下角按钮开关批注面板，可导出 JSON / 导入 JSON / 清空。
+     锚定：全局字符偏移 + 前后文快照，不修改正文 DOM，所以偏移长期有效。
+     ══════════════════════════════════════════════════════════════════ -->
+<style>
+  #anno-fab,#anno-panel,#anno-tip{
+    --a-bg:#FFFFFF; --a-sunk:#F2F3EF; --a-ink:#161A18; --a-ink2:#4A524D; --a-ink3:#7C857F;
+    --a-rule:#DFE2DB; --a-accent:#0F5E52; --a-accent-soft:#E2EDE9; --a-rust:#9A3B28;
+    --a-shadow:0 2px 6px rgba(22,26,24,.08),0 12px 32px -10px rgba(22,26,24,.22);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) #anno-fab,
+    :root:not([data-theme="light"]) #anno-panel,
+    :root:not([data-theme="light"]) #anno-tip{
+      --a-bg:#1A1E18; --a-sunk:#20241D; --a-ink:#E9EDE5; --a-ink2:#AAB3A6; --a-ink3:#7B857A;
+      --a-rule:#2E3429; --a-accent:#66C2AE; --a-accent-soft:#1B2D28; --a-rust:#D57F68;
+      --a-shadow:0 2px 6px rgba(0,0,0,.4),0 12px 32px -10px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] #anno-fab,
+  :root[data-theme="dark"] #anno-panel,
+  :root[data-theme="dark"] #anno-tip{
+    --a-bg:#1A1E18; --a-sunk:#20241D; --a-ink:#E9EDE5; --a-ink2:#AAB3A6; --a-ink3:#7B857A;
+    --a-rule:#2E3429; --a-accent:#66C2AE; --a-accent-soft:#1B2D28; --a-rust:#D57F68;
+    --a-shadow:0 2px 6px rgba(0,0,0,.4),0 12px 32px -10px rgba(0,0,0,.7);
+  }
+
+  /* 高亮：优先 CSS Custom Highlight API，不改 DOM */
+  ::highlight(anno-mark){ background:rgba(15,94,82,.16); text-decoration:underline;
+    text-decoration-color:rgba(15,94,82,.5); text-underline-offset:3px; }
+  ::highlight(anno-active){ background:rgba(169,101,26,.28); }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) ::highlight(anno-mark){ background:rgba(102,194,174,.20);
+      text-decoration-color:rgba(102,194,174,.6); }
+    :root:not([data-theme="light"]) ::highlight(anno-active){ background:rgba(215,154,85,.34); }
+  }
+  :root[data-theme="dark"] ::highlight(anno-mark){ background:rgba(102,194,174,.20);
+    text-decoration-color:rgba(102,194,174,.6); }
+  :root[data-theme="dark"] ::highlight(anno-active){ background:rgba(215,154,85,.34); }
+
+  /* 降级高亮层（无 Highlight API 时启用） */
+  #anno-layer{ position:absolute; inset:0; pointer-events:none; z-index:5; }
+  #anno-layer i{ position:absolute; background:rgba(15,94,82,.16);
+    border-bottom:1px solid rgba(15,94,82,.5); border-radius:2px; display:block; }
+  #anno-layer i.on{ background:rgba(169,101,26,.28); }
+
+  /* 选区浮标 */
+  #anno-tip{ position:absolute; z-index:9999; display:none;
+    background:var(--a-bg); color:var(--a-ink); border:1px solid var(--a-rule);
+    border-radius:7px; box-shadow:var(--a-shadow); padding:.3rem;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif; }
+  #anno-tip button{ all:unset; cursor:pointer; display:flex; align-items:center; gap:.4rem;
+    padding:.4rem .75rem; border-radius:5px; font-size:.85rem; font-weight:600; color:var(--a-accent); }
+  #anno-tip button:hover{ background:var(--a-accent-soft); }
+  #anno-tip button:focus-visible{ outline:2px solid var(--a-accent); outline-offset:1px; }
+
+  /* 悬浮按钮 */
+  #anno-fab{ position:fixed; right:1.1rem; bottom:1.1rem; z-index:9998;
+    width:52px; height:52px; border-radius:50%; border:1px solid var(--a-rule);
+    background:var(--a-bg); color:var(--a-accent); box-shadow:var(--a-shadow);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-family:ui-monospace,Menlo,monospace; font-size:.95rem; font-weight:700;
+    transition:transform .15s ease; }
+  #anno-fab:hover{ transform:translateY(-2px); }
+  #anno-fab:focus-visible{ outline:2px solid var(--a-accent); outline-offset:2px; }
+  #anno-fab svg{ width:21px; height:21px; }
+  #anno-fab .cnt{ position:absolute; top:-3px; right:-3px; min-width:19px; height:19px;
+    padding:0 5px; border-radius:10px; background:var(--a-accent); color:var(--a-bg);
+    font-size:.68rem; line-height:19px; text-align:center; display:none; }
+
+  /* 面板 */
+  #anno-panel{ position:fixed; top:0; right:0; bottom:0; width:min(360px,100vw); z-index:9999;
+    background:var(--a-bg); border-left:1px solid var(--a-rule); box-shadow:var(--a-shadow);
+    display:flex; flex-direction:column; transform:translateX(100%);
+    transition:transform .22s cubic-bezier(.4,0,.2,1);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    color:var(--a-ink); }
+  #anno-panel.open{ transform:translateX(0); }
+  #anno-panel header{ padding:.9rem 1rem; border-bottom:1px solid var(--a-rule);
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex:0 0 auto; }
+  #anno-panel header h3{ margin:0; font-size:.95rem; font-weight:600;
+    font-family:"Songti SC","SimSun",Georgia,serif; }
+  #anno-panel header .sub{ font-size:.72rem; color:var(--a-ink3); font-weight:400; margin-left:.4rem; }
+  #anno-close{ all:unset; cursor:pointer; padding:.3rem .5rem; border-radius:5px;
+    color:var(--a-ink3); font-size:1.15rem; line-height:1; }
+  #anno-close:hover{ background:var(--a-sunk); color:var(--a-ink); }
+  #anno-close:focus-visible{ outline:2px solid var(--a-accent); }
+
+  #anno-list{ flex:1 1 auto; overflow-y:auto; padding:.75rem; display:flex; flex-direction:column; gap:.6rem; }
+  #anno-list .empty{ color:var(--a-ink3); font-size:.85rem; text-align:center;
+    padding:2.5rem 1rem; line-height:1.7; }
+
+  .anno-item{ border:1px solid var(--a-rule); border-radius:7px; background:var(--a-bg);
+    padding:.7rem .8rem; cursor:pointer; }
+  .anno-item:hover{ border-color:var(--a-accent); }
+  .anno-item.on{ border-color:var(--a-accent); background:var(--a-accent-soft); }
+  .anno-item blockquote{ margin:0 0 .45rem; padding-left:.6rem;
+    border-left:2px solid var(--a-accent); font-size:.78rem; color:var(--a-ink2);
+    line-height:1.55; max-height:4.4em; overflow:hidden; }
+  .anno-item .note{ font-size:.87rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+  .anno-item .row{ display:flex; align-items:center; justify-content:space-between;
+    margin-top:.5rem; font-size:.7rem; color:var(--a-ink3); }
+  .anno-item .del{ all:unset; cursor:pointer; color:var(--a-ink3); padding:.15rem .4rem; border-radius:4px; }
+  .anno-item .del:hover{ color:var(--a-rust); background:var(--a-sunk); }
+  .anno-item .del:focus-visible{ outline:2px solid var(--a-rust); }
+  .anno-item .orphan{ color:var(--a-rust); font-size:.68rem; }
+
+  #anno-editor{ border-top:1px solid var(--a-rule); padding:.75rem; display:none; flex:0 0 auto; }
+  #anno-editor.show{ display:block; }
+  #anno-editor blockquote{ margin:0 0 .5rem; padding-left:.6rem; border-left:2px solid var(--a-accent);
+    font-size:.78rem; color:var(--a-ink2); line-height:1.55; max-height:4.4em; overflow:hidden; }
+  #anno-text{ width:100%; box-sizing:border-box; min-height:74px; resize:vertical;
+    border:1px solid var(--a-rule); border-radius:6px; background:var(--a-sunk); color:var(--a-ink);
+    padding:.55rem .65rem; font:inherit; font-size:.87rem; line-height:1.6; }
+  #anno-text:focus{ outline:2px solid var(--a-accent); outline-offset:-1px; }
+  #anno-editor .acts{ display:flex; gap:.5rem; margin-top:.55rem; }
+  #anno-editor button{ all:unset; cursor:pointer; padding:.42rem .9rem; border-radius:6px;
+    font-size:.83rem; font-weight:600; text-align:center; }
+  #anno-save{ background:var(--a-accent); color:var(--a-bg); flex:1; }
+  #anno-cancel{ color:var(--a-ink2); border:1px solid var(--a-rule)!important; }
+  #anno-editor button:focus-visible{ outline:2px solid var(--a-accent); outline-offset:1px; }
+
+  #anno-foot{ border-top:1px solid var(--a-rule); padding:.7rem .75rem;
+    display:flex; gap:.45rem; flex:0 0 auto; flex-wrap:wrap; }
+  #anno-foot button,#anno-foot label{ all:unset; cursor:pointer; flex:1; min-width:82px;
+    text-align:center; padding:.45rem .5rem; border-radius:6px; font-size:.78rem; font-weight:600;
+    border:1px solid var(--a-rule); color:var(--a-ink2); box-sizing:border-box; }
+  #anno-foot button:hover,#anno-foot label:hover{ background:var(--a-sunk); color:var(--a-ink); }
+  #anno-foot #anno-copy{ background:var(--a-accent); color:var(--a-bg); border-color:var(--a-accent); }
+  #anno-foot #anno-copy.done{ background:var(--a-accent-soft); color:var(--a-accent); }
+  #anno-foot button:focus-visible,#anno-foot label:focus-within{ outline:2px solid var(--a-accent); outline-offset:1px; }
+  #anno-file{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+  #anno-newtab{ display:none; text-decoration:none; }
+  #anno-newtab.show{ display:block; background:var(--a-accent-soft); color:var(--a-accent)!important;
+    border-color:var(--a-accent)!important; }
+  #anno-store{ flex:0 0 auto; font-size:.72rem; line-height:1.6; padding:.5rem .8rem;
+    border-bottom:1px solid var(--a-rule); display:none; }
+  #anno-store.show{ display:block; }
+  #anno-store.ok{ color:var(--a-ink3); }
+  #anno-store.bad{ color:var(--a-rust); background:rgba(154,59,40,.07); }
+  #anno-store b{ font-weight:700; }
+  #anno-fallback{ display:none; width:calc(100% - 1.5rem); margin:0 .75rem .75rem; height:120px;
+    box-sizing:border-box; border:1px solid var(--a-accent); border-radius:6px;
+    background:var(--a-sunk); color:var(--a-ink); padding:.5rem; font-size:.72rem;
+    font-family:ui-monospace,Menlo,monospace; resize:vertical; }
+  #anno-fallback.show{ display:block; }
+
+  @media (prefers-reduced-motion:reduce){ #anno-panel,#anno-fab{ transition:none!important; } }
+  @media print{ #anno-fab,#anno-panel,#anno-tip{ display:none!important; } }
+</style>
+
+<div id="anno-tip" data-anno-ui><button type="button" id="anno-add">✎ 批注</button></div>
+
+<button id="anno-fab" data-anno-ui type="button" aria-label="打开批注面板" title="批注（选中文字后可添加）">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+  <span class="cnt" id="anno-cnt">0</span>
+</button>
+
+<aside id="anno-panel" data-anno-ui aria-label="批注面板" aria-hidden="true">
+  <header>
+    <h3>批注<span class="sub" id="anno-sub">0 条</span></h3>
+    <button id="anno-close" type="button" aria-label="关闭批注面板">✕</button>
+  </header>
+  <div id="anno-store"></div>
+  <div id="anno-list"></div>
+  <div id="anno-editor">
+    <blockquote id="anno-quote"></blockquote>
+    <textarea id="anno-text" placeholder="写下你的批注……（⌘/Ctrl + Enter 保存）"></textarea>
+    <div class="acts">
+      <button id="anno-save" type="button">保存</button>
+      <button id="anno-cancel" type="button">取消</button>
+    </div>
+  </div>
+  <div id="anno-foot">
+    <button id="anno-link" type="button">复制回看链接</button>
+    <button id="anno-copy" type="button">复制 JSON</button>
+    <button id="anno-export" type="button">导出 JSON</button>
+    <a id="anno-newtab" target="_blank" rel="noopener" href="#">新窗口打开 ↗</a>
+    <label for="anno-file" tabindex="0" role="button">导入文件</label>
+    <input type="file" id="anno-file" accept="application/json,.json">
+    <button id="anno-paste" type="button">粘贴导入</button>
+    <button id="anno-clear" type="button">清空</button>
+  </div>
+  <textarea id="anno-fallback" aria-label="批注 JSON，请手动复制"></textarea>
+</aside>
+
+<script>
+(function(){
+  'use strict';
+
+  var DOCID = document.title || location.pathname;
+  var KEY   = 'anno:v1:' + DOCID;
+  var CTX   = 40;                       // 前后文快照长度，用于文档变更后重定位
+  var HAS_HL = (typeof Highlight === 'function') && !!(window.CSS && CSS.highlights);
+
+  var items = [];                       // {id,quote,note,start,end,before,after,created,_range,_orphan}
+  var pending = null;                   // 待保存的选区 {quote,start,end,before,after}
+  var activeId = null;
+  var layer = null;                     // 降级高亮层
+
+  var $ = function(id){ return document.getElementById(id); };
+  var tip=$('anno-tip'), fab=$('anno-fab'), panel=$('anno-panel'), list=$('anno-list'),
+      editor=$('anno-editor'), quoteEl=$('anno-quote'), textEl=$('anno-text'),
+      cntEl=$('anno-cnt'), subEl=$('anno-sub');
+
+  /* ---------- 文本索引：把正文所有文本节点串成一条全局字符流 ---------- */
+  function index(){
+    var out=[], off=0;
+    var w=document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode:function(n){
+        if(!n.nodeValue) return NodeFilter.FILTER_REJECT;
+        var p=n.parentElement;
+        while(p){
+          if(p.hasAttribute && p.hasAttribute('data-anno-ui')) return NodeFilter.FILTER_REJECT;
+          var t=p.tagName;
+          if(t==='SCRIPT'||t==='STYLE'||t==='NOSCRIPT') return NodeFilter.FILTER_REJECT;
+          p=p.parentElement;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while(w.nextNode()){
+      var n=w.currentNode;
+      out.push({n:n, s:off, e:off+n.nodeValue.length});
+      off+=n.nodeValue.length;
+    }
+    return out;
+  }
+  function fullText(idx){
+    var s=''; for(var i=0;i<idx.length;i++) s+=idx[i].n.nodeValue; return s;
+  }
+  function rangeToOffset(range, idx){
+    var a=null,b=null;
+    for(var i=0;i<idx.length;i++){
+      if(idx[i].n===range.startContainer) a=idx[i].s+range.startOffset;
+      if(idx[i].n===range.endContainer)   b=idx[i].s+range.endOffset;
+    }
+    return (a===null||b===null||b<=a) ? null : {start:a,end:b};
+  }
+  function offsetToRange(start,end,idx){
+    var r=document.createRange(), got=0;
+    for(var i=0;i<idx.length;i++){
+      var e=idx[i];
+      if(!(got&1) && start>=e.s && start<e.e){ r.setStart(e.n,start-e.s); got|=1; }
+      if(!(got&2) && end  > e.s && end  <=e.e){ r.setEnd(e.n,  end  -e.s); got|=2; }
+      if(got===3) break;
+    }
+    return got===3 ? r : null;
+  }
+
+  /* ---------- 重定位：偏移失效时用引文 + 前后文找回 ---------- */
+  function relocate(it, idx){
+    var r = offsetToRange(it.start, it.end, idx);
+    if(r && r.toString() === it.quote) return r;
+    var text = fullText(idx);
+    var probe = (it.before||'') + it.quote + (it.after||'');
+    var p = text.indexOf(probe);
+    if(p >= 0){
+      var s0 = p + (it.before||'').length;
+      return offsetToRange(s0, s0 + it.quote.length, idx);
+    }
+    var q = text.indexOf(it.quote);
+    if(q >= 0) return offsetToRange(q, q + it.quote.length, idx);
+    return null;
+  }
+
+  /* ---------- 高亮渲染 ---------- */
+  function paint(){
+    var idx = index();
+    for(var i=0;i<items.length;i++){
+      var r = relocate(items[i], idx);
+      items[i]._range = r;
+      items[i]._orphan = !r;
+    }
+    if(HAS_HL){
+      var hm=new Highlight(), ha=new Highlight();
+      for(var j=0;j<items.length;j++){
+        if(!items[j]._range) continue;
+        (items[j].id===activeId ? ha : hm).add(items[j]._range);
+      }
+      CSS.highlights.set('anno-mark', hm);
+      CSS.highlights.set('anno-active', ha);
+    }else{
+      if(!layer){
+        layer=document.createElement('div');
+        layer.id='anno-layer'; layer.setAttribute('data-anno-ui','');
+        document.body.appendChild(layer);
+      }
+      layer.textContent='';
+      var sx=window.scrollX, sy=window.scrollY;
+      for(var k=0;k<items.length;k++){
+        if(!items[k]._range) continue;
+        var rects=items[k]._range.getClientRects();
+        for(var m=0;m<rects.length;m++){
+          var b=rects[m]; if(b.width<1||b.height<1) continue;
+          var el=document.createElement('i');
+          if(items[k].id===activeId) el.className='on';
+          el.style.left=(b.left+sx)+'px'; el.style.top=(b.top+sy)+'px';
+          el.style.width=b.width+'px';    el.style.height=b.height+'px';
+          layer.appendChild(el);
+        }
+      }
+    }
+  }
+
+  /* ---------- 存储：localStorage 主，URL hash 备 ---------- */
+  var LS_OK = (function(){                 // 真实写读测试，沙箱 iframe 里会失败
+    try{
+      var t='__anno_t__'+Math.random();
+      localStorage.setItem(t,'1');
+      var ok = localStorage.getItem(t)==='1';
+      localStorage.removeItem(t);
+      return ok;
+    }catch(e){ return false; }
+  })();
+  var HASH_OK = (function(){
+    try{ history.replaceState(null,'',location.href); return true; }catch(e){ return false; }
+  })();
+
+  function slim(){                          // 压掉冗余字段，缩短 URL
+    return items.map(function(i){
+      return [i.id,i.quote,i.note,i.start,i.end,i.before,i.after,i.created];
+    });
+  }
+  function fat(a){
+    return (a||[]).map(function(r){
+      return {id:r[0],quote:r[1],note:r[2],start:r[3],end:r[4],
+              before:r[5],after:r[6],created:r[7]};
+    });
+  }
+  function b64e(s){
+    var u=new TextEncoder().encode(s), b='';
+    for(var i=0;i<u.length;i++) b+=String.fromCharCode(u[i]);
+    return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+  function b64d(s){
+    s=s.replace(/-/g,'+').replace(/_/g,'/');
+    var bin=atob(s), u=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+    return new TextDecoder().decode(u);
+  }
+
+  function syncHash(){
+    if(!HASH_OK) return;
+    try{
+      var h = items.length ? ('#n=' + b64e(JSON.stringify(slim()))) : '';
+      history.replaceState(null, '', location.pathname + location.search + h);
+    }catch(e){}
+  }
+  function save(){
+    if(LS_OK){
+      try{ localStorage.setItem(KEY, JSON.stringify(items.map(function(i){
+        return {id:i.id,quote:i.quote,note:i.note,start:i.start,end:i.end,
+                before:i.before,after:i.after,created:i.created}; }))); }catch(e){}
+    }
+    syncHash();
+  }
+  function load(){
+    var fromLS=[], fromHash=[];
+    if(LS_OK){
+      try{ fromLS = JSON.parse(localStorage.getItem(KEY)||'[]')||[]; }catch(e){}
+    }
+    try{
+      var m=/[#&]n=([^&]+)/.exec(location.hash||'');
+      if(m) fromHash = fat(JSON.parse(b64d(m[1])));
+    }catch(e){}
+    var seen={}; items=[];
+    fromLS.concat(fromHash).forEach(function(x){
+      if(x && x.quote && x.note && !seen[x.id]){ seen[x.id]=1; items.push(x); }
+    });
+    if(fromHash.length && LS_OK) save();   // hash 恢复的顺手落盘
+  }
+
+  function storeBanner(){
+    var el=$('anno-store'); if(!el) return;
+    if(LS_OK){
+      el.className='show ok';
+      el.innerHTML='✓ 批注已存到本机浏览器，关掉页面重开仍在。';
+    }else{
+      el.className='show bad';
+      el.innerHTML='⚠ <b>这个页面禁用了本机存储</b>，批注只保存在当前地址栏里。'+
+                   '离开前请点下方<b>「复制回看链接」</b>，用那条链接重进即可恢复；'+
+                   '或点<b>「导出 JSON」</b>存成文件。';
+    }
+  }
+
+  /* ---------- 列表渲染 ---------- */
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function render(){
+    cntEl.textContent = items.length;
+    cntEl.style.display = items.length ? 'block' : 'none';
+    subEl.textContent = items.length + ' 条';
+    list.textContent='';
+    if(!items.length){
+      var d=document.createElement('div');
+      d.className='empty';
+      d.textContent='还没有批注。\n在正文里选中一段文字，就能写批注。';
+      list.appendChild(d);
+      return;
+    }
+    var sorted = items.slice().sort(function(a,b){ return a.start-b.start; });
+    sorted.forEach(function(it){
+      var el=document.createElement('article');
+      el.className='anno-item'+(it.id===activeId?' on':'');
+      el.tabIndex=0;
+      el.innerHTML =
+        '<blockquote>'+esc(it.quote)+'</blockquote>'+
+        '<div class="note">'+esc(it.note)+'</div>'+
+        '<div class="row"><span>'+new Date(it.created).toLocaleString('zh-CN')+
+        (it._orphan?' · <span class="orphan">原文已变动</span>':'')+
+        '</span><button class="del" type="button" aria-label="删除这条批注">删除</button></div>';
+      el.addEventListener('click', function(ev){
+        if(ev.target.classList.contains('del')){
+          ev.stopPropagation();
+          items = items.filter(function(x){ return x.id!==it.id; });
+          if(activeId===it.id) activeId=null;
+          save(); paint(); render();
+          return;
+        }
+        activeId = (activeId===it.id) ? null : it.id;
+        paint(); render();
+        if(it._range){
+          var rc=it._range.getBoundingClientRect();
+          window.scrollTo({ top: window.scrollY + rc.top - window.innerHeight/3,
+                            behavior: 'smooth' });
+        }
+      });
+      el.addEventListener('keydown', function(ev){
+        if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); el.click(); }
+      });
+      list.appendChild(el);
+    });
+  }
+
+  /* ---------- 选区 → 浮标 ---------- */
+  function hideTip(){ tip.style.display='none'; }
+
+  document.addEventListener('selectionchange', function(){
+    var sel=document.getSelection();
+    if(!sel || sel.isCollapsed || !sel.rangeCount){ hideTip(); return; }
+    var r=sel.getRangeAt(0);
+    if(!r.toString().trim()){ hideTip(); return; }
+    var host=r.commonAncestorContainer;
+    host = host.nodeType===1 ? host : host.parentElement;
+    if(host && host.closest && host.closest('[data-anno-ui]')){ hideTip(); return; }
+    var b=r.getBoundingClientRect();
+    if(!b.width && !b.height){ hideTip(); return; }
+    tip.style.display='block';
+    var w=tip.offsetWidth||96, h=tip.offsetHeight||36;
+    var left=Math.min(Math.max(8, b.left+window.scrollX+b.width/2-w/2),
+                      window.scrollX+document.documentElement.clientWidth-w-8);
+    var top=b.top+window.scrollY-h-8;
+    if(top < window.scrollY+4) top=b.bottom+window.scrollY+8;
+    tip.style.left=left+'px'; tip.style.top=top+'px';
+  });
+
+  $('anno-add').addEventListener('mousedown', function(ev){ ev.preventDefault(); });
+  $('anno-add').addEventListener('click', function(){
+    var sel=document.getSelection();
+    if(!sel||!sel.rangeCount) return;
+    var r=sel.getRangeAt(0), idx=index(), off=rangeToOffset(r, idx);
+    if(!off) return;
+    var text=fullText(idx);
+    pending = {
+      quote : r.toString(),
+      start : off.start,
+      end   : off.end,
+      before: text.slice(Math.max(0,off.start-CTX), off.start),
+      after : text.slice(off.end, off.end+CTX)
+    };
+    hideTip(); sel.removeAllRanges();
+    quoteEl.textContent = pending.quote;
+    editor.classList.add('show');
+    textEl.value='';
+    open(true);
+    textEl.focus();
+  });
+
+  /* ---------- 保存 / 取消 ---------- */
+  function commit(){
+    var v=textEl.value.trim();
+    if(!pending || !v){ return; }
+    items.push({
+      id: 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),
+      quote:pending.quote, note:v, start:pending.start, end:pending.end,
+      before:pending.before, after:pending.after, created:new Date().toISOString()
+    });
+    pending=null; editor.classList.remove('show'); textEl.value='';
+    save(); paint(); render();
+  }
+  $('anno-save').addEventListener('click', commit);
+  $('anno-cancel').addEventListener('click', function(){
+    pending=null; editor.classList.remove('show'); textEl.value='';
+  });
+  textEl.addEventListener('keydown', function(ev){
+    if((ev.metaKey||ev.ctrlKey) && ev.key==='Enter'){ ev.preventDefault(); commit(); }
+    if(ev.key==='Escape'){ pending=null; editor.classList.remove('show'); textEl.value=''; }
+  });
+
+  /* ---------- 面板开关 ---------- */
+  function open(v){
+    panel.classList.toggle('open', v);
+    panel.setAttribute('aria-hidden', v?'false':'true');
+  }
+  fab.addEventListener('click', function(){ open(!panel.classList.contains('open')); });
+  $('anno-close').addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(ev){
+    if(ev.key==='Escape' && panel.classList.contains('open') && document.activeElement!==textEl) open(false);
+  });
+
+  /* ---------- 复制 / 导出 / 导入 / 清空 ---------- */
+  function payload(){
+    return {
+      document   : DOCID,
+      url        : location.href,
+      exported_at: new Date().toISOString(),
+      count      : items.length,
+      annotations: items.slice().sort(function(a,b){return a.start-b.start;}).map(function(i){
+        return { id:i.id, quote:i.quote, note:i.note,
+                 anchor:{ start:i.start, end:i.end,
+                          context_before:i.before, context_after:i.after },
+                 created_at:i.created, resolved:!i._orphan };
+      })
+    };
+  }
+  function jsonText(){ return JSON.stringify(payload(), null, 2); }
+
+  var copyBtn=$('anno-copy'), fallbackEl=$('anno-fallback');
+  function copied(ok){
+    copyBtn.textContent = ok ? '✓ 已复制' : '↓ 手动复制';
+    copyBtn.classList.add('done');
+    setTimeout(function(){ copyBtn.textContent='复制 JSON'; copyBtn.classList.remove('done'); }, 2200);
+  }
+  function manualCopy(txt){
+    fallbackEl.value = txt;
+    fallbackEl.classList.add('show');
+    fallbackEl.focus(); fallbackEl.select();
+    var ok=false;
+    try{ ok = document.execCommand('copy'); }catch(e){ ok=false; }
+    copied(ok);
+    if(ok) setTimeout(function(){ fallbackEl.classList.remove('show'); }, 400);
+  }
+  copyBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注可复制。'); return; }
+    var txt=jsonText();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ copied(true); },
+                                              function(){ manualCopy(txt); });
+    }else{ manualCopy(txt); }
+  });
+
+  var linkBtn=$('anno-link');
+  linkBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注。'); return; }
+    syncHash();
+    var url;
+    try{
+      url = HASH_OK ? location.href
+                    : (location.origin+location.pathname+location.search+'#n='+b64e(JSON.stringify(slim())));
+    }catch(e){ url = location.href; }
+    var done=function(ok){
+      linkBtn.textContent = ok?'✓ 链接已复制':'↓ 手动复制';
+      setTimeout(function(){ linkBtn.textContent='复制回看链接'; },2400);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){done(true);},function(){
+        fallbackEl.value=url; fallbackEl.classList.add('show');
+        fallbackEl.focus(); fallbackEl.select(); done(false); });
+    }else{
+      fallbackEl.value=url; fallbackEl.classList.add('show');
+      fallbackEl.focus(); fallbackEl.select();
+      var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+      done(ok); if(ok) setTimeout(function(){ fallbackEl.classList.remove('show'); },400);
+    }
+  });
+
+  var expBtn=$('anno-export');
+  function fileName(){ return DOCID.replace(/[\\/:*?"<>|]/g,'_').slice(0,60) + '-批注.json'; }
+  function expFlash(t){ expBtn.textContent=t; setTimeout(function(){ expBtn.textContent='导出 JSON'; },2600); }
+
+  expBtn.addEventListener('click', function(){
+    if(!items.length){ alert('还没有批注可导出。'); return; }
+    var txt=jsonText();
+
+    // ⓪ Artifact 沙箱里唯一被授权的存盘通道（需在发布时声明 downloads 能力）
+    if(window.claude && typeof window.claude.use === 'function'){
+      Promise.resolve(window.claude.use('downloads')).then(function(dl){
+        if(!dl){ pickerOrLegacy(txt); return; }   // 未授权 / 未声明 / 加载失败
+        return dl.save({ filename: fileName(), data: txt })
+          .then(function(){ expFlash('✓ 已保存'); })
+          .catch(function(e){
+            var c = e && e.code;
+            if(c === 'declined' || c === 'rate_limited'){ expFlash('已取消'); return; }
+            pickerOrLegacy(txt);   // unavailable / bad_request 等一律退回原降级链
+          });
+      }).catch(function(){ pickerOrLegacy(txt); });
+      return;
+    }
+    pickerOrLegacy(txt);
+  });
+
+  function pickerOrLegacy(txt){
+    // ① 真正的「另存为」对话框，沙箱 iframe 里也能用
+    if(window.showSaveFilePicker){
+      window.showSaveFilePicker({
+        suggestedName: fileName(),
+        types:[{description:'JSON', accept:{'application/json':['.json']}}]
+      }).then(function(h){ return h.createWritable(); })
+        .then(function(w){ return w.write(txt).then(function(){ return w.close(); }); })
+        .then(function(){ expFlash('✓ 已保存'); })
+        .catch(function(e){ if(e && e.name==='AbortError') return; legacy(txt); });
+      return;
+    }
+    legacy(txt);
+  }
+
+  function legacy(txt){
+    // ② 传统下载；沙箱无 allow-downloads 时会静默失败，故补一条提示
+    var ok=false;
+    try{
+      var blob=new Blob([txt],{type:'application/json'});
+      var url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download=fileName(); a.rel='noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+      ok=true;
+    }catch(e){}
+    if(ok && IN_FRAME){
+      // 沙箱 iframe 无法确认下载是否被拦，直接摆出两条一定走得通的路
+      expFlash('若无反应见下方');
+      fallbackEl.value=txt; fallbackEl.classList.add('show');
+      fallbackEl.focus(); fallbackEl.select();
+      var b=$('anno-store');
+      if(b){ b.className='show bad';
+        b.innerHTML='⬇ <b>没弹出下载？</b>本页嵌在沙箱里，浏览器禁止它下载文件。两条路都能走通：'+
+          '① 上方文本框已全选，<b>⌘/Ctrl+C</b> 复制后自己存成 .json；'+
+          '② 点右下角 <b>「新窗口打开 ↗」</b>，在新标签页里导出就正常了（批注会跟着一起过去）。'; }
+    }else if(!ok){ manualCopy(txt); }
+  }
+
+  /* 新窗口打开：脱离 iframe 后下载可用，且 hash 里带着批注一起过去 */
+  var IN_FRAME = (function(){ try{ return window.self!==window.top; }catch(e){ return true; } })();
+  var newtab=$('anno-newtab');
+  if(IN_FRAME && newtab){
+    newtab.classList.add('show');
+    newtab.addEventListener('click', function(){ syncHash(); newtab.href=location.href; });
+    newtab.addEventListener('mouseenter', function(){ syncHash(); newtab.href=location.href; });
+    newtab.href=location.href;
+  }
+
+  /* 粘贴导入：跨环境（artifact ↔ 本地文件）迁移批注用 */
+  $('anno-paste').addEventListener('click', function(){
+    fallbackEl.value='';
+    fallbackEl.placeholder='把批注 JSON 粘贴到这里，然后按 ⌘/Ctrl + Enter 导入';
+    fallbackEl.setAttribute('data-mode','import');
+    fallbackEl.classList.add('show');
+    fallbackEl.focus();
+  });
+  fallbackEl.addEventListener('keydown', function(ev){
+    if((ev.metaKey||ev.ctrlKey) && ev.key==='Enter'
+       && fallbackEl.getAttribute('data-mode')==='import'){
+      ev.preventDefault();
+      var n=importJSON(fallbackEl.value);
+      if(n>=0){
+        fallbackEl.classList.remove('show');
+        fallbackEl.removeAttribute('data-mode');
+        fallbackEl.value='';
+      }
+    }
+    if(ev.key==='Escape'){
+      fallbackEl.classList.remove('show');
+      fallbackEl.removeAttribute('data-mode');
+    }
+  });
+
+  function importJSON(raw){
+    try{
+      var d=JSON.parse(raw);
+      var incoming=(d.annotations||d||[]).map(function(x){
+        var an=x.anchor||{};
+        return { id:x.id||('a'+Math.random().toString(36).slice(2,9)),
+                 quote:x.quote||'', note:x.note||x.comment||'',
+                 start:an.start!=null?an.start:x.start,
+                 end:an.end!=null?an.end:x.end,
+                 before:an.context_before!=null?an.context_before:(x.before||''),
+                 after:an.context_after!=null?an.context_after:(x.after||''),
+                 created:x.created_at||x.created||new Date().toISOString() };
+      }).filter(function(x){ return x.quote && x.note; });
+      var seen={}, n=0;
+      items.forEach(function(i){ seen[i.id]=1; });
+      incoming.forEach(function(x){ if(!seen[x.id]){ items.push(x); seen[x.id]=1; n++; } });
+      save(); paint(); render(); open(true);
+      alert(n ? ('已导入 '+n+' 条批注。') : '没有新批注可导入（可能都已存在）。');
+      return n;
+    }catch(e){ alert('这个 JSON 读不出来，请确认是本工具导出/复制的内容。'); return -1; }
+  }
+
+  $('anno-file').addEventListener('change', function(ev){
+    var f=ev.target.files && ev.target.files[0];
+    if(!f) return;
+    var fr=new FileReader();
+    fr.onload=function(){
+      try{
+        var d=JSON.parse(fr.result);
+        var incoming=(d.annotations||d||[]).map(function(x){
+          var an=x.anchor||{};
+          return { id:x.id||('a'+Math.random().toString(36).slice(2,9)),
+                   quote:x.quote||'', note:x.note||'',
+                   start:an.start!=null?an.start:x.start,
+                   end:an.end!=null?an.end:x.end,
+                   before:an.context_before!=null?an.context_before:(x.before||''),
+                   after:an.context_after!=null?an.context_after:(x.after||''),
+                   created:x.created_at||x.created||new Date().toISOString() };
+        }).filter(function(x){ return x.quote && x.note; });
+        var seen={}; items.forEach(function(i){ seen[i.id]=1; });
+        incoming.forEach(function(x){ if(!seen[x.id]){ items.push(x); seen[x.id]=1; } });
+        save(); paint(); render(); open(true);
+      }catch(e){ alert('这个 JSON 读不出来，请确认是本工具导出的文件。'); }
+      ev.target.value='';
+    };
+    fr.readAsText(f);
+  });
+  $('anno-file').previousElementSibling.addEventListener('keydown', function(ev){
+    if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); $('anno-file').click(); }
+  });
+
+  $('anno-clear').addEventListener('click', function(){
+    if(!items.length) return;
+    if(!confirm('确定清空全部 '+items.length+' 条批注？此操作不可撤销，建议先导出。')) return;
+    items=[]; activeId=null; save(); paint(); render();
+  });
+
+  /* ---------- 点击高亮定位到批注 ---------- */
+  document.addEventListener('click', function(ev){
+    if(ev.target.closest && ev.target.closest('[data-anno-ui]')) return;
+    var hit=null;
+    for(var i=0;i<items.length;i++){
+      var r=items[i]._range; if(!r) continue;
+      var rects=r.getClientRects();
+      for(var m=0;m<rects.length;m++){
+        var b=rects[m];
+        if(ev.clientX>=b.left&&ev.clientX<=b.right&&ev.clientY>=b.top&&ev.clientY<=b.bottom){ hit=items[i]; break; }
+      }
+      if(hit) break;
+    }
+    if(hit){ activeId=hit.id; paint(); render(); open(true); }
+  });
+
+  /* ---------- 降级层需要跟随重排 ---------- */
+  if(!HAS_HL){
+    var t=null, re=function(){ clearTimeout(t); t=setTimeout(paint,120); };
+    window.addEventListener('resize', re);
+    window.addEventListener('scroll', re, {passive:true});
+  }
+
+  /* ---------- 启动 ---------- */
+  load(); paint(); render(); storeBanner();
+  window.addEventListener('load', function(){ paint(); });
+  // 关页面/切走前兜底再存一次
+  window.addEventListener('pagehide', save);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='hidden') save(); });
+})();
+</script>

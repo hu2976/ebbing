@@ -25,7 +25,7 @@ import { createRequire } from 'module';
 import { draw } from './card-gen.mjs';
 
 const require = createRequire(import.meta.url);
-const R = path.resolve(import.meta.dirname, '..');
+const R = path.resolve(import.meta.dirname, '../04-小程序');
 const D = require(R + '/data/daily.js');
 
 /* 摘 filter 属性：属性形式 filter="url(#x)" 和内联 style 里的 filter:url(#x) 都有。

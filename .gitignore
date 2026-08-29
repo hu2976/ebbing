@@ -1,7 +1,7 @@
 # 截图产物。14M，而且是构建出来的——每次跑 shot.mjs 都会重生成。
-# ⚠️ 它们在工程目录里，微信开发者工具的"代码质量"会把整个工程算进主包，
-#    于是报"主包尺寸应小于 1.5M 未通过"。project.config.json 的
-#    packOptions.ignore 已排除 .sync-mp，所以打包上传不会带上。
+# ⚠️ 2026-08-29 更正：packOptions.ignore 实测不生效（见 04-小程序/README.md）。
+#    .sync-mp/ 没被打进预览包，靠的是"工具默认跳过 . 开头的目录"，不是 ignore。
+#    大文件要么放 . 开头的目录里，要么放小程序根目录外——design-demos 走的是后者。
 04-小程序/.sync-mp/out/
 
 # 本机偏好，不是项目的一部分
@@ -24,12 +24,26 @@ node_modules/
 
 # 设计预览的截图产物，11M。hb.mjs / preview.mjs 跑一次就重生成，
 # 和上面 .sync-mp/out 是同一类东西。
-04-小程序/design-demos/hb-out/
-04-小程序/design-demos/preview-out/
+design-demos/hb-out/
+design-demos/preview-out/
 # card-gen.mjs 生成的 30 个 SVG，源是 card-gen.mjs 里的 SPEC
-04-小程序/design-demos/cards/
+design-demos/cards/
 
 # 设计探索的渲染截图。源就在旁边的同名 .html，跑一次就重出，没必要占 10M 仓库
-04-小程序/design-demos/*.png
+design-demos/*.png
 # 历次调试留下的临时探针（对比页、量尺寸的小页面），不是设计稿
-04-小程序/design-demos/_*
+design-demos/_*
+
+# 路演的视频导出。单份 40M(mp4)+21M(webm)，00-交付-定版/03-路演 和 12-路演deck
+# 各存了一份，共约 145M。git 存二进制不做增量——改一版就整份再存一遍，
+# 仓库很快就失控且没法回收。视频走别处分发，PDF 留下（7.6M，能直接看）。
+*.mp4
+*.webm
+# 录制脚本的工作目录：playwright 依赖 + 中间产物，跑一次就重生成
+12-路演deck/.rec/
+
+# 多端应用模式（Donut）的残留配置。2026-08-29 工具误切到那个模式时生成的，
+# 它一在就会让工具重新进多端模式，而多端模式下 wx.cloud.init 拿不到当前环境
+# （errCode -601002）。这个项目做的是小程序，不提交它。
+project.miniapp.json
+**/app.miniapp.json

@@ -6,7 +6,7 @@ import { createRequire } from 'module';
 import fs from 'fs';
 import path from 'path';
 const require = createRequire(import.meta.url);
-const R = path.resolve(import.meta.dirname, '..');
+const R = path.resolve(import.meta.dirname, '../04-小程序');
 const D = require(R + '/data/daily.js');
 
 // ── 两套主题 ──

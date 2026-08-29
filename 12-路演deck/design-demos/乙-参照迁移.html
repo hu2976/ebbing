@@ -1,0 +1,152 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>退潮 · 路演 deck · 乙 参照迁移</title>
+<style>
+/* ── 方向乙：忠实迁移参考站 cgm.hoka-marathon-by-keepace.asia 的架构
+   照搬的：固定顶栏(brand + 页码) / eyebrow 编号 / 断言式 h1 + lead /
+          cards.c2 c3 卡片网格 / .fig 图容器 / big-num / chip / scroll-snap 翻页
+   换掉的：它的 Keep 绿 #24C789 + 蓝 #0969da 浅色企业风 —— 那套配色的语义是
+          「达标·增长·奖励」，而退潮明确不要绿色奖励也不要红色警示。
+          改成产品自己的 token：#171310 底 / 黄铜 #C9A063 / 青玉 #8CC1AA / 陶土 #CB7E62。 */
+:root{
+  --bg:#171310; --surface:#1F1A15; --surface2:#241E18;
+  --border:rgba(244,237,227,.10); --border2:rgba(244,237,227,.05);
+  --text:#F4EDE3; --muted:#BDB1A1; --faint:#968979;
+  --brass:#C9A063; --jade:#8CC1AA; --clay:#CB7E62;
+  --r:14px;
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 22px 44px -26px rgba(0,0,0,.9);
+  --sans:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+  --serif:"Songti SC","Noto Serif CJK SC",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory}
+.deck::-webkit-scrollbar{width:0}
+.slide{min-height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;
+  padding:11vh 7vw 7vh;position:relative;
+  /* 参考站每屏都有两团氛围光。退潮本来就有这个语言（一暖一冷），直接沿用 */
+  background-image:radial-gradient(880px 480px at 86% -6%,rgba(201,160,99,.10),transparent 62%),
+                   radial-gradient(720px 420px at 2% 4%,rgba(47,72,88,.16),transparent 58%)}
+.slide>*{width:100%;max-width:1120px;margin-left:auto;margin-right:auto}
+
+/* 顶栏：参考站的 brand + dot + 页码 */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;gap:10px;
+  padding:13px 7vw;backdrop-filter:blur(10px);background:rgba(23,19,16,.78);border-bottom:1px solid var(--border2)}
+.topbar .brand{font-weight:600;display:flex;align-items:center;gap:9px;font-size:15px;letter-spacing:.04em}
+.topbar .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--brass);
+  box-shadow:0 0 14px -2px var(--brass)}
+.topbar .pg{margin-left:auto;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--faint)}
+
+.eyebrow{display:inline-flex;align-items:center;gap:11px;font-family:var(--mono);font-size:11.5px;
+  font-weight:600;letter-spacing:.2em;color:var(--brass);margin-bottom:18px}
+.eyebrow .num{min-width:26px;height:26px;padding:0 8px;border-radius:7px;display:grid;place-items:center;
+  color:#241E18;background:var(--brass);font-size:12px}
+h1{font-size:clamp(28px,4.2vw,52px);font-weight:600;letter-spacing:-.005em;line-height:1.22;margin-bottom:16px}
+h1 .hl{color:var(--brass)}
+.lead{font-size:clamp(15px,1.5vw,19px);color:var(--muted);max-width:62ch;line-height:1.82}
+.big-num{font-family:var(--mono);font-size:clamp(38px,6vw,78px);font-weight:600;line-height:1;color:var(--brass)}
+
+.cards{display:grid;gap:16px;margin-top:26px}
+.cards.c2{grid-template-columns:repeat(2,1fr)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px 22px;box-shadow:var(--shadow)}
+.card.hl{border-top:2px solid var(--brass)}
+.card .k{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--brass);
+  letter-spacing:.14em;margin-bottom:9px}
+.card .big{font-family:var(--mono);font-size:29px;font-weight:600;line-height:1.1;margin-bottom:6px}
+.card p{font-size:14.5px;color:var(--muted);line-height:1.78}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--muted);
+  border:1px solid var(--border);border-radius:999px;padding:6px 14px;background:var(--surface)}
+.chip.b{border-color:rgba(201,160,99,.4);color:var(--brass);background:rgba(201,160,99,.07)}
+.fig{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);
+  padding:18px 20px 12px;box-shadow:var(--shadow);margin-top:20px}
+.fig svg{display:block;width:100%;height:auto;overflow:visible}
+.fig text{font-family:var(--sans);fill:var(--muted);font-size:13px}
+.fig .m{font-family:var(--mono);font-size:11.5px;fill:var(--faint);letter-spacing:.06em}
+.fig .hi{fill:var(--brass);font-family:var(--mono);font-size:13.5px;font-weight:600}
+.src{margin-top:22px;font-family:var(--mono);font-size:11.5px;color:var(--faint);line-height:1.95;letter-spacing:.03em}
+.src b{color:var(--muted);font-weight:600}
+
+.slide.a .rv{animation:up .55s both cubic-bezier(.2,.7,.3,1)}
+.slide.a .rv:nth-child(2){animation-delay:.07s}.slide.a .rv:nth-child(3){animation-delay:.14s}
+.slide.a .rv:nth-child(4){animation-delay:.21s}.slide.a .rv:nth-child(5){animation-delay:.28s}
+@keyframes up{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+.slide.a .draw{animation:draw 1.7s .35s both cubic-bezier(.3,.6,.3,1)}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media print{.topbar{display:none}.deck{height:auto;overflow:visible}.slide{min-height:auto;page-break-after:always}}
+</style>
+
+<div class="topbar"><span class="brand"><span class="dot"></span>退潮 · EBBING</span>
+  <span class="pg">参照迁移 · 01–02</span></div>
+
+<div class="deck">
+
+<!-- ══ 开场 ══ -->
+<section class="slide a" id="s1">
+  <div class="eyebrow rv"><span class="num">03</span>凌晨三点</div>
+  <h1 class="rv">热线是开着的。<br>但打过去，<span class="hl">就有一个人知道了。</span></h1>
+  <p class="lead rv">越是看起来没问题的人，越不能让人知道自己有问题。<br>
+    所以此刻唯一开着、而且她真的会打开的，是热量 App。</p>
+
+  <div class="cards c3 rv">
+    <div class="card"><div class="k">要开口</div><div class="big">热线</div>
+      <p>24 小时都在。代价是这件事从此有人知道。</p></div>
+    <div class="card"><div class="k">要建档</div><div class="big">咨询</div>
+      <p>工作日白天。而且要留下一份关于你的记录。</p></div>
+    <div class="card hl"><div class="k">不需要开口</div><div class="big" style="color:var(--brass)">热量 App</div>
+      <p>唯一在凌晨三点还开着、又不暴露任何人的东西。<br>而它只会让事情更糟。</p></div>
+  </div>
+
+  <div class="chips rv">
+    <span class="chip b">105 名确诊者中 75% 在用</span>
+    <span class="chip b">其中 73% 认为它加重了自己的病</span>
+    <span class="chip">Levinson et al. 2017</span>
+  </div>
+</section>
+
+<!-- ══ 内容页：留存 ══ -->
+<section class="slide a" id="s2">
+  <div class="eyebrow rv"><span class="num">01</span>三条核心论点之一</div>
+  <h1 class="rv">要解的不是有效性，<span class="hl">是留存。</span></h1>
+  <p class="lead rv">DBT 技能 App 对暴食有效，已经被大样本 RCT 证实过了。问题在后半句。</p>
+
+  <div class="fig rv">
+    <svg viewBox="0 0 1080 200" role="img" aria-label="Linardon 2024 六周留存衰减与行业基线">
+      <line x1="96" y1="26" x2="96" y2="148" stroke="rgba(244,237,227,.12)"/>
+      <line x1="96" y1="148" x2="1010" y2="148" stroke="rgba(244,237,227,.12)"/>
+      <text class="m" x="86" y="31" text-anchor="end">100%</text>
+      <text class="m" x="86" y="153" text-anchor="end">0</text>
+      <text class="m" x="96" y="172" text-anchor="middle">第 0 周</text>
+      <text class="m" x="1010" y="172" text-anchor="middle">第 6 周</text>
+
+      <path d="M96 26 C112 78, 128 132, 152 146" fill="none" stroke="rgba(244,237,227,.22)"
+            stroke-width="2.5" stroke-linecap="round" class="draw" pathLength="1" stroke-dasharray="1"/>
+      <text class="m" x="164" y="142">心理健康 App 平均留存 5.5 天</text>
+
+      <path d="M96 26 C300 48, 560 70, 1010 96" fill="none" stroke="#C9A063" stroke-width="3.5"
+            stroke-linecap="round" class="draw" pathLength="1" stroke-dasharray="1"/>
+      <circle cx="1010" cy="96" r="5" fill="#C9A063"/>
+      <text class="hi" x="998" y="84" text-anchor="end">6 周还在的 52%</text>
+      <text class="m" x="110" y="48">n=576 · 暴食发作发生率比 0.69 · d = −0.68</text>
+    </svg>
+  </div>
+
+  <div class="cards c2 rv">
+    <div class="card hl"><div class="k">脱落</div><div class="big">48%</div>
+      <p>同一项研究，干预组六周内脱落。只有三分之一的人走完最后一个模块。</p></div>
+    <div class="card"><div class="k">meta 级背书</div><div class="big">279,791 人</div>
+      <p>117 试验／1,698 效应量：脱落更低的试验有提醒、有人的接触，<b style="color:var(--text)">且无游戏化</b>。这就是我们砍掉进度条的依据。</p></div>
+  </div>
+
+  <p class="src rv"><b>Linardon et al. 2024</b>「Resilience: eDBT」RCT，全程无专业指导 · 局限：等待组对照可能放大效应量，样本以白人为主　·
+    <b>Zainal et al. 2025</b> Health Psychology Review</p>
+</section>
+
+</div>
+<script>
+var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('a',e.isIntersecting)})},{threshold:.35});
+document.querySelectorAll('.slide').forEach(function(s){s.classList.remove('a');io.observe(s)});
+</script>

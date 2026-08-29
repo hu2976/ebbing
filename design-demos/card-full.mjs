@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { draw } from './card-gen.mjs';
 const require = createRequire(import.meta.url);
-const R = path.resolve(import.meta.dirname, '..');
+const R = path.resolve(import.meta.dirname, '../04-小程序');
 const D = require(R + '/data/daily.js');
 
 const W = 328, H = 460;                        // 5:7

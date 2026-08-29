@@ -1,0 +1,42 @@
+{
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "uglifyFileName": true,
+    "enhance": true,
+    "packNpmRelationList": [],
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "useCompilerPlugins": false
+  },
+  "compileType": "miniprogram",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": ".sync-mp"
+      },
+      {
+        "type": "folder",
+        "value": "design-demos"
+      },
+      {
+        "type": "folder",
+        "value": "素材"
+      },
+      {
+        "type": "suffix",
+        "value": ".bak"
+      }
+    ],
+    "include": []
+  },
+  "appid": "wxce8f350340bbea30",
+  "editorSetting": {},
+  "cloudfunctionRoot": "cloudfunctions/"
+}

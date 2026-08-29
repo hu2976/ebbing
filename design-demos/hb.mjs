@@ -19,7 +19,8 @@ import { execFileSync } from 'child_process';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-const R = path.resolve(import.meta.dirname, '..');
+const R = path.resolve(import.meta.dirname, '../04-小程序');
+const DD = import.meta.dirname;  /* 设计稿目录：2026-08-29 从小程序根移出来了，不然会被打进预览包 */
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 /* iPhone 15：390×844pt。顶部留白必须和 index.js 的 topPad 一致：
    `(statusBarHeight || 20) + 40`，iPhone 15 的 statusBarHeight 是 54 → 94pt。
@@ -55,13 +56,13 @@ if (!ALL && !D.SCREENS[id]) { console.error('没有这一屏：' + id); process.
    同一张图在一页里会出现多次（--all 时 64 屏都渲），SVG 内部的
    filter / gradient id 会互相覆盖，所以每次注入都给 id 加唯一后缀。 */
 let __artN = 0;
-const CARDS = fs.existsSync(R + '/design-demos/cards')
-  ? fs.readdirSync(R + '/design-demos/cards').filter((f) => f.endsWith('.svg')) : [];
+const CARDS = fs.existsSync(DD + '/cards')
+  ? fs.readdirSync(DD + '/cards').filter((f) => f.endsWith('.svg')) : [];
 function art(food) {
   const hit = CARDS.find((f) => f.slice(3, -4) === food);
   if (!hit) return '';
   const tag = 'a' + (++__artN);
-  let sv = fs.readFileSync(R + '/design-demos/cards/' + hit, 'utf8');
+  let sv = fs.readFileSync(DD + '/cards/' + hit, 'utf8');
   for (const id of new Set([...sv.matchAll(/id="([^"]+)"/g)].map((m) => m[1]))) {
     sv = sv.split(`id="${id}"`).join(`id="${id}_${tag}"`).split(`#${id})`).join(`#${id}_${tag})`);
   }
@@ -74,7 +75,7 @@ const tokens = rpx2px(fs.readFileSync(R + '/pages/index/tokens.wxss', 'utf8')
 const wxss = rpx2px(fs.readFileSync(R + '/pages/index/index.wxss', 'utf8')
   .replace(/@import[^;]+;/g, ''))
   /* ↓ 手账暗色。小程序一个字不改，只在预览时叠加。 */
-  + '\n' + rpx2px(fs.readFileSync(R + '/design-demos/hb.wxss', 'utf8')
+  + '\n' + rpx2px(fs.readFileSync(DD + '/hb.wxss', 'utf8')
   .replace(/\/\*[\s\S]*?\*\//g, ''));
 /* page{} 是小程序的根，第一条当 :root 收变量，其余当 body。
    ⚠️ 正则必须带前边界：不带的话 `.page{` 里的 page{ 也会被换成 `.body{`，
@@ -414,7 +415,7 @@ if (ALL) {
   .wrap{display:inline-block;vertical-align:top}</style>${parts.join('')}
   <script>addEventListener('load',()=>{document.title=[...document.querySelectorAll('.wrap')]
     .map(w=>w.dataset.key+':'+Math.round(w.querySelector('.page').getBoundingClientRect().height)).join('|')})</script>`;
-  const out2 = R + '/design-demos/hb-out'; fs.mkdirSync(out2, { recursive: true });
+  const out2 = DD + '/hb-out'; fs.mkdirSync(out2, { recursive: true });
   const f = out2 + '/_all.html'; fs.writeFileSync(f, all);
   const dom = execFileSync(CHROME, ['--headless', '--disable-gpu', '--dump-dom',
     `--window-size=${W * 4},2000`, 'file://' + f], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
@@ -469,7 +470,7 @@ html,body{margin:0} ${css}
   font:11px/1.4 -apple-system,sans-serif;color:#CB7E62}
 </style><div id=vp>${screen(id)}</div><div class="vpline"></div>`;
 
-const out = R + '/design-demos/hb-out';
+const out = DD + '/hb-out';
 fs.mkdirSync(out, { recursive: true });
 const page = `${out}/${id}-${clock}.html`;
 const png = `${out}/${id}-${clock}.png`;

@@ -1,0 +1,6 @@
+{
+  "name": "talk",
+  "version": "1.0.0",
+  "description": "四个人各自回应一段话。模型生成，三道护栏。",
+  "main": "index.js"
+}
