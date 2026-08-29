@@ -1,7 +1,7 @@
 /* 从 02-可交互原型.html 生成小程序的数据与样式。
    屏级文字与样式的唯一源仍是原型——这里只抽，不抄。 */
 import fs from 'fs';
-const SRC='/Users/hujinghan/Desktop/搓点有趣的/退潮/02-给UI-可交互原型.html';
+const SRC='/Users/hujinghan/Desktop/搓点有趣的/退潮/01-Demo-可交互原型.html';
 const OUT='/Users/hujinghan/Desktop/搓点有趣的/退潮/04-小程序';
 const html=fs.readFileSync(SRC,'utf8');
 
@@ -30,7 +30,7 @@ module.exports={
    文案的唯一源是原型 02，视觉的唯一源是设计画布——两件事两个源。
    屏内块型样式手写在 index.wxss：设计画布只画了 10 屏，其余 26 屏的块型
    要按设计系统推广，那是判断不是转换，不能生成。 */
-const DS='/Users/hujinghan/Desktop/搓点有趣的/退潮/设计画布/System.dc.html';
+const DS='/Users/hujinghan/Desktop/搓点有趣的/退潮/_工作过程/设计画布/System.dc.html';
 const ds=fs.readFileSync(DS,'utf8');
 const tokens=ds.match(/:root\{[\s\S]*?\}/)[0].replace(':root{','page{');
 fs.writeFileSync(OUT+'/pages/index/tokens.wxss',

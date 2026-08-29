@@ -2,7 +2,7 @@
   "setting": {
     "es6": true,
     "postcss": true,
-    "minified": false,
+    "minified": true,
     "uglifyFileName": false,
     "enhance": true,
     "packNpmRelationList": [],
@@ -19,11 +19,13 @@
     "minifyWXML": true,
     "localPlugins": false,
     "disableUseStrict": false,
-    "condition": false
+    "condition": true
   },
   "compileType": "miniprogram",
   "miniprogramRoot": "04-小程序/",
-  "simulatorPluginLibVersion": {},
+  "simulatorPluginLibVersion": {
+    "wxext14566970e7e9f62": "2.27.3"
+  },
   "packOptions": {
     "ignore": [
       {
