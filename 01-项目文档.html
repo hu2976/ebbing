@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>退潮项目文档</title>
 
 <style>
@@ -111,14 +112,15 @@
 
 <div class="meta">
   <span><b>赛道</b>软件应用 · 滴水穿石</span>
-  <span><b>命题</b>eazo「她创所需 · 为你而做」 · 萨福「爱与生俱来，AI 唤醒本能」</span>
+  <span><b>命题</b>eazo「她创所爱 · 为你而造」 · 萨福「爱与生俱来，AI 唤醒本能」</span>
   <span><b>参赛</b>个人</span>
+  <span><b>体验入口</b><a href="https://hu2976.github.io/ebbing/">hu2976.github.io/ebbing</a>（演示视频 · 体验版二维码 · 全部材料）</span>
   <span><b>仓库</b><a href="https://github.com/hu2976/ebbing">github.com/hu2976/ebbing</a> · <code>shenicest-fission</code></span>
 </div>
 
 <p class="lede">进食障碍是<strong>死亡率最高的精神疾病之一</strong>，发病高峰在 <strong>15.5 岁</strong>，而符合诊断的人里<strong>只有 23% 求助过</strong>。<br>
 中国唯一一项全国面访调查给出的患病率是 0.1%，最大规模的青少年筛查给出的是 21%——<strong>两个数字差 200 倍</strong>。<br><br>
-「退潮」是给这群人的匿名自助工具。无账号、无登录、数据不出设备。<strong>62 屏可跑，接了云函数与模型，构建期 15 项自检——其中四项断言的不是功能，是这个产品的立场。</strong></p>
+「退潮」是给这群人的匿名自助工具。无账号、无登录、数据不出设备。<strong>62 屏可跑，接了云函数与模型，构建期 16 项自检——其中四项断言的不是功能，是这个产品的立场。</strong></p>
 
 <h2><span class="n">01</span>项目背景</h2>
 
@@ -260,7 +262,7 @@
 <tr><td>唯一的云函数</td><td><code>cloudfunctions/talk</code>：四个人各自回应一段话。<strong>无状态</strong>——历史由前端每次带上来，用完就没了</td></tr>
 <tr><td>模型</td><td>百度文心 4.5（<code>ernie-4.5</code>），走 OpenRouter。<strong>密钥在云函数的环境变量里</strong>，前端拿不到，反编译也拿不到。<strong>模型可换</strong>——一个环境变量的事，护栏与人设不依赖具体模型</td></tr>
 <tr><td>物理</td><td>情绪瓶子是 <code>canvas 2d</code> + 位置约束松弛（PBD），每帧解位置，接加速度计</td></tr>
-<tr><td>构建期工具</td><td><code>gen.mjs</code> 生成 · <code>chk.mjs</code> 15 项自检 · <code>shot.mjs</code> 用真实 WXSS 渲进 headless Chrome 量一屏装不装得下</td></tr>
+<tr><td>构建期工具</td><td><code>gen.mjs</code> 生成 · <code>chk.mjs</code> 16 项自检 · <code>shot.mjs</code> 用真实 WXSS 渲进 headless Chrome 量一屏装不装得下</td></tr>
 </tbody>
 </table></div>
 
@@ -297,8 +299,8 @@
 <h3>规模</h3>
 <pre>患者端     62 屏 · 489 块 · 42 种块型
 照护者端   22 屏 · 13 种块型 · 20 条课程
-代码       约 4300 行 JS（不含生成物与截图）
-自检       15 项，含 4 条立场断言，exit code 非 0 即构建失败</pre>
+代码       约 4800 行 JS（手写部分：不含生成物 data/screens.js 与截图工具 shot.mjs）
+自检       16 项，含 4 条立场断言，exit code 非 0 即构建失败</pre>
 
 <h2><span class="n">04</span>创新点</h2>
 
@@ -364,7 +366,7 @@
 
 <pre>node .sync-mp/chk.mjs</pre>
 
-<p>15 项里有四项断言的不是功能，是这个产品的立场：</p>
+<p>16 项里有四项断言的不是功能，是这个产品的立场：</p>
 
 <div class="step"><div class="k">断言 1</div><div class="v"><strong>写了「恶心」必须存得下来</strong> —— 存 ≠ 给别人看</div></div>
 <div class="step"><div class="k">断言 2</div><div class="v"><strong>「入口即化」必须和「恶心」同罪</strong> —— 门槛对称，不偏向好话</div></div>
@@ -376,7 +378,7 @@
 <h3>命题契合</h3>
 
 <div class="box acc">
-<span class="lbl">eazo「她创所需 · 为你而做」</span>
+<span class="lbl">eazo「她创所爱 · 为你而造」</span>
 <p style="margin:0">「把『她每天经历的事』，做成一个以前没人替她做过的 App」——这就是这个产品的定义。而<strong>中文世界确实没有</strong>：GBD 2019 中国 BN 患病率约为 AN 两倍，但诊疗聚焦体重恢复；30+ 产品调研里，躯体层是整个品类的空白。</p>
 </div>
 
@@ -523,13 +525,14 @@
 
 <h2><span class="n">08</span>怎么跑起来</h2>
 
-<pre># 微信开发者工具打开仓库根目录（miniprogramRoot 指向 04-小程序/）
+<pre># 微信开发者工具打开仓库根目录（miniprogramRoot 指向 04-小程序/），选「小程序模式」
+# data/*.js 与 tokens.wxss 是生成物，已在仓库里，导入即可运行
 
-node 04-小程序/.sync-mp/gen.mjs          # 从原型生成屏数据
-node 04-小程序/.sync-mp/chk.mjs          # 15 项自检
-node 04-小程序/.sync-mp/shot.mjs --all   # 量每屏装不装得下</pre>
+node 04-小程序/.sync-mp/chk.mjs          # 16 项自检，clone 下来就能跑</pre>
 
-<p><strong>「四个人」需要云函数</strong>：部署 <code>04-小程序/cloudfunctions/talk</code>，在云开发控制台给它配环境变量 <code>OPENROUTER_KEY</code>。<em>不配也能跑</em>——那一层会退回人写的话。</p>
+<p><em>另外两个是作者本机的构建工具，不在提交仓库的运行链上</em>：<code>gen.mjs</code> 从可交互原型抽出屏数据与色板，源文件是工作仓的原型与设计画布，不随参赛仓库提交；<code>shot.mjs</code> 用真实 WXSS 渲进 headless Chrome 量一屏装不装得下，需要 macOS 与本机 Chrome。<strong>要验证这个产品的立场，跑 <code>chk.mjs</code> 就够——立场断言全在它里面。</strong></p>
+
+<p><strong>「四个人」需要云函数</strong>：部署 <code>04-小程序/cloudfunctions/talk</code>，在云开发控制台给它配环境变量 <code>OPENROUTER_KEY</code>，<strong>并把该函数的执行超时从平台默认的 3 秒改大</strong>（四个人是并发调用，3 秒一定超时——见第 07 节）。<em>不配密钥也能跑</em>——那一层会退回人写的话。</p>
 
 <h2><span class="n">09</span>不做清单</h2>
 
@@ -551,7 +554,8 @@ node 04-小程序/.sync-mp/shot.mjs --all   # 量每屏装不装得下</pre>
 
 <p class="foot">
 仓库 <a href="https://github.com/hu2976/ebbing">github.com/hu2976/ebbing</a> · Tag <code>shenicest-fission</code><br>
-更详细的产品文档见仓库内《03-路演-PRD与四分钟脚本》；调研见《10-证据-竞品地形》《11-证据-数据底册》。<br>
+本文档即完整的项目说明。路演文稿见 <code>02-路演PPT.pdf</code>，作品演示见 <code>03-演示视频.mp4</code>。<br>
+（PRD、竞品地形、数据底册属于工作过程稿，不随参赛仓库提交。）<br>
 选中任意正文可批注。批注存在浏览器本地，按文档标题索引——<strong>标题改了批注会丢</strong>。
 </p>
 

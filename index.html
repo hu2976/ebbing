@@ -3091,6 +3091,14 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
   padding:0 26px 8px;font-size:14px;font-weight:600;color:var(--pp);pointer-events:none}
 .roll{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .scr{display:none}.scr.on{display:block}
+/* 小程序里 .tide-bg 是 position:fixed（相对整块屏幕）；这里屏幕是手机壳内的盒子，
+   不覆盖会铺满整个浏览器窗口。高度里的 vh 同理要折成壳内高度。 */
+.screen .tide-bg{position:sticky;top:422px;margin-bottom:-422px;
+  height:422px;display:block}
+.screen .tide-bg.peak{top:270px;margin-bottom:-574px;height:574px}
+.screen .tide-bg.ebb{top:354px;margin-bottom:-490px;height:490px}
+.navbtn,.binder{cursor:pointer}
+.navbtn:active,.binder:active{opacity:.6}
 [data-go]{cursor:pointer}
 [data-go]:active{opacity:.6}
 .side{display:flex;flex-direction:column;gap:.5rem;min-width:11rem}
@@ -3267,7 +3275,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-b ">吃完了</div><div class="vgap"></div>
 <div class="s-q" data-go="quiet">吃不下 · 说不上来<span class="chev">›</span></div><div class="vgap"></div>
 
-</div></div></section><section class="scr" data-scr="p:during"><div class="view s-during" style="padding-top:94px"><div class="page" data-id="during">
+</div></div></section><section class="scr" data-scr="p:during"><div class="view s-during" style="padding-top:94px"><canvas class="tide-bg peak" data-tide="peak"></canvas><div class="page" data-id="during">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">吃着就行。<br>一次不会定下什么。</div><div class="vgap"></div>
@@ -3279,7 +3287,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-b dg">身体不太对</div><div class="vgap"></div>
 <div class="s-q" data-go="after">吃完了<span class="chev">›</span></div><div class="vgap"></div>
 
-</div></div></section><section class="scr" data-scr="p:urge"><div class="view s-urge" style="padding-top:94px"><div class="page" data-id="urge">
+</div></div></section><section class="scr" data-scr="p:urge"><div class="view s-urge" style="padding-top:94px"><canvas class="tide-bg rise" data-tide="rise"></canvas><div class="page" data-id="urge">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">你来了。<br>什么都先放着。</div><div class="vgap"></div>
@@ -3287,7 +3295,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-b ">今天吃过了</div><div class="vgap"></div>
 <div class="s-q" data-go="quiet">现在什么都不想回答<span class="chev">›</span></div><div class="vgap"></div>
 
-</div></div></section><section class="scr" data-scr="p:empty"><div class="view s-empty" style="padding-top:94px"><div class="page" data-id="empty">
+</div></div></section><section class="scr" data-scr="p:empty"><div class="view s-empty" style="padding-top:94px"><canvas class="tide-bg still" data-tide="still"></canvas><div class="page" data-id="empty">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">饿了。</div><div class="vgap"></div>
@@ -3337,7 +3345,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-b cl">试试含一口水，慢慢感受</div><div class="vgap"></div>
 <div class="s-q" data-go="three">有三件事看起来像那么回事<span class="chev">›</span></div><div class="vgap"></div>
 
-</div></div></section><section class="scr" data-scr="p:after"><div class="view s-after" style="padding-top:94px"><div class="page" data-id="after">
+</div></div></section><section class="scr" data-scr="p:after"><div class="view s-after" style="padding-top:94px"><canvas class="tide-bg ebb" data-tide="ebb"></canvas><div class="page" data-id="after">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">结束了。</div><div class="vgap"></div>
@@ -4447,28 +4455,153 @@ function step(B, r, R, gx, gy, dt) {
       <h2>跳转</h2>
       <button id="back">← 返回上一屏</button>
       <button id="home">回首页</button>
-      <p class="hint">屏内没有跳转的地方（输入、罐子、潮汐动画）是运行时行为，
-      demo 里不复刻——那部分请看演示视频或源码。</p>
+      <p class="hint">潮汐会动，屏内的「← 返回」也能点。
+      输入框和情绪瓶子的罐子是本机存储与物理模拟，demo 里不复刻——那两处请看演示视频。</p>
       <h2>材料</h2>
       <a class="lnk" href="03-演示视频.mp4">作品演示视频</a>
       <a class="lnk" href="01-项目文档.html">项目文档</a>
-      <a class="lnk" href="02-路演PPT.pdf">路演 PPT</a>
+      <a class="lnk" href="02-路演PPT.html">路演 PPT</a>
       <a class="lnk" href="https://github.com/hu2976/ebbing">源码仓库</a>
       <p class="hint" style="margin-top:1.2rem">烈变 · 2026 夏季千人黑客松 · 北京 g001<br>软件应用赛道 · 滴水穿石</p>
     </div>
   </div>
 </div>
 <script>
+const TIDE = {
+  rise:  { from: .82, to: .54, dur: 20, amp: [8, 4.5, 3.5], spd: .58, dots: 110, ink: .72, ampCurve: 'grow' },
+  peak:  { from: .44, to: .29, dur: 7,  amp: [26, 15, 10],  spd: 1.5, dots: 195, ink: 1.4, ampCurve: 'hold' },
+  ebb:   { from: .38, to: .78, dur: 26, amp: [12, 6.5, 4.5], spd: .44, dots: 130, ink: .82, ampCurve: 'fade' },
+  still: { from: .54, to: .54, dur: 1,  amp: [13, 7, 5.5],  spd: 1,   dots: 160, ink: 1,   ampCurve: 'hold' },
+};
+const TIDE_MODES = { urge: 'rise', during: 'peak', after: 'ebb', empty: 'still' };
+/* 从 index.js 抽来的潮汐，只垫掉了 selectorQuery / offscreenCanvas /
+   pixelRatio / requestAnimationFrame 四处。波形、墨点、纸纹全是原来那套。 */
+var ST={raf:0};
+function startTide(el,mode){
+  stopTide();
+const M = TIDE[mode] || TIDE.still;
+    const cv = el;
+        const W = el.clientWidth, H = el.clientHeight;
+        const dpr = Math.min(2, devicePixelRatio || 1);
+        cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+        const g = cv.getContext('2d');
+        g.scale(dpr, dpr);
+
+        // 纸纹：生成一次，之后每帧只贴
+        const grain = (()=>{const c=document.createElement("canvas");c.width=Math.round(W);c.height=Math.round(H);return c})();
+        const gg = grain.getContext('2d');
+        const id = gg.createImageData(Math.round(W), Math.round(H));
+        for (let i = 0; i < id.data.length; i += 4) {
+          const v = 130 + Math.random() * 125;
+          id.data[i] = v; id.data[i + 1] = v - 7; id.data[i + 2] = v - 18;
+          id.data[i + 3] = Math.random() * 13;
+        }
+        gg.putImageData(id, 0, 0);
+
+        // 墨点：小点多、大晕少（幂分布），各自漂移速度不同
+        const P = [];
+        for (let i = 0; i < M.dots; i++) P.push({
+          px: Math.random(), off: Math.random() * 2 - 1,
+          r: 3 + Math.pow(Math.random(), 2.3) * 32,
+          a: (0.012 + Math.random() * 0.052) * M.ink,
+          sp: 0.0035 + Math.random() * 0.014,
+          ph: Math.random() * Math.PI * 2,
+        });
+
+        /* 进度：0→1 走完 dur 秒后钉住，三次缓出——潮靠近岸时自己会慢下来 */
+        const prog = (t) => { const x = Math.min(1, t / M.dur); return 1 - Math.pow(1 - x, 3); };
+        const level = (t) => H * (M.from + (M.to - M.from) * prog(t));
+        /* 幅度随进度走：rise 由弱转强，ebb 越退越平，peak 一直满 */
+        const ampK = (t) => {
+          const p = prog(t);
+          return M.ampCurve === 'grow' ? 0.55 + 0.45 * p
+               : M.ampCurve === 'fade' ? 1 - 0.62 * p : 1;
+        };
+        // 三个周期叠加，所以看不出是正弦
+        const wave = (x, t) => {
+          const k = ampK(t), sp = M.spd;
+          return level(t)
+            + Math.sin((x / W) * 6.1 + t * 0.40 * sp) * M.amp[0] * k
+            + Math.sin((x / W) * 10.7 - t * 0.26 * sp) * M.amp[1] * k
+            + Math.sin((x / W) * 2.4 + t * 0.59 * sp) * M.amp[2] * k;
+        };
+
+        let t = 0;
+        const frame = () => {
+          g.clearRect(0, 0, W, H);
+
+          // 水体
+          g.beginPath();
+          g.moveTo(0, H);
+          for (let x = 0; x <= W; x += 4) g.lineTo(x, wave(x, t));
+          g.lineTo(W, H); g.closePath();
+          const wg = g.createLinearGradient(0, H * 0.30, 0, H);
+          wg.addColorStop(0, `rgba(232,224,210,${(0.028 * M.ink).toFixed(4)})`);
+          wg.addColorStop(0.55, `rgba(214,190,150,${(0.048 * M.ink).toFixed(4)})`);
+          wg.addColorStop(1, `rgba(201,160,99,${(0.082 * M.ink).toFixed(4)})`);
+          g.fillStyle = wg; g.fill();
+
+          // 墨点：叠加模式，重叠处自然变浓，像洇开
+          g.globalCompositeOperation = 'lighter';
+          for (const q of P) {
+            const x = (((q.px + t * q.sp) % 1.22) - 0.11) * W;
+            const y = wave(x, t) + q.off * 28 + Math.sin(t * 0.75 + q.ph) * 4;
+            const fade = 1 - Math.min(1, Math.abs(q.off));
+            if (fade <= 0.02) continue;
+            const rr = q.r * (0.86 + 0.28 * Math.sin(t * 0.45 + q.ph));
+            const al = q.a * fade;
+            const rg = g.createRadialGradient(x, y, 0, x, y, rr);
+            rg.addColorStop(0, `rgba(242,234,220,${al.toFixed(4)})`);
+            rg.addColorStop(0.42, `rgba(226,206,176,${(al * 0.5).toFixed(4)})`);
+            rg.addColorStop(1, 'rgba(226,206,176,0)');
+            g.fillStyle = rg;
+            g.beginPath(); g.arc(x, y, rr, 0, 6.2832); g.fill();
+          }
+          g.globalCompositeOperation = 'source-over';
+
+          /* 波脊：水面那一道。
+             原来是 1px 实线 alpha .15 —— 在文字后面横贯整屏，是一条硬边直线，
+             读起来不像水面像一条分隔线（她的原话：这后面这个线，好丑）。
+             改成宽 3px、alpha 压到 .06、再加一层 shadowBlur 糊开：
+             还看得出水到哪儿了，但不再是一条线。 */
+          g.beginPath();
+          for (let x = 0; x <= W; x += 3) { const y = wave(x, t); x ? g.lineTo(x, y) : g.moveTo(x, y); }
+          const cg = g.createLinearGradient(0, 0, W, 0);
+          cg.addColorStop(0, 'rgba(242,234,220,0)');
+          cg.addColorStop(0.22, 'rgba(242,234,220,0.06)');
+          cg.addColorStop(0.78, 'rgba(242,234,220,0.06)');
+          cg.addColorStop(1, 'rgba(242,234,220,0)');
+          g.strokeStyle = cg; g.lineWidth = 3;
+          g.shadowBlur = 10; g.shadowColor = 'rgba(242,234,220,0.18)';
+          g.stroke();
+          g.shadowBlur = 0; g.shadowColor = 'transparent';
+
+          g.globalAlpha = 0.55; g.drawImage(grain, 0, 0, W, H); g.globalAlpha = 1;
+
+          t += 0.0105 * M.spd * (M.ampCurve === 'fade' ? 1 - 0.45 * prog(t) : 1);
+          ST.raf = requestAnimationFrame(frame);
+        };
+        
+        frame();
+}
+function stopTide(){ if(ST.raf) cancelAnimationFrame(ST.raf); ST.raf=0; }
 (function(){
   var roll=document.getElementById('roll'), hist=[], end='p', cur='';
   var first={p:'p:home',c:'c:care'};
   function show(key,push){
     var el=roll.querySelector('[data-scr="'+key+'"]'); if(!el) return;
     if(push&&cur) hist.push(cur);
+    stopTide();
     roll.querySelectorAll('.scr.on').forEach(function(s){s.classList.remove('on')});
     el.classList.add('on'); roll.scrollTop=0; cur=key;
+    var cv=el.querySelector('[data-tide]');
+    /* 等一帧再起：display 刚从 none 变 block，此时 clientWidth 还是 0 */
+    if(cv) requestAnimationFrame(function(){ startTide(cv,cv.dataset.tide); });
   }
+  function back(){ var p=hist.pop(); if(p) show(p,false); }
   roll.addEventListener('click',function(e){
+    /* 屏内自带的返回键（.navbtn / .binder），和小程序里 bindtap="back" 是同一个 */
+    if(e.target.closest('.navbtn,.binder')){ back(); return; }
     var t=e.target.closest('[data-go]'); if(!t) return;
     show(end+':'+t.dataset.go,true);
   });
@@ -4478,9 +4611,7 @@ function step(B, r, R, gx, gy, dt) {
       b.classList.add('on'); end=b.dataset.end; hist=[]; show(first[end],false);
     });
   });
-  document.getElementById('back').addEventListener('click',function(){
-    var p=hist.pop(); if(p) show(p,false);
-  });
+  document.getElementById('back').addEventListener('click',back);
   document.getElementById('home').addEventListener('click',function(){hist=[];show(first[end],false)});
   show(first.p,false);
 })();

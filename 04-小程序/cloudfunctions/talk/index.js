@@ -24,7 +24,7 @@ const https = require('https');
    这一层要的是"说一段短话"，不是推理，用非 reasoning 的快模型就够。 */
 /* ⚠️ 必须用**非 reasoning** 模型。这一处撞了两轮：
      reasoning 模型（qwen3.7-flash / step-3.5-flash / deepseek-v4-flash）
-     把 max_tokens 全花在思考上——给 300 就返回空，给 3000 就要 16 秒。
+     把 max_tokens 全花在思考上——给 400 就返回空，给 3000 就要 16 秒。
      调那个数字是解不开的，得换模型。
 
    实测（max_tokens=400，从本机，四个人各一次）：
@@ -55,9 +55,9 @@ function ask(system, user, history) {
       model: MODEL,
       temperature: 0.7,          // 太低四个人会说得一样；太高会滑出人设
       /* ⚠️ 这个数不是上限保护，是模型的**写作预算**——给多少它就想写多少。
-         原来写 3000，于是每次都要十几秒；这一层要的是三句话，300 够了。
-         实测：3000 → 16s，300 → 2~5s。一个数字的事。 */
-      max_tokens: 400,   // 三句话够用；400 是留一点余量，不是写作预算
+         原来写 3000，于是每次都要十几秒；这一层要的是三句话，400 够了。
+         实测：3000 → 16s，400 → 2~5s。一个数字的事。 */
+      max_tokens: 400,   // 三句话够用，留一点余量
       messages: msgs,
     });
     const req = https.request({

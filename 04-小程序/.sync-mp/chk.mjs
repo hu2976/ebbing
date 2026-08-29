@@ -1,9 +1,10 @@
 /* 小程序自检：每个块都有 prep 分支、每个块型都有 WXML 分支、无死链。
    跑法：node .sync-mp/chk.mjs（先跑 gen.mjs） */
 import fs from 'fs';
+import path from 'path';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const R = '/Users/hujinghan/Desktop/搓点有趣的/退潮/04-小程序';
+const R = path.resolve(import.meta.dirname, '..');
 const D = (await import(R + '/data/screens.js')).default
        || require(R + '/data/screens.js');   // CJS 模块
 /* 有几组屏是代码生成的（七张反应卡、gate 七种建议、two 两支），静态数据里没有。
