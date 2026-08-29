@@ -217,6 +217,16 @@ h1 .hl{color:var(--brass)}
    不是截图，是把真实产品文案跑在一个迷你状态机里。
    样式照 04-小程序/pages/index/index.wxss 的语言压缩而来：
    装订侧 / 手写下划线 + 手画箭头 / 黄铜小色块 / 楷体引文 / 无框按钮 */
+/* ── 第 15 页单独收紧 ────────────────────────────────────────
+   三个手机并排让这一屏比其余 20 屏高出约 160px。在 900 高的笔记本上
+   （视口约 813）底部两行会被切掉，而 scroll-snap 让那两行滚不到：
+   「Zainal et al. 2025」和「『没有游戏化』就是我们砍掉进度条的依据」。
+   1080p 全屏本来就装得下，这几条只在视口矮时起作用。
+   用 transform 等比缩，不改 .scr 高度——改高度会切掉手机屏里的内容；
+   负 margin 把 transform 没有回收的布局高度收回来（448×0.24≈108）。 */
+#s15 .phone.sm{transform:scale(.76);transform-origin:top center;margin-bottom:-108px}
+#s15{padding-top:8vh;padding-bottom:6vh}
+#s15 .src{margin-top:14px}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,34px);margin-top:22px}
 .three .col{display:flex;flex-direction:column;align-items:center}
 .three .tx{margin-top:10px;font-size:13px;line-height:1.75;color:var(--muted);text-align:left;width:100%}
