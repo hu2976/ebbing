@@ -397,6 +397,21 @@
 <p style="margin:10px 0 0"><em>「先写后看」这条规则当初定它的理由是"防止她照着别人写"，纯功能考虑。而萨福那句"与他人的关系始于与自己的关系"，正是这条规则的哲学表述——两边独立推到了同一个地方。</em></p>
 </div>
 
+<div class="box acc">
+<span class="lbl">秒哒「她创未来 · 超级个体」</span>
+<p style="margin:0 0 10px">个人参赛。产品决策、调研、文案、设计、前端、云函数、自检工具，一个人做完 62 屏患者端 + 22 屏照护者端、55 种块型、约 4800 行手写 JS。<strong>做得完不是因为人更能干，是因为团队里靠人盯的那几环，换成了机器每次构建都会跑一遍的断言。</strong></p>
+<div class="scroll"><table style="margin:0">
+<thead><tr><th style="width:44%">团队里靠人盯的</th><th>这里换成了什么</th></tr></thead>
+<tbody>
+<tr><td>文案改了，要同步到设计稿和代码</td><td><strong>唯一源 + 生成</strong>：文案一个源、视觉一个源，<code>gen.mjs</code> 往下生成，手抄的环节不存在</td></tr>
+<tr><td>互相 review 有没有说错话</td><td><strong>4 条立场断言</strong>：存 ≠ 给别人看、门槛对称不偏向好话、润色过的串联退回、患者端无临床词——写进 <code>chk.mjs</code>，非 0 即构建失败</td></tr>
+<tr><td>设计走查「一屏装不装得下」</td><td><strong><code>shot.mjs</code></strong>：真实 WXSS 渲进 headless Chrome 量，不靠估</td></tr>
+<tr><td>盯着 AI 别乱说</td><td><strong><code>guard.js</code> 护栏 + 人写语料兜底</strong>：模型不可用时退回人写的话，产品照常用</td></tr>
+</tbody>
+</table></div>
+<p style="margin:10px 0 0"><em>但有一环没法交给机器，也没法交给别人：判断标准本身。四条产品约束（不制造动机、热量作下限、冲突制造症状、那句起作用的话）来自亲历，不来自调研——AI 放大的是判断力，判断力的来源不可替代。这个产品只能由这样一个人起头，做完它却需要一整套机器。</em></p>
+</div>
+
 <h2><span class="n">05</span>团队分工</h2>
 
 <p><strong>个人参赛。</strong>产品决策、调研、文案、设计、前端、云函数、自检工具，全部一人完成。</p>

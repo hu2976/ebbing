@@ -3250,7 +3250,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
         fill="#FFF" opacity="0.4856324769210222"/></g>
 </g>
 </g>
-</svg></div></div><div class="s-ti">今天的滋味</div><div class="s-food n3">烤红薯</div></div><div class="vgap"></div>
+</svg></div></div><div class="s-ti">今天的滋味</div><div class="s-food n3" data-go="taste-card">烤红薯</div></div><div class="vgap"></div>
 <div class="s-hr"></div><div class="vgap"></div>
 <div class="s-ti">今天怎么样</div><div class="vgap"></div>
 <div class="cells"><div class="cell "></div><div class="cell "></div><div class="cell "></div><div class="cell on"></div><div class="cell e next"></div><div class="cell e"></div></div><div class="vgap"></div>
@@ -3264,15 +3264,15 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-q" data-go="group">那场是什么<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-b big" data-go="mine">我现在不太好</div><div class="vgap"></div>
 <div class="s-q" data-go="sip">试试含一口水，慢慢感受<span class="chev">›</span></div><div class="vgap"></div>
-<div class="s-foot"><div class="footbtn">身体不舒服</div><div class="footbtn">什么时候必须去医院</div></div><div class="vgap"></div>
+<div class="s-foot"><div class="footbtn" data-go="vom">身体不舒服</div><div class="footbtn" data-go="sos">什么时候必须去医院</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:mine"><div class="view s-mine" style="padding-top:94px"><div class="page" data-id="mine">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">你来了。</div><div class="vgap"></div>
-<div class="s-b ">很想吃</div><div class="vgap"></div>
-<div class="s-b ">正在吃</div><div class="vgap"></div>
-<div class="s-b ">吃完了</div><div class="vgap"></div>
+<div class="s-b " data-go="urge">很想吃</div><div class="vgap"></div>
+<div class="s-b " data-go="during">正在吃</div><div class="vgap"></div>
+<div class="s-b " data-go="after">吃完了</div><div class="vgap"></div>
 <div class="s-q" data-go="quiet">吃不下 · 说不上来<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:during"><div class="view s-during" style="padding-top:94px"><canvas class="tide-bg peak" data-tide="peak"></canvas><div class="page" data-id="during">
@@ -3284,15 +3284,15 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-box">今天之后可能会觉得肿，秤上也会重一点。那是水，几天就下去了。</div><div class="vgap"></div>
 <div class="s-num">现在这一页上，还有 12 个人。</div><div class="vgap"></div>
 <div class="s-s">谁也不知道谁是谁。</div><div class="vgap"></div>
-<div class="s-b dg">身体不太对</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">身体不太对</div><div class="vgap"></div>
 <div class="s-q" data-go="after">吃完了<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:urge"><div class="view s-urge" style="padding-top:94px"><canvas class="tide-bg rise" data-tide="rise"></canvas><div class="page" data-id="urge">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">你来了。<br>什么都先放着。</div><div class="vgap"></div>
-<div class="s-b ">今天吃得很少</div><div class="vgap"></div>
-<div class="s-b ">今天吃过了</div><div class="vgap"></div>
+<div class="s-b " data-go="empty">今天吃得很少</div><div class="vgap"></div>
+<div class="s-b " data-go="skill">今天吃过了</div><div class="vgap"></div>
 <div class="s-q" data-go="quiet">现在什么都不想回答<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:empty"><div class="view s-empty" style="padding-top:94px"><canvas class="tide-bg still" data-tide="still"></canvas><div class="page" data-id="empty">
@@ -3313,17 +3313,17 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-p">配一个蛋，或者一块肉。</div><div class="vgap"></div>
 <div class="s-p">有菜就加一样，没有也行。</div><div class="vgap"></div>
 <div class="s-box">饭就是饭。吃下去，人就有力气。</div><div class="vgap"></div>
-<div class="s-b ">吃完了，这阵过去了</div><div class="vgap"></div>
+<div class="s-b " data-go="passed">吃完了，这阵过去了</div><div class="vgap"></div>
 <div class="s-q" data-go="empty">换一种<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:skill"><div class="view s-skill" style="padding-top:94px"><div class="page" data-id="skill">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">它会自己退。<br>等着就行。</div><div class="vgap"></div>
-<div class="s-b ">把手放到冷水下面</div><div class="vgap"></div>
+<div class="s-b " data-go="passed">把手放到冷水下面</div><div class="vgap"></div>
 <div class="s-row"><span class="rk">含一块冰</span><span class="rv">慢慢感受口腔冰冰凉凉的感觉</span></div><div class="vgap"></div>
 <div class="s-box">现在想去抵消掉刚才那顿的话，先别。那条路事后更难。</div><div class="vgap"></div>
-<div class="s-b ">用了，这阵过去了</div><div class="vgap"></div>
+<div class="s-b " data-go="passed">用了，这阵过去了</div><div class="vgap"></div>
 <div class="s-q" data-go="sip">试试含一口水，慢慢感受<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="group">去看「一起正念」<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="during">在吃<span class="chev">›</span></div><div class="vgap"></div>
@@ -3333,7 +3333,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">好。</div><div class="vgap"></div>
 <div class="s-p">愿意做点其他的什么吗。</div><div class="vgap"></div>
-<div class="s-b cl">一起正念</div><div class="vgap"></div>
+<div class="s-b cl" data-go="mind">一起正念</div><div class="vgap"></div>
 <div class="s-q" data-go="sip">试试含一口水，慢慢感受<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:passed"><div class="view s-passed" style="padding-top:94px"><div class="page" data-id="passed">
@@ -3342,7 +3342,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-h">过去了。</div><div class="vgap"></div>
 <div class="s-p">吃多了一点，或者少了一点，都没有把今天定下来。</div><div class="vgap"></div>
 <div class="s-box">那是一阵，不是你。</div><div class="vgap"></div>
-<div class="s-b cl">试试含一口水，慢慢感受</div><div class="vgap"></div>
+<div class="s-b cl" data-go="sip">试试含一口水，慢慢感受</div><div class="vgap"></div>
 <div class="s-q" data-go="three">有三件事看起来像那么回事<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:after"><div class="view s-after" style="padding-top:94px"><canvas class="tide-bg ebb" data-tide="ebb"></canvas><div class="page" data-id="after">
@@ -3351,8 +3351,8 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-h">结束了。</div><div class="vgap"></div>
 <div class="s-box">现在想去抵消掉刚才那顿的话，先别。那条路事后更难。</div><div class="vgap"></div>
 <div class="s-p">先看看身体。</div><div class="vgap"></div>
-<div class="s-b dg">有点不舒服</div><div class="vgap"></div>
-<div class="s-b ">还行</div><div class="vgap"></div>
+<div class="s-b dg" data-go="vom">有点不舒服</div><div class="vgap"></div>
+<div class="s-b " data-go="passed">还行</div><div class="vgap"></div>
 <div class="s-q" data-go="three">有三件事看起来像那么回事<span class="chev">›</span></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:vom"><div class="view s-vom" style="padding-top:94px"><div class="page" data-id="vom">
@@ -3363,7 +3363,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-row"><span class="rk">水一小口一小口</span><span class="rv">胃已经不舒服了，猛灌会更胀</span></div><div class="vgap"></div>
 <div class="s-row"><span class="rk">别平躺</span><span class="rv">垫高一点</span></div><div class="vgap"></div>
 <div class="s-row"><span class="rk">下一顿还是到点吃</span><span class="rv">相信我们的身体</span></div><div class="vgap"></div>
-<div class="s-b dg">这些情况，等一等风险更大</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">这些情况，等一等风险更大</div><div class="vgap"></div>
 <div class="s-q" data-go="swell">停下来的头几天会怎样<span class="chev">›</span></div><div class="vgap"></div>
 <div class="foldwrap"><div class="morebtn"><span>更多</span><span class="chev mchev">›</span></div></div>
 </div></div></section><section class="scr" data-scr="p:swell"><div class="view s-swell" style="padding-top:94px"><div class="page" data-id="swell">
@@ -3395,7 +3395,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="s-h">一口水。</div><div class="vgap"></div>
 <div class="s-p">含着。<br>凉的，还是温的。<br>它在嘴里哪个位置。</div><div class="vgap"></div>
 <div class="s-p">然后想点什么。</div><div class="vgap"></div>
-<div class="s-b cl">好了</div><div class="vgap"></div>
+<div class="s-b cl" data-go="home">好了</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:taste-card"><div class="view s-taste-card" style="padding-top:94px"><div class="page" data-id="taste-card">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -3569,7 +3569,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">记下了。</div><div class="vgap"></div>
 <div class="s-box">但这只是一个词，它不代表对你的任何评价。</div><div class="vgap"></div>
-<div class="s-b cl">看看情绪瓶子</div><div class="vgap"></div>
+<div class="s-b cl" data-go="bottle">看看情绪瓶子</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:bottle"><div class="view s-bottle" style="padding-top:94px"><div class="page" data-id="bottle">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -3763,7 +3763,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">一起正念</div><div class="vgap"></div>
 <div class="s-ti">现在自己做</div><div class="vgap"></div>
-<div class="s-pair"><div class="s-b cl flat">正念</div><div class="s-b cl flat">冥想</div></div><div class="vgap"></div>
+<div class="s-pair"><div class="s-b cl flat" data-go="mind">正念</div><div class="s-b cl flat" data-go="medit">冥想</div></div><div class="vgap"></div>
 <div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
 <div class="s-hr"></div><div class="vgap"></div>
 <div class="s-ti">今天三场 · 一起</div><div class="vgap"></div>
@@ -3820,16 +3820,16 @@ function step(B, r, R, gx, gy, dt) {
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">好。那就这样。</div><div class="vgap"></div>
 <div class="s-p">改变会发生在你想改变的时候。</div><div class="vgap"></div>
-<div class="s-b dg">身体不对的时候</div><div class="vgap"></div>
-<div class="s-b ">正在吃</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">身体不对的时候</div><div class="vgap"></div>
+<div class="s-b " data-go="during">正在吃</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:entry"><div class="haze"><div class="hz h1"></div><div class="hz h2"></div><div class="hz h3"></div></div><div class="view s-entry" style="padding-top:94px"><div class="page" data-id="entry">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">八月三十</span></div>
 <div class="nav root"></div>
 <div class="s-h">你是为自己来的，<br>还是为了一个<br>你在意的人。</div><div class="vgap"></div>
 <div class="s-gap"></div><div class="vgap"></div>
-<div class="s-b ">为自己</div><div class="vgap"></div>
-<div class="s-b ">为了一个我在意的人</div><div class="vgap"></div>
+<div class="s-b " data-go="home">为自己</div><div class="vgap"></div>
+<div class="s-b " data-go="worry">为了一个我在意的人</div><div class="vgap"></div>
 <div class="s-s">还没打算改变的话，也可以先看看。</div><div class="vgap"></div>
 <div class="s-q" data-go="notyet">我还没打算改变<span class="chev">›</span></div><div class="vgap"></div>
 
@@ -3839,8 +3839,8 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-h">先进来看看。</div><div class="vgap"></div>
 <div class="s-p">到这儿的时候，手里常常只有几件说不清的小事：吃的少了、垃圾里有包装、饭后总在卫生间、情绪突然就下去了。</div><div class="vgap"></div>
 <div class="s-p">这里把你看见的动作，翻译成它可能的意思。</div><div class="vgap"></div>
-<div class="s-b ">我看见的是……</div><div class="vgap"></div>
-<div class="s-b dg">什么时候必须送医院</div><div class="vgap"></div>
+<div class="s-b " data-go="tr">我看见的是……</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">什么时候必须送医院</div><div class="vgap"></div>
 <div class="s-s">这条比什么都重要。</div><div class="vgap"></div>
 <div class="s-q" data-go="w-react">我自己的反应在起什么作用<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="two">我总忍不住说 ta<span class="chev">›</span></div><div class="vgap"></div>
@@ -3907,14 +3907,14 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-ti">现在</div><div class="vgap"></div>
 <div class="s-box">把红旗清单贴到冰箱上，或者发在家庭群里。</div><div class="vgap"></div>
 <div class="vgap"></div>
-<div class="s-b dg">哪些情况必须立刻送医院</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">哪些情况必须立刻送医院</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:two"><div class="view s-two" style="padding-top:94px"><div class="page" data-id="two">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">担心一个人的时候，<br>人会往两个相反的方向跑。</div><div class="vgap"></div>
 <div class="s-p">这两种需要的建议正好相反。</div><div class="vgap"></div>
-<div class="twoway"><div class="tw"><span class="twt">我总忍不住说 ta</span><span class="twh">说了又后悔，下次还是会说</span><span class="chev">›</span></div><div class="tw"><span class="twt">我什么都不敢说</span><span class="twh">怕说错，所以装作没看见</span><span class="chev">›</span></div></div><div class="vgap"></div>
+<div class="twoway"><div class="tw" data-go="w-say"><span class="twt">我总忍不住说 ta</span><span class="twh">说了又后悔，下次还是会说</span><span class="chev">›</span></div><div class="tw" data-go="w-quiet"><span class="twt">我什么都不敢说</span><span class="twh">怕说错，所以装作没看见</span><span class="chev">›</span></div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:tr"><div class="view s-tr" style="padding-top:94px"><div class="page" data-id="tr">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -3926,7 +3926,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-q" data-go="tr-table">ta 拨来拨去不吃<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="tr-swell">ta 好像脸肿了<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="tr-mark">ta 手背指关节有老茧<span class="chev">›</span></div><div class="vgap"></div>
-<div class="s-b dg">哪些情况必须立刻送医院</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">哪些情况必须立刻送医院</div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:learn"><div class="view s-learn" style="padding-top:94px"><div class="page" data-id="learn">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -3943,8 +3943,8 @@ function step(B, r, R, gx, gy, dt) {
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">这些情况，<br>等一等的风险更大。</div><div class="vgap"></div>
-<div class="s-b dg">120　急救</div><div class="vgap"></div>
-<div class="s-b dg">12356　心理援助</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">120　急救</div><div class="vgap"></div>
+<div class="s-b dg" data-go="sos">12356　心理援助</div><div class="vgap"></div>
 <div class="s-row"><span class="rk">心里发慌、心跳乱、胸口闷</span><span class="rv">钾少了引起的心律问题</span></div><div class="vgap"></div>
 <div class="s-row"><span class="rk">很没力气、抽筋、手脚发麻</span><span class="rv"></span></div><div class="vgap"></div>
 <div class="s-row"><span class="rk">头晕、站不稳、意识不清</span><span class="rv"></span></div><div class="vgap"></div>
@@ -4068,7 +4068,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-box">一天只说一次。说完就走开，不等回答。</div><div class="vgap"></div>
 <div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
 <div class="s-ti">这一支对着两张卡：</div><div class="vgap"></div>
-<div class="beasts"><div class="bcard a-rhino "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">想把道理讲清楚</span><span class="ba">「犀牛」</span></div><div class="bcard a-terrier "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">忍不住一直提</span><span class="ba">「梗犬」</span></div></div><div class="vgap"></div>
+<div class="beasts"><div class="bcard a-rhino " data-go="w-rhino"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">想把道理讲清楚</span><span class="ba">「犀牛」</span></div><div class="bcard a-terrier " data-go="w-terrier"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">忍不住一直提</span><span class="ba">「梗犬」</span></div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-quiet"><div class="view s-w-quiet" style="padding-top:94px"><div class="page" data-id="w-quiet">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4079,14 +4079,14 @@ function step(B, r, R, gx, gy, dt) {
 <div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
 <div class="vgap"></div>
 <div class="s-ti">这一支对着两张卡：</div><div class="vgap"></div>
-<div class="beasts"><div class="bcard a-ostrich "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">看见了但装作没看见</span><span class="ba">「鸵鸟」</span></div><div class="bcard a-kangaroo "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">把所有难都替 ta 挡掉</span><span class="ba">「袋鼠」</span></div></div><div class="vgap"></div>
+<div class="beasts"><div class="bcard a-ostrich " data-go="w-ostrich"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">看见了但装作没看见</span><span class="ba">「鸵鸟」</span></div><div class="bcard a-kangaroo " data-go="w-kangaroo"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">把所有难都替 ta 挡掉</span><span class="ba">「袋鼠」</span></div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-react"><div class="view s-w-react" style="padding-top:94px"><div class="page" data-id="w-react">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
 <div class="nav"><div class="navbtn">← 返回</div></div>
 <div class="s-h">你自己的反应，<br>也在起作用。</div><div class="vgap"></div>
 <div class="swrap"><div class="sbtn">为什么<span class="chev">›</span></div></div><div class="vgap"></div>
-<div class="beasts"><div class="bcard a-rhino "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">想把道理讲清楚</span><span class="ba">「犀牛」</span></div><div class="bcard a-terrier "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">忍不住一直提</span><span class="ba">「梗犬」</span></div><div class="bcard a-ostrich "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">看见了但装作没看见</span><span class="ba">「鸵鸟」</span></div><div class="bcard a-kangaroo "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">把所有难都替 ta 挡掉</span><span class="ba">「袋鼠」</span></div><div class="bcard a-jelly "><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">自己先撑不住</span><span class="ba">「水母」</span></div><div class="bcard a-dolphin ideal"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">在旁边一起走</span><span class="ba">「海豚」</span></div><div class="bcard a-stbernard ideal"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">不慌</span><span class="ba">「圣伯纳犬」</span></div></div><div class="vgap"></div>
+<div class="beasts"><div class="bcard a-rhino " data-go="w-rhino"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">想把道理讲清楚</span><span class="ba">「犀牛」</span></div><div class="bcard a-terrier " data-go="w-terrier"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">忍不住一直提</span><span class="ba">「梗犬」</span></div><div class="bcard a-ostrich " data-go="w-ostrich"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">看见了但装作没看见</span><span class="ba">「鸵鸟」</span></div><div class="bcard a-kangaroo " data-go="w-kangaroo"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">把所有难都替 ta 挡掉</span><span class="ba">「袋鼠」</span></div><div class="bcard a-jelly " data-go="w-jelly"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">自己先撑不住</span><span class="ba">「水母」</span></div><div class="bcard a-dolphin ideal" data-go="w-dolphin"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">在旁边一起走</span><span class="ba">「海豚」</span></div><div class="bcard a-stbernard ideal" data-go="w-stbernard"><div class="bart"><div class="bl1"></div><div class="bl2"></div><div class="bl3"></div></div><span class="bt">不慌</span><span class="ba">「圣伯纳犬」</span></div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="p:w-rhino"><div class="view s-w-rhino" style="padding-top:94px"><div class="page" data-id="w-rhino">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
@@ -4183,7 +4183,7 @@ function step(B, r, R, gx, gy, dt) {
 <div class="s-q" data-go="care-react">我的反应在起什么作用<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-q" data-go="care-obs">两处最容易被读错的样子<span class="chev">›</span></div><div class="vgap"></div>
 <div class="s-b big" data-go="care-red">什么时候必须去医院</div><div class="vgap"></div>
-<div class="s-foot"><div class="footbtn">孩子还未成年</div><div class="footbtn">一句最硬的建议</div></div><div class="vgap"></div>
+<div class="s-foot"><div class="footbtn" data-go="care-minor">孩子还未成年</div><div class="footbtn" data-go="care-one">一句最硬的建议</div></div><div class="vgap"></div>
 
 </div></div></section><section class="scr" data-scr="c:care-course"><div class="view s-care-course" style="padding-top:94px"><div class="page" data-id="care-course">
 <div class="binder"><span class="binder-mk"></span><span class="binder-tx">← 返回</span></div>
