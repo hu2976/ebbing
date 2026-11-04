@@ -3092,7 +3092,10 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 .bar{position:absolute;top:0;left:0;right:0;height:94px;z-index:15;
   display:flex;align-items:flex-end;justify-content:space-between;
   padding:0 26px 8px;font-size:14px;font-weight:600;color:var(--pp);pointer-events:none}
-.roll{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.roll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+/* 真手机屏不显示滚动条。浏览器的滚动条会吃掉 30px 宽高，首屏就从刚好装下变成要滑；
+   饺子插画右边故意出血，overflow-x 不收就会冒出横向滚动条。 */
+.roll::-webkit-scrollbar{display:none}
 .scr{display:none}.scr.on{display:block}
 /* 小程序里 .tide-bg 是 position:fixed（相对整块屏幕）；这里屏幕是手机壳内的盒子，
    不覆盖会铺满整个浏览器窗口。高度里的 vh 同理要折成壳内高度。 */
