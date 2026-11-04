@@ -3076,11 +3076,11 @@ view, text, rich-text, canvas, image{ box-sizing:border-box; }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--pp);
   font-family:-apple-system,"PingFang SC","HarmonyOS Sans SC",sans-serif}
-.stage{min-height:100vh;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:1.4rem;padding:2.5rem 1rem}
-.tt{text-align:center}
-.tt h1{font-size:1.35rem;font-weight:600;margin:0;letter-spacing:.04em}
-.tt p{margin:.45rem 0 0;font-size:.85rem;color:var(--p3)}
+/* 整页一屏：舞台锁视口高度，手机和右栏各自按高度缩（fit 脚本在文末），
+   标题收进右栏，不再在手机上方占一行 */
+.stage{height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;padding:16px}
+.rig{display:flex;align-items:center;gap:56px}
 /* 手机外壳：圆角机身 + 灵动岛。壳只是画框，屏内是真实 WXSS 渲的 */
 .phone{position:relative;width:390px;height:844px;flex:none;
   border-radius:54px;padding:12px;background:#2A2724;
@@ -3099,6 +3099,11 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 .scr{display:none}.scr.on{display:block}
 /* 小程序里 .tide-bg 是 position:fixed（相对整块屏幕）；这里屏幕是手机壳内的盒子，
    不覆盖会铺满整个浏览器窗口。高度里的 vh 同理要折成壳内高度。 */
+/* 屏内的 100vh 在小程序里就是屏幕高；这里得折成壳内 820px（844 机身 − 2×12 边框），
+   否则窗口一高，首屏就被撑出滚动。 */
+.screen .view{min-height:820px}
+.screen .page{min-height:calc(820px - 135.200px)}
+.screen .s-entry .page{min-height:calc(820px - 124.800px)}
 .screen .tide-bg{position:sticky;top:422px;margin-bottom:-422px;
   height:422px;display:block}
 .screen .tide-bg.peak{top:270px;margin-bottom:-574px;height:574px}
@@ -3107,22 +3112,31 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 .navbtn:active,.binder:active{opacity:.6}
 [data-go]{cursor:pointer}
 [data-go]:active{opacity:.6}
-.side{display:flex;flex-direction:column;gap:.5rem;min-width:11rem}
-.side h2{font-size:.7rem;letter-spacing:.16em;color:var(--p3);margin:.2rem 0 .3rem;font-weight:600}
-.side button{appearance:none;background:none;border:1px solid var(--hair);color:var(--pp);
-  font:inherit;font-size:.82rem;padding:.5rem .8rem;border-radius:2px;cursor:pointer;text-align:left}
-.side button:hover{background:#1F1A15}
-.side button.on{border-color:var(--brass);color:var(--brass)}
-.side .lnk{display:block;font-size:.82rem;color:var(--pp);text-decoration:none;
-  padding:.42rem 0;border-bottom:1px solid var(--hair)}
-.side .lnk::after{content:" →";color:var(--brass)}
-.side .lnk:hover{color:var(--brass)}
-.hint{font-size:.75rem;color:var(--p3);line-height:1.7;max-width:11rem}
-@media(max-width:900px){.stage{padding:1rem}}
+.side{width:280px;display:flex;flex-direction:column;gap:22px}
+.brand h1{font-size:44px;font-weight:600;letter-spacing:.08em;margin:0;line-height:1}
+.brand .en{display:block;margin-top:12px;font-size:12px;letter-spacing:.62em;color:var(--p3)}
+.brand p{margin:16px 0 0;font-size:13px;line-height:1.8;color:var(--p3)}
+.grp h2{font-size:11px;letter-spacing:.22em;color:var(--p3);margin:0 0 8px;font-weight:600}
+/* 两个并排的胶囊，圆角用产品里按钮那一档 999 */
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--hair);border-radius:999px;padding:3px}
+.seg button{appearance:none;background:none;border:0;border-radius:999px;color:var(--pp);
+  font:inherit;font-size:13px;padding:9px 0;cursor:pointer;transition:background .2s}
+.seg button b{font-weight:400;color:var(--p3);margin-left:6px;font-size:12px}
+.seg button:hover{background:#1F1A15}
+.seg button.on{background:var(--brass);color:#171310}
+.seg button.on b{color:rgba(23,19,16,.62)}
+.hint{font-size:12px;color:var(--p3);line-height:1.8;margin:0}
+.mats{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}
+.lnk{font-size:13px;color:var(--pp);text-decoration:none;padding:9px 0;border-bottom:1px solid var(--hair)}
+.lnk::after{content:" →";color:var(--brass)}
+.lnk:hover{color:var(--brass)}
+.credit{font-size:11px;color:var(--p3);opacity:.75;line-height:1.7;margin:0}
+/* 窄屏（手机上直接打开）：上下排，手机先装满一屏，右栏往下滑 */
+@media(max-width:720px){.stage{height:auto;overflow:visible;padding:24px 16px}
+  .rig{flex-direction:column;gap:32px}}
 </style>
 <div class="stage">
-  <div class="tt"><h1>退潮 · ebbing</h1><p>点屏内的按钮就能走。这是小程序此刻的真实界面，用同一份数据和同一份 WXSS 渲的。</p></div>
-  <div style="display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap;justify-content:center">
+  <div class="rig">
     <div class="phone"><div class="island"></div>
       <div class="screen">
         <div class="bar"><span>22:41</span><span>●●●●</span></div>
@@ -4387,20 +4401,21 @@ function step(B, r, R, gx, gy, dt) {
       </div>
     </div>
     <div class="side">
-      <h2>两端</h2>
-      <button data-end="p" class="on">患者端　62 屏</button>
-      <button data-end="c">照护者端　22 屏</button>
-      <h2>跳转</h2>
-      <button id="back">← 返回上一屏</button>
-      <button id="home">回首页</button>
-      <p class="hint">潮汐会动，屏内的「← 返回」也能点。
-      输入框和情绪瓶子的罐子是本机存储与物理模拟，demo 里不复刻——那两处请看演示视频。</p>
-      <h2>材料</h2>
-      <a class="lnk" href="03-演示视频.mp4">作品演示视频</a>
-      <a class="lnk" href="01-项目文档.html">项目文档</a>
-      <a class="lnk" href="02-路演PPT.html">路演 PPT</a>
-      <a class="lnk" href="https://github.com/hu2976/ebbing">源码仓库</a>
-      <p class="hint" style="margin-top:1.2rem">烈变 · 2026 夏季千人黑客松 · 北京 g001<br>软件应用赛道 · 滴水穿石</p>
+      <div class="brand"><h1>退潮</h1><span class="en">EBBING</span>
+        <p>点屏内的按钮就能走。这是小程序此刻的真实界面，用同一份数据和同一份 WXSS 渲的。</p></div>
+      <div class="grp"><h2>两端</h2><div class="seg">
+        <button data-end="p" class="on">患者端<b>62 屏</b></button>
+        <button data-end="c">照护者端<b>22 屏</b></button></div></div>
+      <div class="grp"><h2>跳转</h2><div class="seg">
+        <button id="back">← 上一屏</button>
+        <button id="home">回首页</button></div></div>
+      <p class="hint">潮汐会动，屏内的「← 返回」也能点。输入框和情绪瓶子的罐子是本机存储与物理模拟，demo 里不复刻——那两处请看演示视频。</p>
+      <div class="grp"><h2>材料</h2><nav class="mats">
+        <a class="lnk" href="03-演示视频.mp4">演示视频</a>
+        <a class="lnk" href="01-项目文档.html">项目文档</a>
+        <a class="lnk" href="02-路演PPT.html">路演 PPT</a>
+        <a class="lnk" href="https://github.com/hu2976/ebbing">源码仓库</a></nav></div>
+      <p class="credit">烈变 · 2026 夏季千人黑客松 · 北京 g001<br>软件应用赛道 · 滴水穿石</p>
     </div>
   </div>
 </div>
@@ -4641,11 +4656,15 @@ function stopTide(){ if(ST.raf) cancelAnimationFrame(ST.raf); ST.raf=0; }
   document.getElementById('home').addEventListener('click',function(){hist=[];show(first[end],false)});
   show(first.p,false);
 })();
-/* 手机壳按窗口剩余高度缩放：嵌进个人网站的 iframe（只有 80vh）也能一屏看完。
-   用 zoom 不用 transform——transform 不改布局占位，缩完下面还空一大块。 */
-(function(){var p=document.querySelector('.phone');
-  function fit(){p.style.zoom=1;var r=p.getBoundingClientRect();
-    var s=Math.min(1,(innerHeight-(r.top+scrollY)-16)/r.height,(innerWidth-32)/r.width);
-    p.style.zoom=Math.max(.5,s);}
+/* 一屏装下：手机和右栏各自按视口高度缩（右栏本来就比手机矮，多半不用缩），
+   宽度不够再一起缩。用 zoom 不用 transform——transform 不改占位，缩完还空一大块。
+   窄屏上下排，只让手机装满一屏。 */
+(function(){var p=document.querySelector('.phone'),sd=document.querySelector('.side');
+  function fit(){p.style.zoom=1;sd.style.zoom=1;
+    var H=innerHeight-32,W=innerWidth-32,a=p.getBoundingClientRect(),b=sd.getBoundingClientRect();
+    if(innerWidth<=720){p.style.zoom=Math.max(.3,Math.min(1,H/a.height,W/a.width));return}
+    var zp=Math.min(1,H/a.height),zs=Math.min(1,H/b.height),
+        k=Math.min(1,(W-56)/(a.width*zp+b.width*zs));
+    p.style.zoom=zp*k;sd.style.zoom=zs*k;}
   addEventListener('resize',fit);fit();})();
 </script>
