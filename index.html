@@ -3115,7 +3115,7 @@ html,body{margin:0;background:var(--bg);color:var(--pp);
 .side .lnk::after{content:" →";color:var(--brass)}
 .side .lnk:hover{color:var(--brass)}
 .hint{font-size:.75rem;color:var(--p3);line-height:1.7;max-width:11rem}
-@media(max-width:900px){.stage{padding:1rem}.phone{transform:scale(.8);transform-origin:top center}}
+@media(max-width:900px){.stage{padding:1rem}}
 </style>
 <div class="stage">
   <div class="tt"><h1>退潮 · ebbing</h1><p>点屏内的按钮就能走。这是小程序此刻的真实界面，用同一份数据和同一份 WXSS 渲的。</p></div>
@@ -4638,4 +4638,11 @@ function stopTide(){ if(ST.raf) cancelAnimationFrame(ST.raf); ST.raf=0; }
   document.getElementById('home').addEventListener('click',function(){hist=[];show(first[end],false)});
   show(first.p,false);
 })();
+/* 手机壳按窗口剩余高度缩放：嵌进个人网站的 iframe（只有 80vh）也能一屏看完。
+   用 zoom 不用 transform——transform 不改布局占位，缩完下面还空一大块。 */
+(function(){var p=document.querySelector('.phone');
+  function fit(){p.style.zoom=1;var r=p.getBoundingClientRect();
+    var s=Math.min(1,(innerHeight-(r.top+scrollY)-16)/r.height,(innerWidth-32)/r.width);
+    p.style.zoom=Math.max(.5,s);}
+  addEventListener('resize',fit);fit();})();
 </script>
